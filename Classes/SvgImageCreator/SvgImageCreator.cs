@@ -53,10 +53,8 @@ namespace SvgImageApp
             filePath = "./output/" + filePath;
             if (_svgDocument != null)
             {
-                // Сохраняем SVG как .svg
                 _svgDocument.Save(filePath);
 
-                // Сохраняем тот же документ как .xml
                 string xmlFilePath = System.IO.Path.ChangeExtension(filePath, ".xml");
                 _svgDocument.Save(xmlFilePath);
             }
