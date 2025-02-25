@@ -8,6 +8,11 @@ namespace SvgImageApp
         public void ReadSvgFile(string filePath)
         {
             XmlDocument svgDocument = new XmlDocument();
+            string inputDirectory = "./input/";
+            if (!Directory.Exists(inputDirectory))
+            {
+                Directory.CreateDirectory(inputDirectory);
+            }
             svgDocument.Load("./input/" + filePath);
 
             // text

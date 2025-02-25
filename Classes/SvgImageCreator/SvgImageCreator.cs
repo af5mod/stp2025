@@ -51,6 +51,11 @@ namespace SvgImageApp
         public void SaveSvg(string filePath)
         {
             filePath = "./output/" + filePath;
+            string outputDirectory = "./output/";
+            if (!Directory.Exists(outputDirectory))
+            {
+                Directory.CreateDirectory(outputDirectory);
+            }
             if (_svgDocument != null)
             {
                 _svgDocument.Save(filePath);
