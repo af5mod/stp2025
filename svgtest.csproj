@@ -8,4 +8,20 @@
     <StartupObject>IOClass</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="App.axaml.cs" />
+    <Compile Remove="FigureFabric.cs" />
+    <Compile Remove="Logic.cs" />
+    <Compile Remove="Program.cs" />
+    <Compile Remove="ViewLocator.cs" />
+    <Compile Remove="ViewModels\MainWindowViewModel.cs" />
+    <Compile Remove="ViewModels\ViewModelBase.cs" />
+    <Compile Remove="Views\MainWindow.axaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+
 </Project>

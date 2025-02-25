@@ -69,6 +69,9 @@ namespace GraphicEditor
         public Point Start { get; private set; }
         public Point End { get; private set; }
         public Point Center => new Point { X = (Start.X + End.X) / 2, Y = (Start.Y + End.Y) / 2 };
+
+        public string Name => throw new NotImplementedException();
+
         public Line(Point start, Point end)
         {
             Start = start;
@@ -151,6 +154,9 @@ namespace GraphicEditor
     {
         public Point Center { get; }
         public Point PointOnCircle { get; }
+
+        public string Name => throw new NotImplementedException();
+
         public Circle(Point center, Point pointOnCircle)
         {
             Center = center;
