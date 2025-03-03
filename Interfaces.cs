@@ -1,21 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 
 namespace GraphicEditor
 {
-    public class Point
-    {
-        public double X { get; set; }
-        public double Y { get; set; }
-    }
-
     public interface IDrawing
     {
-        void DrawLine(Point a, Point b);
-        void DrawCircle(Point Center, double r);
+        void DrawLine(PointF a, PointF b);
+        void DrawCircle(PointF Center, float r);
     }
     public interface IDrawingFigure
     {
@@ -24,25 +14,21 @@ namespace GraphicEditor
 
     public interface IFigure
     {
-        void Move(Point vector);
-        void Rotate(Point center, double angle);
-        Point Center { get; }
-        string Name
-        {
-            get;
-        }
+        void Move(PointF vector);
+        void Rotate(PointF center, float angle);
+        PointF Center { get; }
+        string Name { get; }
 
-        void Scale(double dx, double dy);
-        void Scale(Point center, double dr);
-        void Reflection(Point a, Point b);
+        void Scale(float dx, float dy);
+        void Scale(PointF center, float dr);
+        void Reflection(PointF a, PointF b);
         IFigure Clone();
         void Draw(IDrawing drawing);
-        bool IsIn(Point point, double eps);
+        bool IsIn(PointF point, float eps);
         IFigure Intersect(IFigure other);
         IFigure Union(IFigure other);
         IFigure Subtract(IFigure other);
-        void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, Point> pointParams);
-
+        void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams);
     }
 
     public interface ILogic
@@ -55,7 +41,7 @@ namespace GraphicEditor
         IFigure Create(string name, IDictionary<string, object> parameters);
         void AddFigure(IFigure figure);
         void RemoveFigure(IFigure figure);
-        IFigure Find(Point p, double eps);
+        IFigure Find(PointF p, float eps);
 
         void Select(IFigure f);
         void UnSelect(IFigure f);
