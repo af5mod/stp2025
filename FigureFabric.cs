@@ -117,6 +117,7 @@ namespace GraphicEditor
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
 
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams)
         {
@@ -152,6 +153,8 @@ namespace GraphicEditor
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
+
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
 
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) =>

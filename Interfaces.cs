@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace GraphicEditor
@@ -28,7 +30,7 @@ namespace GraphicEditor
         IFigure Intersect(IFigure other);
         IFigure Union(IFigure other);
         IFigure Subtract(IFigure other);
-        void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams);
+        void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams);
     }
 
     public interface ILogic
