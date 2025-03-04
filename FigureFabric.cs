@@ -132,24 +132,63 @@ namespace GraphicEditor
     [ExportMetadata("Name", nameof(Circle))]
     public class Circle : IFigure
     {
-        public PointF Center { get; }
-        public PointF PointOnCircle { get; }
-        public string Name => throw new NotImplementedException();
-
+        private PointF center;
+        private PointF pointOnCircle;
+        public PointF Center => center;
+        public string Name => "Circle";
         public Circle(PointF center, PointF pointOnCircle)
         {
             Center = center;
             PointOnCircle = pointOnCircle;
         }
+        public void Move(PointF vector)
+        {
+            center = new PointF(center.X + vector.X, center.Y + vector.Y);
+            pointOnCircle = new PointF(pointOnCircle.X + vector.X, pointOnCircle.Y + vector.Y);
+        }
+         public void Rotate(PointF rotationCenter, float angle)
+        {
+            double rad = angle * Math.PI / 180;
+            double cosA = Math.Cos(rad);
+            double sinA = Math.Sin(rad);
+            center = RotatePoint(center, rotationCenter, cosA, sinA);
+            pointOnCircle = RotatePoint(pointOnCircle, rotationCenter, cosA, sinA);
+        }
 
-        public void Move(PointF vector) => throw new NotImplementedException();
-        public void Rotate(PointF center, float angle) => throw new NotImplementedException();
-        public void Scale(float dx, float dy) => throw new NotImplementedException();
-        public void Scale(PointF center, float dr) => throw new NotImplementedException();
-        public void Reflection(PointF a, PointF b) => throw new NotImplementedException();
-        public IFigure Clone() => throw new NotImplementedException();
+        public void Scale(float dx, float dy)
+        {
+            center = new PointF(center.X * dx, center.Y * dy);
+            pointOnCircle = new PointF(pointOnCircle.X * dx, pointOnCircle.Y * dy);
+        }
+        public void Scale(PointF scaleCenter, float dr)
+        {
+            center = new PointF(scaleCenter.X + (center.X - scaleCenter.X) * dr,
+                                scaleCenter.Y + (center.Y - scaleCenter.Y) * dr);
+            pointOnCircle = new PointF(scaleCenter.X + (pointOnCircle.X - scaleCenter.X) * dr,
+                                       scaleCenter.Y + (pointOnCircle.Y - scaleCenter.Y) * dr);
+        }
+        public void Reflection(PointF a, PointF b)
+        {
+            center = ReflectPoint(center, a, b);
+            pointOnCircle = ReflectPoint(pointOnCircle, a, b);
+        }
+        public IFigure Clone()
+        {
+            return new Circle(new PointF(center.X, center.Y), new PointF(pointOnCircle.X, pointOnCircle.Y));
+        }
         public IEnumerable<IDrawingFigure> GetAsDrawable() => throw new NotImplementedException();
-        public bool IsIn(PointF point, float eps) => throw new NotImplementedException();
+        public bool IsIn(PointF point, float eps)
+        {
+            float radius = Distance(center, pointOnCircle);
+            float distToCenter = Distance(center, point);
+            return Math.Abs(distToCenter - radius) <= eps;
+        }
+        private float Distance(PointF p1, PointF p2)
+        {
+            float dx = p1.X - p2.X;
+            float dy = p1.Y - p2.Y;
+            return (float)Math.Sqrt(dx * dx + dy * dy);
+        }
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
