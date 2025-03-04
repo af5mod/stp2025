@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls.Shapes;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using DynamicData;
 using System.Text.RegularExpressions;
