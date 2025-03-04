@@ -128,12 +128,14 @@ namespace GraphicEditor
             if (lineMatch.Success)
             {
                 LoadLine(lineMatch);
+                Console.WriteLine("Line is found");
             }
 
             var circleMatch = Regex.Match(svgContent, @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'");
             if (circleMatch.Success)
             {
                 LoadCircle(circleMatch);
+                Console.WriteLine("Circle is found");
             }
         }
 
@@ -169,13 +171,21 @@ namespace GraphicEditor
             File.WriteAllText(FilePath, fullSvgContent);
         }
 
-        private void SaveAsSvg(IFigure figure, string filePath)
+        public void PrintFigures()
         {
-
-            if (figure is Line line)
-            { 
-                var svgContent = $"<svg height=\"200\" width=\"500\" xmlns='http://www.w3.org/2000/svg'><line x1=\"{line.Start.X}\" y1=\"{line.Start.Y}\" x2=\"{line.End.X}\" y2=\"{line.End.Y}\" style=\"stroke:rgb(99,99,99);stroke-width:2\" /></svg>";
-                File.WriteAllText(filePath, svgContent);
+            Console.WriteLine("Список фигур:");
+            foreach (var figure in Figures)
+            {
+                if (figure is Line line)
+                {
+                    Console.WriteLine($"Линия: Start({line.Start.X}, {line.Start.Y}) -> End({line.End.X}, {line.End.Y})");
+                }
+                else if (figure is Circle circle)
+                {
+                    var radius = Math.Sqrt(Math.Pow(circle.PointOnCircle.X - circle.Center.X, 2) +
+                                        Math.Pow(circle.PointOnCircle.Y - circle.Center.Y, 2));
+                    Console.WriteLine($"Круг: Center({circle.Center.X}, {circle.Center.Y}), Radius {radius}");
+                }
             }
         }
 
