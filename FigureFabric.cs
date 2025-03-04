@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Composition.Hosting;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GraphicEditor
 {
@@ -63,8 +65,8 @@ namespace GraphicEditor
     [ExportMetadata(nameof(FigureMetadata.Name), nameof(Line))]
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
-    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] {"First","Second" })]
-    public class Line: IFigure
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "First", "Second" })]
+    public class Line : IFigure
     {
         public Point Start { get; private set; }
         public Point End { get; private set; }
@@ -74,6 +76,7 @@ namespace GraphicEditor
             Start = start;
             End = end;
         }
+        public string Name => nameof(Line);
         public void Move(Point vector)
         {
             Start = new Point { X = Start.X + vector.X, Y = Start.Y + vector.Y };
@@ -84,7 +87,7 @@ namespace GraphicEditor
             double rad = angle * Math.PI / 180;
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
-            Start = new Point { X = center.X + (Start.X - center.X) * cosA - (Start.Y - center.Y) * sinA , Y = center.Y + (Start.X - center.X) * sinA + (Start.Y - center.Y) * cosA };
+            Start = new Point { X = center.X + (Start.X - center.X) * cosA - (Start.Y - center.Y) * sinA, Y = center.Y + (Start.X - center.X) * sinA + (Start.Y - center.Y) * cosA };
             End = new Point { X = center.X + (End.X - center.X) * cosA - (End.Y - center.Y) * sinA, Y = center.Y + (End.X - center.X) * sinA + (End.Y - center.Y) * cosA };
         }
 
@@ -108,7 +111,7 @@ namespace GraphicEditor
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
-        public IEnumerable<Point> GetLinePoints() 
+        public IEnumerable<Point> GetLinePoints()
         {
 
             int x0 = (int)Math.Round(Start.X);
@@ -156,6 +159,7 @@ namespace GraphicEditor
             Center = center;
             PointOnCircle = pointOnCircle;
         }
+        public string Name => nameof(Circle);
         public void Move(Point vector) => throw new NotImplementedException();
         public void Rotate(Point center, double angle) => throw new NotImplementedException();
 
