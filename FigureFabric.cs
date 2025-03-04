@@ -70,6 +70,9 @@ namespace GraphicEditor
             End = end;
         }
         public string Name => nameof(Line);
+
+        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public void Move(PointF vector)
         {
             Start = new PointF(Start.X + vector.X, Start.Y + vector.Y);
@@ -125,6 +128,7 @@ namespace GraphicEditor
         }
 
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
+        public bool HitTest(Point point, double epsilon) => throw new NotImplementedException();
     }
 
     [Export(typeof(IFigure))]
@@ -134,6 +138,8 @@ namespace GraphicEditor
         public PointF Center { get; set; }
         public PointF PointOnCircle { get; set; }
         public string Name => "Circle";
+
+        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Circle(PointF center, PointF pointOnCircle)
         {
@@ -216,6 +222,7 @@ namespace GraphicEditor
 
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) =>
             throw new NotImplementedException();
+        public bool HitTest(Point point, double epsilon) => throw new NotImplementedException();
     }
 
     public class Rectangle : IFigure
@@ -255,6 +262,8 @@ namespace GraphicEditor
                 return new PointF(sumX / corners.Count, sumY / corners.Count);
             }
         }
+
+        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Move(PointF vector)
         {
@@ -368,5 +377,7 @@ namespace GraphicEditor
                 throw new ArgumentException("Для Rectangle необходимы параметры 'TopLeft', 'TopRight', 'BottomRight' и 'BottomLeft'.");
             }
         }
+
+        public bool HitTest(Point point, double epsilon) => throw new NotImplementedException();
     }
 }

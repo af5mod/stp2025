@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using DynamicData;
 
 namespace GraphicEditor
 {
@@ -16,11 +17,12 @@ namespace GraphicEditor
 
     public interface IFigure
     {
+        bool IsSelected { get; set; }
+
         void Move(PointF vector);
         void Rotate(PointF center, float angle);
         PointF Center { get; }
         string Name { get; }
-
         void Scale(float dx, float dy);
         void Scale(PointF center, float dr);
         void Reflection(PointF a, PointF b);
@@ -35,6 +37,9 @@ namespace GraphicEditor
 
     public interface ILogic
     {
+        public void ClearAll();
+        public IObservable<IChangeSet<IFigure>> ObservableFigures { get; }
+        public IObservable<IChangeSet<IFigure>> ConnectSelections { get; }
         IEnumerable<IFigure> Figures { get; } //список всех фигур
         void Save(string FilePath, string FileFormat);
         void Load(string FilePath, string FileFormat);
@@ -43,9 +48,10 @@ namespace GraphicEditor
         IFigure Create(string name, IDictionary<string, PointF> parameters, IDictionary<string, double> doubleparameters);
         void AddFigure(IFigure figure);
         void RemoveFigure(IFigure figure);
+        public void RemoveFigures(IEnumerable<IFigure> figures);
         IFigure? Find(PointF p, float eps);
 
-        void Select(IFigure f);
+        void Select(IFigure f, bool multiSelect);
         void UnSelect(IFigure f);
         IEnumerable<IFigure> Selected();
     }

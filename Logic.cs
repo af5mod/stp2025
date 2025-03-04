@@ -10,17 +10,57 @@ using System.Text.RegularExpressions;
 
 using DynamicData;
 using System.Text.RegularExpressions;
+using Avalonia.Interactivity;
+using Avalonia.Input;
 
 namespace GraphicEditor
 {
     public class FigureService : ILogic
     {
-        public readonly SourceCache<IFigure,string> _figures = new(fig=>fig.Name); // Все фигуры
-        private readonly HashSet<IFigure> _selectedFigures = new(); // Выбранные фигуры
-        public IEnumerable<IFigure> Figures => _figures.Items;
+        public readonly SourceCache<IFigure, string> _figures = new(fig => fig.Name); // Все фигуры
+        private readonly SourceList<IFigure> _selectedFigures = new(); // Выбранные фигуры
 
+        public IEnumerable<IFigure> Figures => _figures.Items;
+        public IObservable<IChangeSet<IFigure>> ObservableFigures => (IObservable<IChangeSet<IFigure>>)_figures.Connect();
+        public IObservable<IChangeSet<IFigure>> ConnectSelections => _selectedFigures.Connect();
         public IEnumerable<string> FigureNamesToCreate => FigureFabric.AvailableFigures; //список всех доступных имен фигур
 
+        public void Select(Point point, bool multiSelect = false)
+        {
+            var figure = _figures.Items
+                .Reverse()
+                .FirstOrDefault(f => f.IsIn(point, 3.0f));
+
+            if (figure == null)
+            {
+                if (!multiSelect) _selectedFigures.Clear();
+                return;
+            }
+
+            if (multiSelect)
+            {
+                figure.IsSelected = !figure.IsSelected;
+                if (figure.IsSelected)
+                    _selectedFigures.Add(figure);
+                else
+                    _selectedFigures.Remove(figure);
+            }
+            else
+            {
+                foreach (var f in _selectedFigures.Items)
+                    f.IsSelected = false;
+
+                _selectedFigures.Clear();
+                figure.IsSelected = true;
+                _selectedFigures.Add(figure);
+            }
+        }
+
+        public void ClearAll()
+        {
+            _figures.Clear();
+            _selectedFigures.Clear();
+        }
         public void AddFigure(IFigure figure)
         {
             if (figure == null) throw new ArgumentNullException(nameof(figure));
@@ -33,7 +73,13 @@ namespace GraphicEditor
             _figures.Remove(figure);
             _selectedFigures.Remove(figure);
         }
-        
+
+        public void RemoveFigures(IEnumerable<IFigure> figures)
+        {
+            _figures.Remove(figures);
+            _selectedFigures.RemoveMany(figures);
+        }
+
         public IFigure Create(string name, IDictionary<string, PointF> parameters, IDictionary<string, double> doubleparameters)
         {
             if (!FigureFabric.AvailableFigures.Contains(name))
@@ -173,7 +219,7 @@ namespace GraphicEditor
         {
 
             if (figure is Line line)
-            { 
+            {
                 var svgContent = $"<svg height=\"200\" width=\"500\" xmlns='http://www.w3.org/2000/svg'><line x1=\"{line.Start.X}\" y1=\"{line.Start.Y}\" x2=\"{line.End.X}\" y2=\"{line.End.Y}\" style=\"stroke:rgb(99,99,99);stroke-width:2\" /></svg>";
                 File.WriteAllText(filePath, svgContent);
             }
@@ -194,5 +240,12 @@ namespace GraphicEditor
             throw new NotImplementedException();
         }
 
+        public void Dispose()
+        {
+            _figures.Dispose();
+            _selectedFigures.Dispose();
+        }
+
+        public void Select(IFigure f, bool multiSelect) => throw new NotImplementedException();
     }
 }
