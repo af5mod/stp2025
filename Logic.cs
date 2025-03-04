@@ -13,11 +13,10 @@ using System.Text.RegularExpressions;
 
 namespace GraphicEditor
 {
-    public class FigureService 
+    public class FigureService : ILogic
     {
         public readonly SourceCache<IFigure,string> _figures = new(fig=>fig.Name); // Все фигуры
         private readonly HashSet<IFigure> _selectedFigures = new(); // Выбранные фигуры
-
         public IEnumerable<IFigure> Figures => _figures.Items;
 
         public IEnumerable<string> FigureNamesToCreate => FigureFabric.AvailableFigures; //список всех доступных имен фигур
@@ -34,7 +33,7 @@ namespace GraphicEditor
             _figures.Remove(figure);
             _selectedFigures.Remove(figure);
         }
-
+        
         public IFigure Create(string name, IDictionary<string, PointF> parameters, IDictionary<string, double> doubleparameters)
         {
             if (!FigureFabric.AvailableFigures.Contains(name))
@@ -75,11 +74,10 @@ namespace GraphicEditor
             return figure;
         }
 
-        public IFigure? Find(Point p, float eps)
+        public IFigure? Find(PointF p, float eps)
         {
             return Figures.FirstOrDefault(f => f.IsIn(p, eps));
         }
-
 
         public IEnumerable<(string, Type)> GetParameters(string figure)
         {
@@ -195,5 +193,6 @@ namespace GraphicEditor
         {
             throw new NotImplementedException();
         }
+
     }
 }

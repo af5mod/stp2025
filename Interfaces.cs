@@ -40,10 +40,10 @@ namespace GraphicEditor
         void Load(string FilePath, string FileFormat);
         IEnumerable<string> FigureNamesToCreate { get; } //список имен фигур доступных для создания
         IEnumerable<(string, Type)> GetParameters(string figure);
-        IFigure Create(string name, IDictionary<string, object> parameters);
+        IFigure Create(string name, IDictionary<string, PointF> parameters, IDictionary<string, double> doubleparameters);
         void AddFigure(IFigure figure);
         void RemoveFigure(IFigure figure);
-        IFigure Find(PointF p, float eps);
+        IFigure? Find(PointF p, float eps);
 
         void Select(IFigure f);
         void UnSelect(IFigure f);
