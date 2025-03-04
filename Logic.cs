@@ -93,10 +93,10 @@ namespace GraphicEditor
             double y2 = double.Parse(lineMatch.Groups["y2"].Value);
 
             var line = FigureFabric.CreateFigure("Line") as Line;
-            line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, Point>
+            line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
-                    {"First", new Point { X = x1, Y = y1 }},
-                    {"Second", new Point { X = x2, Y = y2 }}
+                    {"First", new PointF { X = (float)x1, Y = (float)y1 }},
+                    {"Second", new PointF {X =(float) x2, Y =(float) y2}}
                 });
 
             AddFigure(line);
@@ -109,10 +109,10 @@ namespace GraphicEditor
             double r = double.Parse(circleMatch.Groups["r"].Value);
 
             var circle = FigureFabric.CreateFigure("Circle") as Circle;
-            circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, Point>
+            circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
-                    {"Center", new Point { X = cx, Y = cy }},
-                    {"RadiusPoint", new Point { X = cx + r, Y = cy }}
+                    {"Center", new PointF {X =(float) cx, Y =(float) cy}},
+                    {"RadiusPoint", new PointF {X =(float)cx + (float)r, Y =(float) cy}}
                 });
 
             AddFigure(circle);
