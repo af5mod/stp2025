@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,40 +13,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaXaml Remove="Classes\**" />
-    <AvaloniaXaml Remove="input\**" />
-    <AvaloniaXaml Remove="output\**" />
-    <Compile Remove="Classes\**" />
-    <Compile Remove="input\**" />
     <Compile Remove="Models\**" />
-    <Compile Remove="output\**" />
-    <EmbeddedResource Remove="Classes\**" />
-    <EmbeddedResource Remove="input\**" />
     <EmbeddedResource Remove="Models\**" />
-    <EmbeddedResource Remove="output\**" />
-    <None Remove="Classes\**" />
-    <None Remove="input\**" />
     <None Remove="Models\**" />
-    <None Remove="output\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="IOClass.cs" />
-    <Compile Remove="merged_Program.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.4" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.4" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.4" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.4" />
+    <PackageReference Include="Avalonia" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Skia" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.0.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.4" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.4" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.5" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.5" />
     <PackageReference Include="DynamicData" Version="9.1.2" />
     <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
     <PackageReference Include="System.Composition.AttributedModel" Version="9.0.2" />
     <PackageReference Include="System.Composition.TypedParts" Version="9.0.2" />
   </ItemGroup>
+
 </Project>

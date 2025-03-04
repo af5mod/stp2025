@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:GraphicEditor.ViewModels"
+        xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg.Skia"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1600" d:DesignHeight="900"
@@ -9,190 +10,174 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="GraphicEditor">
-        
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-	<Window.Styles>
-		<!--переопределяем вид радио-кнопок для выбора фигуры-->
-		<Style Selector="RadioButton.Figure">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate>
-						<Grid>
-							<Border Name="ButtFig" Width="130" Height="50"
-									CornerRadius="10"
-									Background="#646464">
-							</Border>
-							<ContentPresenter Content="{TemplateBinding Content}"
-											  HorizontalAlignment="Center"
-											  VerticalAlignment="Center"/>
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<!--вид выбранной кнопки-->
-		<Style Selector="RadioButton.Figure:checked /template/ Border#ButtFig">
-			<Setter Property="Background" Value="#999999"/>
-		</Style>
-		<!--вид кнопки при наведенном курсоре-->
-		<Style Selector="RadioButton.Figure:pointerover /template/ Border#ButtFig">
-      <Setter Property="Background" Value="#787878"/>
-		</Style>
-	</Window.Styles>
 
-  <Window.Styles>
-    <!--переопределяем вид радио-кнопок для переключениями между вкладок-->
-    <Style Selector="RadioButton.Figure2">
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate>
-            <Grid>
-              <Border Name="ButtFig" Width="300" Height="22"
-									CornerRadius="10,10,0,0"
-									Background="#c4c4c4">
-              </Border>
-              <ContentPresenter Content="{TemplateBinding Content}"
-											  HorizontalAlignment="Center"
-											  VerticalAlignment="Center"/>
+    <Grid Background="#EBEBEB">
+        <!-- две колонки тту: центральная область (левая) и правая панель (фиксированной ширины) -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- меню -->
+                <RowDefinition Height="Auto"/> <!-- кнопки и ползунки -->
+                <RowDefinition Height="*"/>    <!-- центральная область -->
+                <RowDefinition Height="Auto"/>  
+            </Grid.RowDefinitions>
+
+            <!-- верх меню-->
+            <DockPanel Grid.Row="0" LastChildFill="True" Background="#D9D9D9">
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="Файл">
+                        <MenuItem Header="Новый"/>
+                        <MenuItem Header="Открыть"/>
+                        <MenuItem Header="Сохранить"/>
+                    </MenuItem>
+                    <MenuItem Header="Изменить"/>
+                    <MenuItem Header="Вид"/>
+                </Menu>
+            </DockPanel>
+
+            <!-- (2) КНОПКИ + ПОЛЗУНКИ -->
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Spacing="12"
+                        Margin="8,4">
+                
+                <!-- группа с тремя кнопками -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button>
+                        <ContentControl>
+                            <Image Source="{SvgImage /Assets/pajamas_go-back.svg}"/>
+                        </ContentControl>
+                    </Button>
+                    <Button>
+                        <ContentControl>
+                            <Image Source="{SvgImage /Assets/pajamas_go-back-2.svg}"/>
+                        </ContentControl>
+                    </Button>
+                    <Button>
+                        <ContentControl>
+                            <Image Source="{SvgImage /Assets/Save.svg}"/>
+                        </ContentControl>
+                    </Button>
+                </StackPanel>
+
+                <!-- небольшой отступ между кнопками и ползунками -->
+                <StackPanel Width="20"/>
+
+                <!-- ползунки -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider.Value}"/>
+                    <Slider x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="50"/>
+
+
+                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider.Value}"/>
+                    <Slider x:Name="slider1" Width="120" Minimum="0" Maximum="100" Value="50"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- основная область: левый блок (инструменты) + центр (холст) -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- левый столбец с вертикальным списком инструментов -->
+                <StackPanel Grid.Column="0"
+                            Orientation="Vertical"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Margin="11"
+                            Spacing="10">
+                    <Button><Image Source="{SvgImage /Assets/mdi_pen.svg}" Stretch="None"/></Button>
+                    <Button><Image Source="{SvgImage /Assets/solar_eraser-bold.svg}" Stretch="None"/></Button>
+                    <Button><Image Source="{SvgImage /Assets/solar_text-bold.svg}" Stretch="None"/></Button>
+                    <Button><Image Source="{SvgImage /Assets/ic_baseline-highlight-alt.svg}" Stretch="None"/></Button>
+                    <Button><Image Source="{SvgImage /Assets/fluent_lasso-20-filled.svg}" Stretch="None"/></Button>
+                </StackPanel>
+
+                
             </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-    <!--вид выбранной кнопки-->
-    <Style Selector="RadioButton.Figure2:checked /template/ Border#ButtFig">
-      <Setter Property="Background" Value="#a8a8a8"/>
-    </Style>
-    <!--вид кнопки при наведенном курсоре-->
-    <Style Selector="RadioButton.Figure2:pointerover /template/ Border#ButtFig">
-      <Setter Property="Background" Value="#bdbdbd"/>
-    </Style>
-  </Window.Styles>
-	<Grid Background="White">
-		<Canvas Background="AliceBlue">
-			<!--рабочая поляна(тут будет полотно)-->
-			<Panel Background="#a8a8a8" 
-				   Height="828" 
-				   Width="1400"
-				   Canvas.Bottom="0"
-				   Canvas.Right="0">
-				<Image x:Name="Picture"/>
-			</Panel>
-			<!--поле с выбором фигуры и цветовой схемой-->
-			<Panel Background="#4b4b4b"
-				   Height="858"
-				   Width="198"
-				   Canvas.Left="0"
-				   Canvas.Bottom="0">
-				<!--контейнер кнопок для фигур-->
-				<StackPanel Margin="0 30 0 0" HorizontalAlignment="Center" >
-					<RadioButton Classes="Figure" Margin="0 20 0 0">
-						<Image Source="avares://GraphicEditor/Assets/Img/slash.png"
-							Height="27"
-							Width="27"
-							Margin="5"/>
-						<ToolTip.Tip>
-							<TextBlock Text="Ломаная"/>
-						</ToolTip.Tip>
-					</RadioButton>
-					<RadioButton Classes="Figure" Content="Квадрат" Margin="0 20 0 0">
-						<Image Source="avares://GraphicEditor/Assets/Img/no-people.png"
-							Height="27"
-							Width="27"
-							Margin="5"/>
-						<ToolTip.Tip>
-							<TextBlock Text="Квадрат"/>
-						</ToolTip.Tip>
-					</RadioButton>
-					<RadioButton Classes="Figure" Content="Треугольник" Margin="0 20 0 0">
-						<Image Source="avares://GraphicEditor/Assets/Img/triangle.png"
-							Height="27"
-							Width="27"
-							Margin="5"/>
-						<ToolTip.Tip>
-							<TextBlock Text="Треугольник"/>
-						</ToolTip.Tip>
-					</RadioButton>
-					<RadioButton Classes="Figure" Content="Круг" Margin="0 20 0 0">
-						<Image Source="avares://GraphicEditor/Assets/Img/circle.png"
-							Height="27"
-							Width="27"
-							Margin="5"/>
-						<ToolTip.Tip>
-							<TextBlock Text="Круг"/>
-						</ToolTip.Tip>
-					</RadioButton>
-				</StackPanel>
-				<!--цветовая схема-->
-				<Rectangle Fill="DarkGoldenrod"
-				   Height="180"
-				   Width="180"
-				   VerticalAlignment="Bottom"
-				   Margin="0 0 0 10"/>
-			</Panel>
-			<!--тут выпадающий список-->
-			<Panel  Background="#646464" 
-				   Height="40" 
-				   Width="1600"
-				   Canvas.Top="0"
-				   Canvas.Right="0">
-				   <DockPanel>
-						<Menu DockPanel.Dock="Top">
-						<MenuItem Header="_Файл">
-						<MenuItem Header="_Открыть"/>
-						<Separator/>
-						<MenuItem Header="_Выйти"/>
-					</MenuItem>
-						<MenuItem Header="_Правка">
-						<MenuItem Header="Копировать"/>
-						<MenuItem Header="Вставить"/>
-					</MenuItem>
-						<MenuItem Header="_Вид">
-						<MenuItem Header=" "/>
-						<MenuItem Header=" "/>
-					</MenuItem>
-						<MenuItem Header="_Помощь">
-						<MenuItem Header="Документация"/>
-					</MenuItem>
-					</Menu>
-					<TextBlock/>
-				</DockPanel>
-			</Panel>
-     
-      
-			<!--просто полосчка один горизонтальная-->
-			<Panel Background="#404040"
-				   Height="2"
-				   Width="1600"
-				   Canvas.Top="40"
-				   Canvas.Right="0"/>
-			<!--просто полосчка два вертикальная-->
-			<Panel Background="#404040"
-				   Height="858"
-				   Width="2"
-				   Canvas.Left="198"
-				   Canvas.Bottom="0"/>
-			<!--тут переключаемся между окнами-->
-			<Panel Background="#4b4b4b"
-				   Height="30"
-				   Width="1400"
-				   Canvas.Top="42"
-				   Canvas.Right="0">
 
-        <StackPanel Margin="0 0 0 0" Orientation="Horizontal" HorizontalAlignment="Left" >
-          <RadioButton Classes="Figure2" Content="Проект 1" Margin="0 8 0 0"> 
-            Проект 1
-          </RadioButton>
-          <RadioButton Classes="Figure2" Content="Проект 2" Margin="10 8 0 0">
-            Проект 2
-          </RadioButton>
-          <RadioButton Classes="Figure2" Content="Проект 3" Margin="10 8 0 0">
-            Проект 3
-          </RadioButton>
-          </StackPanel>
-			</Panel>
-		</Canvas>
-	</Grid>
-</Window>
+        </Grid>
+        <!-- пРАВАЯ ПАНЕЛЬ  -->
+        <Border Grid.Column="1" Background="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- (1) поворот/отражение -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- (2) фигуры -->
+                    <RowDefinition Height="*"/>
+                    <!-- (3) панель выбора цвета -->
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- (1) поворот и отражение -->
+                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="8" Spacing="4">
+                    <TextBlock Text="Поворот:" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button><Image Source="{SvgImage /Assets/Rotate Right.svg}" Stretch="None"/></Button>
+                        <Button><Image Source="{SvgImage /Assets/Rotate Right-2.svg}" Stretch="None"/></Button>
+                        <Button><Image Source="{SvgImage /Assets/Replace.svg}" Stretch="None"/></Button>
+                    
+                    </StackPanel>
+
+                    <TextBlock Text="Отражение:" Margin="0,8,0,0" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button><Image Source="{SvgImage /Assets/material-symbols_flip.svg}" Stretch="None"/></Button>
+                        <Button><Image Source="{SvgImage /Assets/material-symbols_flip-2.svg}" Stretch="None"/></Button>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- (2) фигуры аотом свг будет -->
+                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="8" Spacing="8">
+                    <TextBlock Text="Фигуры" FontWeight="Bold"/>
+                    <WrapPanel>
+                        <Button Content="○" Margin="4"/>
+                        <Button Content="△" Margin="4"/>
+                        <Button Content="—" Margin="4"/>
+                        <Button Content="★" Margin="4"/>
+                        <Button Content="■" Margin="4"/>
+                        <Button Content="♥" Margin="4"/>
+                        <Button Content="☁" Margin="4"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Margin="8" Spacing="8">
+                    <Viewbox Stretch="Uniform">
+                        <ColorView Width="400" Height="500"/>
+                    </Viewbox>
+                </StackPanel>
+                
+            </Grid>
+        </Border>
+
+
+
+        <Grid Grid.Row="2">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <StackPanel Grid.Column="0"
+                Orientation="Vertical"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Margin="11"
+                Spacing="10">
+    </StackPanel>
+
+    <Canvas x:Name="MainCanvas"
+            Grid.Column="1"
+            Background="pink"
+            Width="1000"  
+            Height="600"  
+            />  
+</Grid>
+ </Grid>
+ </Window>
