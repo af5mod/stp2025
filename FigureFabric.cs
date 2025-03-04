@@ -137,10 +137,10 @@ namespace GraphicEditor
         public PointF PointOnCircle { get; set; }
         public string Name => "Circle";
 
-        public Circle(PointF Center, PointF PointOnCircle)
+        public Circle(PointF center, PointF pointOnCircle)
         {
-            Center = Сenter;
-            PointOnCircle = PointOnCircle;
+            Center = center;
+            PointOnCircle = pointOnCircle;
         }
 
         public void Move(PointF vector)
