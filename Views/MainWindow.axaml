@@ -70,12 +70,12 @@
 
                 <!-- ползунки -->
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider.Value}"/>
-                    <Slider x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="50"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider.Value,StringFormat='{}{0:0}'}"/>
+                    <Slider Foreground="Black"  x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="50"/>
 
 
-                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider.Value}"/>
-                    <Slider x:Name="slider1" Width="120" Minimum="0" Maximum="100" Value="50"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider2.Value,StringFormat='{}{0:0}'}"/>
+                    <Slider x:Name="slider2" Width="120" Minimum="0" Maximum="100" Value="50"/>
                 </StackPanel>
             </StackPanel>
 
