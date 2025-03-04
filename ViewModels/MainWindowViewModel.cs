@@ -8,41 +8,39 @@ using DynamicData.Binding;
 using ReactiveUI;
 using Avalonia.Input;
 using GraphicEditor.Views;
+using System.Reactive.Linq;
 
 namespace GraphicEditor.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly ILogic _figureService;
-        private ObservableCollection<IFigure> _figures;
-        private ObservableCollection<IFigure> _selectedFigure;
-
-        public IObservableCollection<IFigure> Figures { get => (IObservableCollection<IFigure>)_figures; }
-        public IObservableCollection<IFigure> SelectedFigures { get => (IObservableCollection<IFigure>)_selectedFigure; }
-
         public ReactiveCommand<Unit, Unit> ClearAllCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
         // public ReactiveCommand<Point, Unit> CanvasClickCommand { get; }
 
+        private readonly ReadOnlyObservableCollection<IFigure> _readonlyFigures;
+        public ReadOnlyObservableCollection<IFigure> ReadonlyFigures => _readonlyFigures;
+        private readonly ReadOnlyObservableCollection<IFigure> _readonlySelectedFigures;
+        public ReadOnlyObservableCollection<IFigure> ReadonlySelectedFigures => _readonlySelectedFigures;
+
         public MainWindowViewModel()
         {
-            _figures = new ObservableCollection<IFigure>();
-            _selectedFigure = new ObservableCollection<IFigure>();
             _figureService = new FigureService();
 
             // Подключение реактивных источников
-            _figureService.ObservableFigures
-                .Bind(Figures)
+            _figureService.Connect()
+                .Bind(out _readonlyFigures)
                 .Subscribe();
 
-            _figureService.ConnectSelections
-                .Bind(SelectedFigures)
+            _figureService.ConnectSelections()
+                .Bind(out _readonlySelectedFigures)
                 .Subscribe();
 
             // Инициализация команд
             ClearAllCommand = ReactiveCommand.Create(_figureService.ClearAll);
             DeleteSelectedCommand = ReactiveCommand.Create(() =>
-                _figureService.RemoveFigures(SelectedFigures.ToList()));
+                _figureService.RemoveFigures(ReadonlySelectedFigures));
 
             // CanvasClickCommand = ReactiveCommand.Create<PointerPressedEventArgs>(args =>
             // {

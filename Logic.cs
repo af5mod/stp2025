@@ -12,17 +12,23 @@ using DynamicData;
 using System.Text.RegularExpressions;
 using Avalonia.Interactivity;
 using Avalonia.Input;
+using System.Reactive.Linq;
+using DynamicData.Kernel;
+using System.Collections.ObjectModel;
 
 namespace GraphicEditor
 {
     public class FigureService : ILogic
     {
-        public readonly SourceCache<IFigure, string> _figures = new(fig => fig.Name); // Все фигуры
-        private readonly SourceList<IFigure> _selectedFigures = new(); // Выбранные фигуры
-
+        public readonly SourceList<IFigure> _figures = new(); // Все фигуры
+        public IObservable<IChangeSet<IFigure>> Connect() => _figures.Connect();
         public IEnumerable<IFigure> Figures => _figures.Items;
-        public IObservable<IChangeSet<IFigure>> ObservableFigures => (IObservable<IChangeSet<IFigure>>)_figures.Connect();
-        public IObservable<IChangeSet<IFigure>> ConnectSelections => _selectedFigures.Connect();
+
+        // IObservable<IChangeSet<IFigure, string>>
+        // IObservable<IChangeSet<IFigure>>
+        private readonly SourceList<IFigure> _selectedFigures = new(); // Выбранные фигуры
+        public IObservable<IChangeSet<IFigure>> ConnectSelections() => _selectedFigures.Connect();
+
         public IEnumerable<string> FigureNamesToCreate => FigureFabric.AvailableFigures; //список всех доступных имен фигур
 
         public void Select(Point point, bool multiSelect = false)
@@ -64,7 +70,7 @@ namespace GraphicEditor
         public void AddFigure(IFigure figure)
         {
             if (figure == null) throw new ArgumentNullException(nameof(figure));
-            _figures.AddOrUpdate(figure);
+            _figures.Add(figure);
         }
 
         public void RemoveFigure(IFigure figure)
@@ -76,7 +82,7 @@ namespace GraphicEditor
 
         public void RemoveFigures(IEnumerable<IFigure> figures)
         {
-            _figures.Remove(figures);
+            _figures.RemoveMany(figures);
             _selectedFigures.RemoveMany(figures);
         }
 
