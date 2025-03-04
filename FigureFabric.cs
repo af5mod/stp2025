@@ -155,6 +155,16 @@ namespace GraphicEditor
             pointOnCircle = RotatePoint(pointOnCircle, rotationCenter, cosA, sinA);
         }
 
+        private PointF RotatePoint(PointF pt, PointF rotationCenter, double cosA, double sinA)
+        {
+            float dx = pt.X - rotationCenter.X;
+            float dy = pt.Y - rotationCenter.Y;
+            return new PointF(
+                (float)(rotationCenter.X + dx * cosA - dy * sinA),
+                (float)(rotationCenter.Y + dx * sinA + dy * cosA)
+            );
+        }
+
         public void Scale(float dx, float dy)
         {
             center = new PointF(center.X * dx, center.Y * dy);
