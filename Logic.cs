@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls.Shapes;
@@ -33,7 +34,7 @@ namespace GraphicEditor
             _selectedFigures.Remove(figure);
         }
 
-        public IFigure Create(string name, IDictionary<string, Point> parameters, IDictionary<string, double> doubleparameters)
+        public IFigure Create(string name, IDictionary<string, PointF> parameters, IDictionary<string, double> doubleparameters)
         {
             if (!FigureFabric.AvailableFigures.Contains(name))
             {
@@ -45,8 +46,8 @@ namespace GraphicEditor
 
             if (figure is Circle circle)
             {
-                var center = (Point)parameters["Center"];
-                var pointOnCircle = (Point)parameters["PointOnCircle"];
+                var center = (PointF)parameters["Center"];
+                var pointOnCircle = (PointF)parameters["PointOnCircle"];
                 figure = new Circle(center, pointOnCircle);
             }
             //пример создания остальных фигур
@@ -73,7 +74,7 @@ namespace GraphicEditor
             return figure;
         }
 
-        public IFigure? Find(Point p, double eps)
+        public IFigure? Find(Point p, float eps)
         {
             return Figures.FirstOrDefault(f => f.IsIn(p, eps));
         }
