@@ -132,8 +132,8 @@ namespace GraphicEditor
     [ExportMetadata("Name", nameof(Circle))]
     public class Circle : IFigure
     {
-        private PointF center;
-        private PointF pointOnCircle;
+        public Point Center { get; }
+        public Point PointOnCircle { get; }
         public PointF Center => center;
         public string Name => "Circle";
         public Circle(PointF center, PointF pointOnCircle)
