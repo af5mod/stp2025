@@ -4,6 +4,7 @@ using System.Composition;
 using System.Composition.Hosting;
 using System.Linq;
 using System.Drawing;
+using GraphicEditor;
 
 namespace GraphicEditor
 {
@@ -132,9 +133,8 @@ namespace GraphicEditor
     [ExportMetadata("Name", nameof(Circle))]
     public class Circle : IFigure
     {
-        public Point Center { get; }
-        public Point PointOnCircle { get; }
-        public PointF Center => center;
+        public PointF Center { get; set; }
+        public PointF PointOnCircle { get; set; }
         public string Name => "Circle";
 
         public Circle(PointF center, PointF pointOnCircle)
@@ -145,8 +145,8 @@ namespace GraphicEditor
 
         public void Move(PointF vector)
         {
-            center = new PointF(center.X + vector.X, center.Y + vector.Y);
-            pointOnCircle = new PointF(pointOnCircle.X + vector.X, pointOnCircle.Y + vector.Y);
+            Center = new PointF(Center.X + vector.X, Center.Y + vector.Y);
+            PointOnCircle = new PointF(PointOnCircle.X + vector.X, PointOnCircle.Y + vector.Y);
         }
 
          public void Rotate(PointF rotationCenter, float angle)
@@ -154,11 +154,11 @@ namespace GraphicEditor
             double rad = angle * Math.PI / 180;
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
-            center = RotatePoint(center, rotationCenter, cosA, sinA);
-            pointOnCircle = RotatePoint(pointOnCircle, rotationCenter, cosA, sinA);
+            Center = RotatePoint(Center, rotationCenter, cosA, sinA);
+            PointOnCircle = RotatePoint(PointOnCircle, rotationCenter, cosA, sinA);
         }
 
-        private PointF RotatePoint(PointF pt, PointF rotationCenter, double cosA, double sinA)
+        public PointF RotatePoint(PointF pt, PointF rotationCenter, double cosA, double sinA)
         {
             float dx = pt.X - rotationCenter.X;
             float dy = pt.Y - rotationCenter.Y;
@@ -170,35 +170,35 @@ namespace GraphicEditor
 
         public void Scale(float dx, float dy)
         {
-            center = new PointF(center.X * dx, center.Y * dy);
-            pointOnCircle = new PointF(pointOnCircle.X * dx, pointOnCircle.Y * dy);
+            Center = new PointF(Center.X * dx, Center.Y * dy);
+            PointOnCircle = new PointF(PointOnCircle.X * dx, PointOnCircle.Y * dy);
         }
 
         public void Scale(PointF scaleCenter, float dr)
         {
-            center = new PointF(scaleCenter.X + (center.X - scaleCenter.X) * dr,
-                                scaleCenter.Y + (center.Y - scaleCenter.Y) * dr);
-            pointOnCircle = new PointF(scaleCenter.X + (pointOnCircle.X - scaleCenter.X) * dr,
-                                       scaleCenter.Y + (pointOnCircle.Y - scaleCenter.Y) * dr);
+            Center = new PointF(scaleCenter.X + (Center.X - scaleCenter.X) * dr,
+                                scaleCenter.Y + (Center.Y - scaleCenter.Y) * dr);
+            PointOnCircle = new PointF(scaleCenter.X + (PointOnCircle.X - scaleCenter.X) * dr,
+                                       scaleCenter.Y + (PointOnCircle.Y - scaleCenter.Y) * dr);
         }
 
         public void Reflection(PointF a, PointF b)
         {
-            center = ReflectPoint(center, a, b);
-            pointOnCircle = ReflectPoint(pointOnCircle, a, b);
+            //Center = ReflectPoint(Center, a, b);
+            //PointOnCircle = ReflectPoint(PointOnCircle, a, b);
         }
 
         public IFigure Clone()
         {
-            return new Circle(new PointF(center.X, center.Y), new PointF(pointOnCircle.X, pointOnCircle.Y));
+            return new Circle(new PointF(Center.X, Center.Y), new PointF(PointOnCircle.X, PointOnCircle.Y));
         }
 
         public IEnumerable<IDrawingFigure> GetAsDrawable() => throw new NotImplementedException();
 
         public bool IsIn(PointF point, float eps)
         {
-            float radius = Distance(center, pointOnCircle);
-            float distToCenter = Distance(center, point);
+            float radius = Distance(Center, PointOnCircle);
+            float distToCenter = Distance(Center, point);
             return Math.Abs(distToCenter - radius) <= eps;
         }
 
@@ -222,7 +222,7 @@ namespace GraphicEditor
 }
 
 public class Rectangle : IFigure
-    {
+{
         private List<PointF> corners;
 
         public Rectangle(PointF topLeft, float width, float height) // конструктор по левому верхнему углу, ширине и высоте
