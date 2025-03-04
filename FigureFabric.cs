@@ -149,7 +149,7 @@ namespace GraphicEditor
             PointOnCircle = new PointF(PointOnCircle.X + vector.X, PointOnCircle.Y + vector.Y);
         }
 
-         public void Rotate(PointF rotationCenter, float angle)
+        public void Rotate(PointF rotationCenter, float angle)
         {
             double rad = angle * Math.PI / 180;
             double cosA = Math.Cos(rad);
@@ -219,10 +219,9 @@ namespace GraphicEditor
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) =>
             throw new NotImplementedException();
     }
-}
 
-public class Rectangle : IFigure
-{
+    public class Rectangle : IFigure
+    {
         private List<PointF> corners;
 
         public Rectangle(PointF topLeft, float width, float height) // конструктор по левому верхнему углу, ширине и высоте
@@ -372,3 +371,4 @@ public class Rectangle : IFigure
             }
         }
     }
+}
