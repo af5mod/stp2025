@@ -9,7 +9,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using DynamicData;
-using System.Text.RegularExpressions;
 using Avalonia.Interactivity;
 using Avalonia.Input;
 using System.Reactive.Linq;
@@ -20,8 +19,8 @@ namespace GraphicEditor
 {
     public class FigureService : ILogic
     {
-        public readonly SourceList<IFigure> _figures = new(); // Все фигуры
-        public IObservable<IChangeSet<IFigure>> Connect() => _figures.Connect();
+        public readonly SourceCache<IFigure,string> _figures = new(f=>f.Name); // Все фигуры
+        public IObservable<IChangeSet<IFigure,string>> Connect() => _figures.Connect();
         public IEnumerable<IFigure> Figures => _figures.Items;
 
         // IObservable<IChangeSet<IFigure, string>>
@@ -70,7 +69,7 @@ namespace GraphicEditor
         public void AddFigure(IFigure figure)
         {
             if (figure == null) throw new ArgumentNullException(nameof(figure));
-            _figures.Add(figure);
+            _figures.AddOrUpdate(figure);
         }
 
         public void RemoveFigure(IFigure figure)
@@ -82,7 +81,7 @@ namespace GraphicEditor
 
         public void RemoveFigures(IEnumerable<IFigure> figures)
         {
-            _figures.RemoveMany(figures);
+            _figures.RemoveKeys(figures.Select(f=>f.Name));
             _selectedFigures.RemoveMany(figures);
         }
 
@@ -143,7 +142,7 @@ namespace GraphicEditor
             double x2 = double.Parse(lineMatch.Groups["x2"].Value);
             double y2 = double.Parse(lineMatch.Groups["y2"].Value);
 
-            var line = FigureFabric.CreateFigure("Line") as Line;
+            var line = FigureFabric.CreateFigure("Line") ;
             line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
                     {"First", new PointF { X = (float)x1, Y = (float)y1 }},
@@ -159,7 +158,7 @@ namespace GraphicEditor
             double cy = double.Parse(circleMatch.Groups["cy"].Value);
             double r = double.Parse(circleMatch.Groups["r"].Value);
 
-            var circle = FigureFabric.CreateFigure("Circle") as Circle;
+            var circle = FigureFabric.CreateFigure("Circle") ;
             circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
                     {"Center", new PointF {X =(float) cx, Y =(float) cy}},

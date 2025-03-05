@@ -1,14 +1,10 @@
-﻿using System;
+
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive;
-using Avalonia;
 using DynamicData;
-using DynamicData.Binding;
+using DynamicData.Alias;
 using ReactiveUI;
-using Avalonia.Input;
-using GraphicEditor.Views;
-using System.Reactive.Linq;
 
 namespace GraphicEditor.ViewModels
 {
@@ -19,6 +15,7 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
         // public ReactiveCommand<Point, Unit> CanvasClickCommand { get; }
 
+        private readonly ReadOnlyObservableCollection<string> _readonlyFiguresNames;
         private readonly ReadOnlyObservableCollection<IFigure> _readonlyFigures;
         public ReadOnlyObservableCollection<IFigure> ReadonlyFigures => _readonlyFigures;
         private readonly ReadOnlyObservableCollection<IFigure> _readonlySelectedFigures;
@@ -31,6 +28,8 @@ namespace GraphicEditor.ViewModels
             // Подключение реактивных источников
             _figureService.Connect()
                 .Bind(out _readonlyFigures)
+                .Subscribe();
+            _figureService.Connect().Select(f=>f.Name).SortAndBind(out _readonlyFiguresNames)
                 .Subscribe();
 
             _figureService.ConnectSelections()

@@ -93,7 +93,9 @@
                             HorizontalAlignment="Left"
                             Margin="11"
                             Spacing="10">
-                    <Button><Image Source="{SvgImage /Assets/mdi_pen.svg}" Stretch="None"/></Button>
+                    <Button>
+                        <Image Source="{SvgImage /Assets/mdi_pen.svg}" Stretch="None"/>
+                    </Button>
                     <Button><Image Source="{SvgImage /Assets/solar_eraser-bold.svg}" Stretch="None"/></Button>
                     <Button><Image Source="{SvgImage /Assets/solar_text-bold.svg}" Stretch="None"/></Button>
                     <Button><Image Source="{SvgImage /Assets/ic_baseline-highlight-alt.svg}" Stretch="None"/></Button>
@@ -172,11 +174,13 @@
                 Spacing="10">
     </StackPanel>
 
-    <Canvas x:Name="MainCanvas"
+    
+            <Canvas x:Name="MainCanvas"
             Grid.Column="1"
             Background="pink"
             Width="1000"  
-            Height="600"  
+            Height="600" 
+            PointerPressed="Canvas_PointerPressed"
             />  
 </Grid>
  </Grid>

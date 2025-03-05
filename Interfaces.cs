@@ -38,7 +38,7 @@ namespace GraphicEditor
     public interface ILogic
     {
         public void ClearAll();        
-        public IObservable<IChangeSet<IFigure>> Connect();
+        public IObservable<IChangeSet<IFigure, string>> Connect();
         public IObservable<IChangeSet<IFigure>> ConnectSelections();
         IEnumerable<IFigure> Figures { get; } //список всех фигур
         void Save(string FilePath, string FileFormat);
