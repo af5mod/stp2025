@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Drawing;
-using GraphicEditor;
 
 namespace GraphicEditor
 {
@@ -58,7 +57,19 @@ namespace GraphicEditor
             End = new PointF(center.X + (End.X - center.X) * dr, center.Y + (End.Y - center.Y) * dr);
         }
 
-        public void Reflection(PointF a, PointF b) => throw new NotImplementedException();
+        public void Reflection(PointF a, PointF b)
+        {
+            float dx = a.X - b.X;
+            float dy = a.Y - b.Y;
+            float d = dx * dx + dy * dy;
+            
+            float x = ((Start.X * dx + Start.Y * dy - a.X * dx - a.Y * dy) * dx + a.X * d) / d * 2 - Start.X;
+            float y = ((Start.X * dx + Start.Y * dy - a.X * dx - a.Y * dy) * dy + a.Y * d) / d * 2 - Start.Y;
+            Start = new PointF { X = x, Y = y };
+            x = ((End.X * dx + End.Y * dy - a.X * dx - a.Y * dy) * dx + a.X * d) / d * 2 - End.X;
+            y = ((End.X * dx + End.Y * dy - a.X * dx - a.Y * dy) * dy + a.Y * d) / d * 2 - End.Y;
+            End = new PointF { X = x, Y = y };
+        }
 
         public IFigure Clone()
         {
