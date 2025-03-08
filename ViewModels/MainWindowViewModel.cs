@@ -10,6 +10,20 @@ namespace GraphicEditor.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private double _selectedShapeWidth;
+    private double _selectedShapeHeight;
+
+    public double SelectedShapeWidth
+    {
+        get => _selectedShapeWidth;
+        set => this.RaiseAndSetIfChanged(ref _selectedShapeWidth, Math.Round(value, 0));  // округление до целого
+    }
+
+    public double SelectedShapeHeight
+    {
+        get => _selectedShapeHeight;
+        set => this.RaiseAndSetIfChanged(ref _selectedShapeHeight, Math.Round(value, 0));  // округление до целого
+    }
         private readonly ILogic _figureService;
         public ReactiveCommand<Unit, Unit> ClearAllCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }

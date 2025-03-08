@@ -5,14 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1600" d:DesignHeight="900"
-		Height="900"		Width="1600"
-		x:Class="GraphicEditor.Views.MainWindow"
+        Height="900" Width="1600"
+        x:Class="GraphicEditor.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="GraphicEditor">
 
     <Grid Background="#EBEBEB">
-        <!-- две колонки тту: центральная область (левая) и правая панель (фиксированной ширины) -->
+        <!-- две колонки: центральная область (левая) и правая панель (фиксированной ширины) -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="300"/>
@@ -26,7 +26,7 @@
                 <RowDefinition Height="Auto"/>  
             </Grid.RowDefinitions>
 
-            <!-- верх меню-->
+            <!-- верх меню -->
             <DockPanel Grid.Row="0" LastChildFill="True" Background="#D9D9D9">
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="Файл">
@@ -68,14 +68,21 @@
                 <!-- небольшой отступ между кнопками и ползунками -->
                 <StackPanel Width="20"/>
 
-                <!-- ползунки -->
+                <!-- ползунки с подписями -->
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider.Value,StringFormat='{}{0:0}'}"/>
-                    <Slider Foreground="Black"  x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="50"/>
+                    <!-- Подписи слайдеров -->
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Ширина" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedShapeWidth, StringFormat='{}{0:0}'}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <Slider x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="{Binding SelectedShapeWidth, Mode=TwoWay}" />
 
 
-                    <TextBlock VerticalAlignment="Center" Text="{Binding #slider2.Value,StringFormat='{}{0:0}'}"/>
-                    <Slider x:Name="slider2" Width="120" Minimum="0" Maximum="100" Value="50"/>
+<StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Высота" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedShapeHeight, StringFormat='{}{0:0}'}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <Slider x:Name="slider2" Width="120" Minimum="0" Maximum="100" Value="{Binding SelectedShapeHeight, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>
 
@@ -101,12 +108,11 @@
                     <Button><Image Source="{SvgImage /Assets/ic_baseline-highlight-alt.svg}" Stretch="None"/></Button>
                     <Button><Image Source="{SvgImage /Assets/fluent_lasso-20-filled.svg}" Stretch="None"/></Button>
                 </StackPanel>
-
-                
             </Grid>
 
         </Grid>
-        <!-- пРАВАЯ ПАНЕЛЬ  -->
+
+        <!-- правая панель -->
         <Border Grid.Column="1" Background="White">
             <Grid>
                 <Grid.RowDefinitions>
@@ -125,7 +131,6 @@
                         <Button><Image Source="{SvgImage /Assets/Rotate Right.svg}" Stretch="None"/></Button>
                         <Button><Image Source="{SvgImage /Assets/Rotate Right-2.svg}" Stretch="None"/></Button>
                         <Button><Image Source="{SvgImage /Assets/Replace.svg}" Stretch="None"/></Button>
-                    
                     </StackPanel>
 
                     <TextBlock Text="Отражение:" Margin="0,8,0,0" FontWeight="Bold"/>
@@ -135,7 +140,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- (2) фигуры аотом свг будет -->
+<!-- (2) фигуры -->
                 <StackPanel Grid.Row="1" Orientation="Vertical" Margin="8" Spacing="8">
                     <TextBlock Text="Фигуры" FontWeight="Bold"/>
                     <WrapPanel>
@@ -144,8 +149,8 @@
                         <Button Content="—" Margin="4"/>
                         <Button Content="★" Margin="4"/>
                         <Button Content="■" Margin="4"/>
-                        <Button Content="♥" Margin="4"/>
-                        <Button Content="☁" Margin="4"/>
+                        <Button Content="♥️" Margin="4"/>
+                        <Button Content="☁️" Margin="4"/>
                     </WrapPanel>
                 </StackPanel>
 
@@ -154,34 +159,32 @@
                         <ColorView Width="400" Height="500"/>
                     </Viewbox>
                 </StackPanel>
-                
+
             </Grid>
         </Border>
 
-
-
+        <!-- Центральная область для холста -->
         <Grid Grid.Row="2">
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto"/>
-        <ColumnDefinition Width="*"/>
-    </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-    <StackPanel Grid.Column="0"
-                Orientation="Vertical"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                Margin="11"
-                Spacing="10">
-    </StackPanel>
+            <StackPanel Grid.Column="0"
+                        Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="11"
+                        Spacing="10">
+            </StackPanel>
 
-    
             <Canvas x:Name="MainCanvas"
-            Grid.Column="1"
-            Background="pink"
-            Width="1000"  
-            Height="600" 
-            PointerPressed="Canvas_PointerPressed"
+                    Grid.Column="1"
+                    Background="pink"
+                    Width="1000"  
+                    Height="600" 
+                    PointerPressed="Canvas_PointerPressed"
             />  
-</Grid>
- </Grid>
- </Window>
+        </Grid>
+    </Grid>
+</Window>
