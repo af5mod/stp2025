@@ -141,7 +141,7 @@
                 </StackPanel>
 
 <!-- (2) фигуры -->
-                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="8" Spacing="8">
+                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="8" Spacing="8">
                     <TextBlock Text="Фигуры" FontWeight="Bold"/>
                     <WrapPanel>
                         <Button Content="○" Margin="4"/>
@@ -154,7 +154,9 @@
                     </WrapPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Row="2" Margin="8" Spacing="8">
+                <ListBox Grid.Row="1" ItemsSource="{Binding ReadonlyFigures}" />
+
+                <StackPanel Grid.Row="3" Margin="8" Spacing="8">
                     <Viewbox Stretch="Uniform">
                         <ColorView Width="400" Height="500"/>
                     </Viewbox>

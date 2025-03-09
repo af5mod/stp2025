@@ -1,6 +1,8 @@
-
+﻿
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Reactive;
 using DynamicData;
 using DynamicData.Alias;
@@ -11,19 +13,19 @@ namespace GraphicEditor.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private double _selectedShapeWidth;
-    private double _selectedShapeHeight;
+        private double _selectedShapeHeight;
 
-    public double SelectedShapeWidth
-    {
-        get => _selectedShapeWidth;
-        set => this.RaiseAndSetIfChanged(ref _selectedShapeWidth, Math.Round(value, 0));  // округление до целого
-    }
+        public double SelectedShapeWidth
+        {
+            get => _selectedShapeWidth;
+            set => this.RaiseAndSetIfChanged(ref _selectedShapeWidth, Math.Round(value, 0));  // округление до целого
+        }
 
-    public double SelectedShapeHeight
-    {
-        get => _selectedShapeHeight;
-        set => this.RaiseAndSetIfChanged(ref _selectedShapeHeight, Math.Round(value, 0));  // округление до целого
-    }
+        public double SelectedShapeHeight
+        {
+            get => _selectedShapeHeight;
+            set => this.RaiseAndSetIfChanged(ref _selectedShapeHeight, Math.Round(value, 0));  // округление до целого
+        }
         private readonly ILogic _figureService;
         public ReactiveCommand<Unit, Unit> ClearAllCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
@@ -39,11 +41,26 @@ namespace GraphicEditor.ViewModels
         {
             _figureService = new FigureService();
 
+            // var circle = FigureFabric.CreateFigure("Circle") ;
+            // circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+            //     {
+            //         {"Center", new PointF {X =(float) 1.0, Y =(float) 1.0}},
+            //         {"RadiusPoint", new PointF {X =(float)1.0 + (float)2.0, Y =(float) 1.0}}
+            //     });
+
+            // _figureService.AddFigure(circle);
+
+            var line = new Line(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
+            _figureService.AddFigure(line);            
+            
+            var circle = new Circle(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
+            _figureService.AddFigure(circle);
+
             // Подключение реактивных источников
             _figureService.Connect()
                 .Bind(out _readonlyFigures)
                 .Subscribe();
-            _figureService.Connect().Select(f=>f.Name).SortAndBind(out _readonlyFiguresNames)
+            _figureService.Connect().Select(f => f.Name).SortAndBind(out _readonlyFiguresNames)
                 .Subscribe();
 
             _figureService.ConnectSelections()
