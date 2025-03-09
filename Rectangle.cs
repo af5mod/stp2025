@@ -118,16 +118,13 @@ namespace GraphicEditor
 
         public bool IsIn(PointF point, float eps)
         {
-            bool inside = false;
-            int j = corners.Count - 1;
-            for (int i = 0; i < corners.Count; i++)
-            {
-                if (((corners[i].Y > point.Y) != (corners[j].Y > point.Y)) &&
-                    (point.X < (corners[j].X - corners[i].X) * (point.Y - corners[i].Y) / (corners[j].Y - corners[i].Y) + corners[i].X))
-                    inside = !inside;
-                j = i;
-            }
-            return inside;
+            float minX = Math.Min(corners[0].X, corners[2].X);
+            float maxX = Math.Max(corners[0].X, corners[2].X);
+            float minY = Math.Min(corners[0].Y, corners[2].Y);
+            float maxY = Math.Max(corners[0].Y, corners[2].Y);
+
+            return point.X >= minX - eps && point.X <= maxX + eps &&
+                   point.Y >= minY - eps && point.Y <= maxY + eps;
         }
 
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
