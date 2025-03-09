@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,21 +40,30 @@ namespace GraphicEditor.ViewModels
         public MainWindowViewModel()
         {
             _figureService = new FigureService();
+            var line = FigureFabric.CreateFigure("Line") ;
 
-            // var circle = FigureFabric.CreateFigure("Circle") ;
-            // circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
-            //     {
-            //         {"Center", new PointF {X =(float) 1.0, Y =(float) 1.0}},
-            //         {"RadiusPoint", new PointF {X =(float)1.0 + (float)2.0, Y =(float) 1.0}}
-            //     });
+             line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+                 {
+                     {"Start", new PointF { X = 1F, Y = 1F }},
+                     {"End", new PointF {X =2F, Y =2F}}
+                 });
 
-            // _figureService.AddFigure(circle);
+            _figureService.AddFigure(line);
+            var circle = FigureFabric.CreateFigure("Circle");
 
-            var line = new Line(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
-            _figureService.AddFigure(line);            
-            
-            var circle = new Circle(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
+            circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+                 {
+                     {"Center", new PointF { X = 1F, Y = 1F }},
+                     {"PointOnCircle", new PointF {X =2F, Y =2F}}
+                 });
+
             _figureService.AddFigure(circle);
+
+            //var line = new Line(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
+            //.AddFigure(line);            
+
+            // var circle = new Circle(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
+            // _figureService.AddFigure(circle);
 
             // Подключение реактивных источников
             _figureService.Connect()

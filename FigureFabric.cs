@@ -6,15 +6,16 @@ using System.IO;
 using System.Linq;
 using System.Drawing;
 using GraphicEditor;
+using System.Collections;
 
 namespace GraphicEditor
 {
     public class FigureMetadata
     {
-        public string Name { get; }
-        public int NumberOfDoubleParameters { get; }
-        public int NumberOfPointParameters { get; }
-        public IEnumerable<string> PointParametersNames { get; }
+        public string Name { get; set; }
+        public int NumberOfDoubleParameters { get; set; }
+        public int NumberOfPointParameters { get; set; }
+        public IEnumerable<string> PointParametersNames { get; set; }
         public IEnumerable<string> DoubleParametersNames { get; }
     }
 
@@ -29,7 +30,7 @@ namespace GraphicEditor
 
         static FigureFabric()
         {
-            var assemblies = new[] { typeof(Circle).Assembly };
+            var assemblies = new[] { typeof(Line).Assembly, typeof(Circle).Assembly };
             var conf = new ContainerConfiguration();
             try
             {
@@ -46,30 +47,47 @@ namespace GraphicEditor
         }
 
         public static IEnumerable<string> AvailableFigures => info.AvailableFigures.Select(f => f.Metadata.Name);
+        
         public static IEnumerable<FigureMetadata> AvailableMetadata => info.AvailableFigures.Select(f => f.Metadata);
 
         public static IFigure CreateFigure(string FigureName)
         {
-            return info.AvailableFigures.First(f => f.Metadata.Name == FigureName).Value;
+            var figure = info.AvailableFigures.FirstOrDefault(f =>
+                string.Equals(f.Metadata.Name, FigureName, StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (figure == null)
+            {
+                throw new ArgumentException($"Фигура '{FigureName}' не зарегистрирована.");
+            }
+
+            return figure.Value;
         }
     }
 
     [Export(typeof(IFigure))]
-    [ExportMetadata(nameof(FigureMetadata.Name), nameof(Line))]
+    [ExportMetadata(nameof(FigureMetadata.Name), "Line")]
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
-    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "First", "Second" })]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Start", "End" })]
     public class Line : IFigure
     {
         public PointF Start { get; private set; }
         public PointF End { get; private set; }
         public PointF Center => new PointF { X = (Start.X + End.X) / 2, Y = (Start.Y + End.Y) / 2 };
+        public Line()
+        {
+            // Инициализация по умолчанию (если требуется)
+            Start = new PointF(1f, 1f);
+            End = new PointF(2f, 2f);
+        }
+
         public Line(PointF start, PointF end)
         {
             Start = start;
             End = end;
         }
-        public string Name => nameof(Line);
+        public string Name => "Line";
 
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -119,12 +137,16 @@ namespace GraphicEditor
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
-        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
+        {
+            Start = pointParams["Start"];
+            End = pointParams["End"];
+        }
 
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams)
         {
-            Start = pointParams["First"];
-            End = pointParams["Second"];
+            Start = pointParams["Start"];
+            End = pointParams["End"];
         }
 
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
@@ -132,13 +154,21 @@ namespace GraphicEditor
     }
 
     [Export(typeof(IFigure))]
-    [ExportMetadata("Name", nameof(Circle))]
+    [ExportMetadata(nameof(FigureMetadata.Name), "Circle")]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Center", "PointOnCircle" })]
     public class Circle : IFigure
     {
         public PointF Center { get; set; }
         public PointF PointOnCircle { get; set; }
         public string Name => "Circle";
-
+        public Circle()
+        {
+            // Инициализация по умолчанию (если требуется)
+            Center = new PointF(1f, 1f);
+            PointOnCircle = new PointF(2f, 2f);
+        }
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Circle(PointF center, PointF pointOnCircle)
@@ -216,7 +246,11 @@ namespace GraphicEditor
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
-        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
+        {
+            Center = pointParams["Center"];
+            PointOnCircle = pointParams["PointOnCircle"];
+        }
 
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
 
