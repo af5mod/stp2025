@@ -14,6 +14,8 @@ using Avalonia.Input;
 using System.Reactive.Linq;
 using DynamicData.Kernel;
 using System.Collections.ObjectModel;
+using Avalonia.Controls.ApplicationLifetimes;
+using Tmds.DBus.Protocol;
 
 namespace GraphicEditor
 {

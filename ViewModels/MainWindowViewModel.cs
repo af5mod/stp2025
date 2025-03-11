@@ -1,8 +1,9 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Linq;
 using System.Reactive;
 using DynamicData;
 using DynamicData.Alias;
@@ -31,7 +32,9 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
         // public ReactiveCommand<Point, Unit> CanvasClickCommand { get; }
 
+        public ObservableCollection<FigureFactoryViewModel> FigureFactories { get; } = [];
         private readonly ReadOnlyObservableCollection<string> _readonlyFiguresNames;
+        public ReadOnlyObservableCollection<string> ReadonlyFigureNames => _readonlyFiguresNames;
         private readonly ReadOnlyObservableCollection<IFigure> _readonlyFigures;
         public ReadOnlyObservableCollection<IFigure> ReadonlyFigures => _readonlyFigures;
         private readonly ReadOnlyObservableCollection<IFigure> _readonlySelectedFigures;
@@ -40,24 +43,29 @@ namespace GraphicEditor.ViewModels
         public MainWindowViewModel()
         {
             _figureService = new FigureService();
-            var line = FigureFabric.CreateFigure("Line") ;
+            foreach (var figureName in FigureFabric.AvailableFigures)
+            {
+                FigureFactories.Add(new() { FigureService = _figureService, FigureType = figureName, MainWindowViewModel = this });
+            }
 
-             line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
-                 {
-                     {"Start", new PointF { X = 1F, Y = 1F }},
-                     {"End", new PointF {X =2F, Y =2F}}
-                 });
+            // var line = FigureFabric.CreateFigure("Line");
 
-            _figureService.AddFigure(line);
-            var circle = FigureFabric.CreateFigure("Circle");
+            // line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+            //      {
+            //          {"Start", new PointF { X = 1F, Y = 1F }},
+            //          {"End", new PointF {X =2F, Y =2F}}
+            //      });
 
-            circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
-                 {
-                     {"Center", new PointF { X = 1F, Y = 1F }},
-                     {"PointOnCircle", new PointF {X =2F, Y =2F}}
-                 });
+            // _figureService.AddFigure(line);
+            // var circle = FigureFabric.CreateFigure("Circle");
 
-            _figureService.AddFigure(circle);
+            // circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+            //      {
+            //          {"Center", new PointF { X = 1F, Y = 1F }},
+            //          {"PointOnCircle", new PointF {X =2F, Y =2F}}
+            //      });
+
+            // _figureService.AddFigure(circle);
 
             //var line = new Line(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
             //.AddFigure(line);            
@@ -69,6 +77,7 @@ namespace GraphicEditor.ViewModels
             _figureService.Connect()
                 .Bind(out _readonlyFigures)
                 .Subscribe();
+
             _figureService.Connect().Select(f => f.Name).SortAndBind(out _readonlyFiguresNames)
                 .Subscribe();
 

@@ -22,7 +22,7 @@ namespace GraphicEditor
         void Move(PointF vector);
         void Rotate(PointF center, float angle);
         PointF Center { get; }
-        string Name { get; }
+        string Name { get; set; }
         void Scale(float dx, float dy);
         void Scale(PointF center, float dr);
         void Reflection(PointF a, PointF b);

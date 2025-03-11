@@ -44,24 +44,28 @@ namespace GraphicEditor
             var cont = conf.CreateContainer();
             info = new ImportInfo();
             cont.SatisfyImports(info);
+
+            foreach (var item in info.AvailableFigures)
+            {
+                Console.WriteLine(item.Value);
+            }
         }
 
         public static IEnumerable<string> AvailableFigures => info.AvailableFigures.Select(f => f.Metadata.Name);
-        
+
         public static IEnumerable<FigureMetadata> AvailableMetadata => info.AvailableFigures.Select(f => f.Metadata);
 
         public static IFigure CreateFigure(string FigureName)
         {
-            var figure = info.AvailableFigures.FirstOrDefault(f =>
+            var lazyFigure = info.AvailableFigures.FirstOrDefault(f =>
                 string.Equals(f.Metadata.Name, FigureName, StringComparison.OrdinalIgnoreCase)
-            );
+                ) ?? throw new ArgumentException($"Фигура '{FigureName}' не зарегистрирована.");
 
-            if (figure == null)
-            {
-                throw new ArgumentException($"Фигура '{FigureName}' не зарегистрирована.");
-            }
+            var figure = lazyFigure.Value.Clone();
 
-            return figure.Value;
+            figure.Name = $"{FigureName} {Random.Shared.Next(100)}";
+
+            return figure;
         }
     }
 
@@ -80,16 +84,17 @@ namespace GraphicEditor
             // Инициализация по умолчанию (если требуется)
             Start = new PointF(1f, 1f);
             End = new PointF(2f, 2f);
+            Name = "Line";
         }
 
         public Line(PointF start, PointF end)
         {
             Start = start;
             End = end;
+            Name = "Line";
         }
-        public string Name => "Line";
-
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Name { get; set; }
 
         public void Move(PointF vector)
         {
@@ -162,19 +167,21 @@ namespace GraphicEditor
     {
         public PointF Center { get; set; }
         public PointF PointOnCircle { get; set; }
-        public string Name => "Circle";
         public Circle()
         {
             // Инициализация по умолчанию (если требуется)
             Center = new PointF(1f, 1f);
             PointOnCircle = new PointF(2f, 2f);
+            Name = "Circle";
         }
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Name { get; set; }
 
         public Circle(PointF center, PointF pointOnCircle)
         {
             Center = center;
             PointOnCircle = pointOnCircle;
+            Name = "Circle";
         }
 
         public void Move(PointF vector)
@@ -272,6 +279,7 @@ namespace GraphicEditor
                 new PointF(topLeft.X + width, topLeft.Y + height),
                 new PointF(topLeft.X, topLeft.Y + height)
             };
+            Name = "Rectangle";
         }
 
         public Rectangle(List<PointF> corners) // конструктор по 4 точкам
@@ -279,9 +287,8 @@ namespace GraphicEditor
             if (corners == null || corners.Count != 4)
                 throw new ArgumentException("Для прямоугольника необходимо задать 4 вершины.");
             this.corners = new List<PointF>(corners);
+            Name = "Rectangle";
         }
-
-        public string Name => "Rectangle";
 
         public PointF Center
         {
@@ -298,6 +305,7 @@ namespace GraphicEditor
         }
 
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Name { get; set; }
 
         public void Move(PointF vector)
         {

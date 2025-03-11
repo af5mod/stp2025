@@ -118,9 +118,12 @@
                 <Grid.RowDefinitions>
                     <!-- (1) поворот/отражение -->
                     <RowDefinition Height="Auto"/>
-                    <!-- (2) фигуры -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- (2) список фигур -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- (3) фигуры -->
                     <RowDefinition Height="*"/>
-                    <!-- (3) панель выбора цвета -->
+                    <!-- (4) панель выбора цвета -->
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -140,10 +143,27 @@
                     </StackPanel>
                 </StackPanel>
 
-<!-- (2) фигуры -->
-                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="8" Spacing="8">
+                <!-- (2) список фигур -->
+                <Border Grid.Row="1" Height="100">
+                  <ScrollViewer>
+                    <ListBox ItemsSource="{Binding ReadonlyFigureNames}" />
+                  </ScrollViewer>
+                </Border>
+
+                <GridSplitter Grid.Row="2" ResizeDirection="Rows"/>
+
+                <!-- (3) фигуры -->
+                <StackPanel Grid.Row="3" Orientation="Vertical" Margin="8" Spacing="8">
                     <TextBlock Text="Фигуры" FontWeight="Bold"/>
-                    <WrapPanel>
+                    <ItemsControl ItemsSource="{Binding FigureFactories}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Margin="2" Content="{Binding FigureType, StringFormat='Create {0}'}" Command="{Binding CreateAndAdd}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- <WrapPanel>
                         <Button Content="○" Margin="4"/>
                         <Button Content="△" Margin="4"/>
                         <Button Content="—" Margin="4"/>
@@ -151,12 +171,11 @@
                         <Button Content="■" Margin="4"/>
                         <Button Content="♥️" Margin="4"/>
                         <Button Content="☁️" Margin="4"/>
-                    </WrapPanel>
+                    </WrapPanel> -->
                 </StackPanel>
 
-                <ListBox Grid.Row="1" ItemsSource="{Binding ReadonlyFigures}" />
-
-                <StackPanel Grid.Row="3" Margin="8" Spacing="8">
+                <!-- (4) цвет -->
+                <StackPanel Grid.Row="4" Margin="8" Spacing="8">
                     <Viewbox Stretch="Uniform">
                         <ColorView Width="400" Height="500"/>
                     </Viewbox>
