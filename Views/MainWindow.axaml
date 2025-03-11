@@ -1,251 +1,304 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:GraphicEditor.ViewModels"
-        xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg.Skia"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1600" d:DesignHeight="900"
-        Height="900" Width="1600"
-        x:Class="GraphicEditor.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="GraphicEditor">
+<Window
+    x:Class="GraphicEditor.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:m="using:GraphicEditor.IFigure"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg.Skia"
+    xmlns:vm="using:GraphicEditor.ViewModels"
+    Title="GraphicEditor"
+    Width="1600"
+    Height="900"
+    d:DesignHeight="900"
+    d:DesignWidth="1600"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+
+    <!-- <Window.DataTemplates>
+        <DataTemplate DataType="vm:FigureViewModel">
+
+        </DataTemplate>
+    </Window.DataTemplates>-->
+
+
 
     <Grid Background="#EBEBEB">
-        <!-- две колонки: центральная область (левая) и правая панель (фиксированной ширины) -->
+        <!--  две колонки: центральная область (левая) и правая панель (фиксированной ширины)  -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="500" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- меню -->
-                <RowDefinition Height="Auto"/> <!-- кнопки и ползунки -->
-                <RowDefinition Height="*"/>    <!-- центральная область -->
-                <RowDefinition Height="Auto"/>  
+                <RowDefinition Height="Auto" />
+                <!--  меню  -->
+                <RowDefinition Height="Auto" />
+                <!--  кнопки и ползунки  -->
+                <RowDefinition Height="*" />
+                <!--  центральная область  -->
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- верх меню -->
-            <DockPanel Grid.Row="0" LastChildFill="True" Background="#D9D9D9">
+            <!--  верх меню  -->
+            <DockPanel Grid.Row="0" Background="#D9D9D9" LastChildFill="True">
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="Файл">
-                        <MenuItem Header="Новый"/>
-                        <MenuItem Header="Открыть"/>
-                        <MenuItem Header="Сохранить"/>
+                        <MenuItem Header="Новый" />
+                        <MenuItem Header="Открыть" />
+                        <MenuItem Header="Сохранить" />
                     </MenuItem>
-                    <MenuItem Header="Изменить"/>
-                    <MenuItem Header="Вид"/>
+                    <MenuItem Header="Изменить" />
+                    <MenuItem Header="Вид" />
                 </Menu>
             </DockPanel>
 
-            <!-- (2) КНОПКИ + ПОЛЗУНКИ -->
-            <StackPanel Grid.Row="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        Spacing="12"
-                        Margin="8,4">
-                
-                <!-- группа с тремя кнопками -->
+            <!--  (2) КНОПКИ + ПОЛЗУНКИ  -->
+            <StackPanel
+                Grid.Row="1"
+                Margin="8,4"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="12">
+
+                <!--  группа с тремя кнопками  -->
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button>
                         <ContentControl>
-                            <Image Source="{SvgImage /Assets/pajamas_go-back.svg}"/>
+                            <Image Source="{SvgImage /Assets/pajamas_go-back.svg}" />
                         </ContentControl>
                     </Button>
                     <Button>
                         <ContentControl>
-                            <Image Source="{SvgImage /Assets/pajamas_go-back-2.svg}"/>
+                            <Image Source="{SvgImage /Assets/pajamas_go-back-2.svg}" />
                         </ContentControl>
                     </Button>
                     <Button>
                         <ContentControl>
-                            <Image Source="{SvgImage /Assets/Save.svg}"/>
+                            <Image Source="{SvgImage /Assets/Save.svg}" />
                         </ContentControl>
                     </Button>
                 </StackPanel>
 
-                <!-- небольшой отступ между кнопками и ползунками -->
-                <StackPanel Width="20"/>
+                <!--  небольшой отступ между кнопками и ползунками  -->
+                <StackPanel Width="20" />
 
-                
-                <!-- ползунки с подписями -->
+
+                <!--  ползунки с подписями  -->
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <!-- Подписи слайдеров -->
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Прозрачность" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding SelectedShapeWidth, StringFormat='{}{0:0}'}" HorizontalAlignment="Center"/>
+                    <!--  Подписи слайдеров  -->
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Center" Text="Прозрачность" />
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedShapeWidth, StringFormat='{}{0:0}'}" />
                     </StackPanel>
 
-                    <Slider x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="{Binding SelectedShapeWidth, Mode=TwoWay}" />
+                    <Slider
+                        x:Name="slider"
+                        Width="120"
+                        Maximum="100"
+                        Minimum="0"
+                        Value="{Binding SelectedShapeWidth, Mode=TwoWay}" />
 
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Толщина" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding SelectedShapeHeight, StringFormat='{}{0:0}'}" HorizontalAlignment="Center"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Center" Text="Толщина" />
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedShapeHeight, StringFormat='{}{0:0}'}" />
                     </StackPanel>
-                    <Slider x:Name="slider2" Width="120" Minimum="0" Maximum="100" Value="{Binding SelectedShapeHeight, Mode=TwoWay}" />
+                    <Slider
+                        x:Name="slider2"
+                        Width="120"
+                        Maximum="100"
+                        Minimum="0"
+                        Value="{Binding SelectedShapeHeight, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>
 
-            <!-- основная область: левый блок (инструменты) + центр (холст) -->
+            <!--  основная область: левый блок (инструменты) + центр (холст)  -->
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- левый столбец с вертикальным списком инструментов -->
-                <StackPanel Grid.Column="0"
-                            Orientation="Vertical"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Left"
-                            Margin="11"
-                            Spacing="10">
+                <!--  левый столбец с вертикальным списком инструментов  -->
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="11"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical"
+                    Spacing="10">
                     <Button>
-                        <Image Source="{SvgImage /Assets/mdi_pen.svg}" Stretch="None"/>
+                        <Image Source="{SvgImage /Assets/mdi_pen.svg}" Stretch="None" />
                     </Button>
-                    <Button><Image Source="{SvgImage /Assets/solar_eraser-bold.svg}" Stretch="None"/></Button>
-                    <Button><Image Source="{SvgImage /Assets/solar_text-bold.svg}" Stretch="None"/></Button>
-                    <Button><Image Source="{SvgImage /Assets/ic_baseline-highlight-alt.svg}" Stretch="None"/></Button>
-                    <Button><Image Source="{SvgImage /Assets/fluent_lasso-20-filled.svg}" Stretch="None"/></Button>
+                    <Button>
+                        <Image Source="{SvgImage /Assets/solar_eraser-bold.svg}" Stretch="None" />
+                    </Button>
+                    <Button>
+                        <Image Source="{SvgImage /Assets/solar_text-bold.svg}" Stretch="None" />
+                    </Button>
+                    <Button>
+                        <Image Source="{SvgImage /Assets/ic_baseline-highlight-alt.svg}" Stretch="None" />
+                    </Button>
+                    <Button>
+                        <Image Source="{SvgImage /Assets/fluent_lasso-20-filled.svg}" Stretch="None" />
+                    </Button>
                 </StackPanel>
             </Grid>
 
         </Grid>
 
-        <!-- правая панель -->
+        <!--  правая панель  -->
         <Border Grid.Column="1" Background="White">
             <Grid>
                 <Grid.RowDefinitions>
-                    <!-- (1) поворот/отражение -->
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <!-- (2) список фигур -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- (3) фигуры -->
-                    <RowDefinition Height="*"/>
-                    <!-- (4) панель выбора цвета -->
-                    <RowDefinition Height="Auto"/>
+                    <!--  (1) поворот/отражение  -->
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <!--  (2) список фигур  -->
+                    <RowDefinition Height="Auto" />
+                    <!--  (3) фигуры  -->
+                    <RowDefinition Height="Auto" />
+                    <!--  (4) панель выбора цвета  -->
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- (1) поворот и отражение -->
-                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="8" Spacing="4">
-                    <TextBlock Text="Поворот:" FontWeight="Bold"/>
+                <!--  (1) поворот и отражение  -->
+                <StackPanel Grid.Row="0" Margin="8" Orientation="Vertical" Spacing="4">
+                    <TextBlock FontWeight="Bold" Text="Поворот:" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button><Image Source="{SvgImage /Assets/Rotate Right.svg}" Stretch="None"/></Button>
-                        <Button><Image Source="{SvgImage /Assets/Rotate Right-2.svg}" Stretch="None"/></Button>
-                        <Button><Image Source="{SvgImage /Assets/Replace.svg}" Stretch="None"/></Button>
+                        <Button>
+                            <Image Source="{SvgImage /Assets/Rotate Right.svg}" Stretch="None" />
+                        </Button>
+                        <Button>
+                            <Image Source="{SvgImage /Assets/Rotate Right-2.svg}" Stretch="None" />
+                        </Button>
+                        <Button>
+                            <Image Source="{SvgImage /Assets/Replace.svg}" Stretch="None" />
+                        </Button>
                     </StackPanel>
 
-                    <TextBlock Text="Отражение:" Margin="0,8,0,0" FontWeight="Bold"/>
+                    <TextBlock Margin="0,8,0,0" FontWeight="Bold" Text="Отражение:" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button><Image Source="{SvgImage /Assets/material-symbols_flip.svg}" Stretch="None"/></Button>
-                        <Button><Image Source="{SvgImage /Assets/material-symbols_flip-2.svg}" Stretch="None"/></Button>
+                        <Button>
+                            <Image Source="{SvgImage /Assets/material-symbols_flip.svg}" Stretch="None" />
+                        </Button>
+                        <Button>
+                            <Image Source="{SvgImage /Assets/material-symbols_flip-2.svg}" Stretch="None" />
+                        </Button>
                     </StackPanel>
                 </StackPanel>
 
-                <!-- (2) список фигур -->
-                <Border Grid.Row="1" Height="100">
-                  <ScrollViewer>
-                    <ListBox ItemsSource="{Binding ReadonlyFigureNames}" />
-                  </ScrollViewer>
+                <!--  (2) список фигур  -->
+                <Border Grid.Row="4">
+                    <ScrollViewer>
+                        <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigureNames}" SelectedItem="{Binding SelectedFigureName}" />
+                    </ScrollViewer>
                 </Border>
 
-                <GridSplitter Grid.Row="2" ResizeDirection="Rows"/>
+                <GridSplitter Grid.Row="3" ResizeDirection="Rows" />
 
-                <!-- (3) фигуры -->
-                <StackPanel Grid.Row="3" Orientation="Vertical" Margin="8" Spacing="8">
-                    <TextBlock Text="Фигуры" FontWeight="Bold"/>
+                <!--  (3) фигуры  -->
+                <StackPanel Grid.Row="1" Margin="8" Orientation="Vertical" Spacing="8">
+                    <TextBlock FontWeight="Bold" Text="Фигуры" />
                     <ItemsControl ItemsSource="{Binding FigureFactories}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Margin="2" Content="{Binding FigureType, StringFormat='Create {0}'}" Command="{Binding CreateAndAdd}" />
+                                <Button Margin="2" Command="{Binding CreateAndAdd}" Content="{Binding FigureType, StringFormat='Create {0}'}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
-                    <!-- <WrapPanel>
-                        <Button Content="○" Margin="4"/>
-                        <Button Content="△" Margin="4"/>
-                        <Button Content="—" Margin="4"/>
-                        <Button Content="★" Margin="4"/>
-                        <Button Content="■" Margin="4"/>
-                        <Button Content="♥️" Margin="4"/>
-                        <Button Content="☁️" Margin="4"/>
-                    </WrapPanel> -->
                 </StackPanel>
 
-                <!-- (4) цвет -->
-                <StackPanel Grid.Row="5" Margin="8" Spacing="8">
-                <!-- Мини-табличка свойств -->
-                <TextBlock Text="Свойства фигуры" FontWeight="Bold"/>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <ContentControl Grid.Row="2" Grid.Column="0" Margin="2" Content="{Binding SelectedFigureViewModel}">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate x:DataType="vm:FigureViewModel">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Name:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox x:Name="ShapeName" Grid.Row="0" Grid.Column="1"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Name:" />
+                                <TextBox x:Name="ShapeName" Grid.Row="0" Grid.Column="1" Text="{Binding Figure.Name}" />
 
-                    <TextBlock Text="Color:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Spacing="5">
-                        <TextBox x:Name="RedValue" Width="50" Watermark="R"/>
-                        <TextBox x:Name="GreenValue" Width="50" Watermark="G"/>
-                        <TextBox x:Name="BlueValue" Width="50" Watermark="B"/>
-                    </StackPanel>
+                                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Color:" />
+                                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                    <TextBox x:Name="RedValue" Width="50" Text="0" Watermark="R" />
+                                    <TextBox x:Name="GreenValue" Width="50" Text="0" Watermark="G" />
+                                    <TextBox x:Name="BlueValue" Width="50" Text="0" Watermark="B" />
+                                </StackPanel>
 
-                    <TextBlock Text="Center X:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Center X:" />
+                                <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1" Text="{Binding Figure.Center.X}" />
 
-                    <TextBlock Text="Center Y:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1"/>
-                    
-                    <TextBlock Text="Radius:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox x:Name="Radius" Grid.Row="4" Grid.Column="1"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="Center Y:" />
+                                <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1" Text="{Binding Figure.Center.Y}" />
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="2" Spacing="10" HorizontalAlignment="Center" Margin="0,10,0,0">
-                        <Button Content="Увеличить" x:Name="ScaleUpButton" Width="90" Height="30"/>
-                        <Button Content="Уменьшить" x:Name="ScaleDownButton" Width="100" Height="30"/>
-                        <Button Content="Удалить" x:Name="RemoveButton" Width="80" Height="30"/>
-                    </StackPanel>
-                </Grid>
-                </StackPanel>
+                                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="Radius:" />
+                                <TextBox x:Name="Radius" Grid.Row="4" Grid.Column="1" />
+
+                                <StackPanel
+                                    Grid.Row="5"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,10,0,0"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="10">
+                                    <Button x:Name="ScaleUpButton" Width="90" Height="30" Content="Увеличить" />
+                                    <Button x:Name="ScaleDownButton" Width="100" Height="30" Content="Уменьшить" />
+                                    <Button x:Name="RemoveButton" Width="80" Height="30" Content="Удалить" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
 
             </Grid>
         </Border>
 
-        <!-- Центральная область для холста -->
+        <!--  Центральная область для холста  -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0"
-                        Orientation="Vertical"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left"
-                        Margin="11"
-                        Spacing="10">
-            </StackPanel>
+            <StackPanel
+                Grid.Column="0"
+                Margin="11"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Vertical"
+                Spacing="10" />
 
-            <Canvas x:Name="MainCanvas"
-                    Grid.Column="1"
-                    Background="pink"
-                    Width="1000"  
-                    Height="600" 
-                    PointerPressed="Canvas_PointerPressed"
-            />  
+            <ContentControl Grid.Column="1" Width="1000" Height="600" Content="{Binding SelectedFigureViewModel}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate x:DataType="vm:FigureViewModel">
+                        <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="1">
+                            <Path.Fill>
+                                <SolidColorBrush Color="Red" />
+                            </Path.Fill>
+                        </Path>
+                        <!-- <Canvas
+                            x:Name="MainCanvas"
+                            Width="1000"
+                            Height="600"
+                            Background="pink"
+                            PointerPressed="Canvas_PointerPressed" /> -->
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
         </Grid>
     </Grid>
 </Window>

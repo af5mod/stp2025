@@ -8,6 +8,7 @@ using System.Reactive;
 using DynamicData;
 using DynamicData.Alias;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GraphicEditor.ViewModels
 {
@@ -32,6 +33,23 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
         // public ReactiveCommand<Point, Unit> CanvasClickCommand { get; }
 
+        [Reactive]
+        public string SelectedFigureName { get; set; }
+
+        public FigureViewModel? SelectedFigureViewModel
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SelectedFigureName))
+                {
+                    return null;
+                }
+                else
+                {
+                    return new FigureViewModel(_figureService.Figures.FirstOrDefault((x) => x.Name == SelectedFigureName)!);
+                }
+            }
+        }
         public ObservableCollection<FigureFactoryViewModel> FigureFactories { get; } = [];
         private readonly ReadOnlyObservableCollection<string> _readonlyFiguresNames;
         public ReadOnlyObservableCollection<string> ReadonlyFigureNames => _readonlyFiguresNames;
@@ -89,6 +107,8 @@ namespace GraphicEditor.ViewModels
             ClearAllCommand = ReactiveCommand.Create(_figureService.ClearAll);
             DeleteSelectedCommand = ReactiveCommand.Create(() =>
                 _figureService.RemoveFigures(ReadonlySelectedFigures));
+
+            this.WhenAnyValue(o => o.SelectedFigureName).Subscribe(o => this.RaisePropertyChanged(nameof(SelectedFigureViewModel)));
 
             // CanvasClickCommand = ReactiveCommand.Create<PointerPressedEventArgs>(args =>
             // {

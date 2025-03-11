@@ -30,7 +30,7 @@ namespace GraphicEditor
 
         static FigureFabric()
         {
-            var assemblies = new[] { typeof(IFigure).Assembly};
+            var assemblies = new[] { typeof(IFigure).Assembly };
             var conf = new ContainerConfiguration();
             try
             {
@@ -64,6 +64,7 @@ namespace GraphicEditor
             var figure = lazyFigure.Value.Clone();
 
             figure.Name = $"{FigureName} {Random.Shared.Next(100)}";
+            figure.RandomizeParameters();
 
             return figure;
         }
@@ -78,7 +79,12 @@ namespace GraphicEditor
     {
         public PointF Start { get; private set; }
         public PointF End { get; private set; }
-        public PointF Center => new PointF { X = (Start.X + End.X) / 2, Y = (Start.Y + End.Y) / 2 };
+        public PointF Center
+        {
+            get;
+            set;
+        }
+
         public Line()
         {
             // Инициализация по умолчанию (если требуется)
@@ -92,9 +98,12 @@ namespace GraphicEditor
             Start = start;
             End = end;
             Name = "Line";
+            Center = new PointF { X = (Start.X + End.X) / 2, Y = (Start.Y + End.Y) / 2 };
         }
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string Name { get; set; }
+
+        public string DrawingGeometry => throw new NotImplementedException();
 
         public void Move(PointF vector)
         {
@@ -156,6 +165,17 @@ namespace GraphicEditor
 
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
         public bool HitTest(Point point, double epsilon) => throw new NotImplementedException();
+        public void RandomizeParameters()
+        {
+            var startX = Random.Shared.Next(256);
+            var startY = Random.Shared.Next(256);
+
+            var endX = Random.Shared.Next(256);
+            var endY = Random.Shared.Next(256);
+
+            Start = new(startX, startY);
+            End = new(endX, endY);
+        }
     }
 
     [Export(typeof(IFigure))]
@@ -163,20 +183,20 @@ namespace GraphicEditor
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
     [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Center", "PointOnCircle" })]
-    public class Circle : IFigure
+    public class Circle : IFigure, IDrawingFigure
     {
         public PointF Center { get; set; }
         public PointF PointOnCircle { get; set; }
         public Circle()
         {
             // Инициализация по умолчанию (если требуется)
-            Center = new PointF(1f, 1f);
-            PointOnCircle = new PointF(2f, 2f);
+            RandomizeParameters();
             Name = "Circle";
         }
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string Name { get; set; }
-
+        public string DrawingGeometry => $"M{Center.X + Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X - Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X + Radius},{Center.Y} z";
+        public float Radius => Distance(Center, PointOnCircle);
         public Circle(PointF center, PointF pointOnCircle)
         {
             Center = center;
@@ -264,14 +284,32 @@ namespace GraphicEditor
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) =>
             throw new NotImplementedException();
         public bool HitTest(Point point, double epsilon) => throw new NotImplementedException();
+        public void RandomizeParameters()
+        {
+            var centerX = Random.Shared.Next(256);
+            var centerY = Random.Shared.Next(256);
+
+            var pointX = Random.Shared.Next(256);
+            var pointY = Random.Shared.Next(256);
+
+            Center = new PointF(centerX, centerY);
+            PointOnCircle = new PointF(pointX, pointY);
+        }
     }
+
 
     public class Rectangle : IFigure
     {
+
         private List<PointF> corners;
+
+        private float _width;
+        private float _height;
 
         public Rectangle(PointF topLeft, float width, float height) // конструктор по левому верхнему углу, ширине и высоте
         {
+            _width = width;
+            _height = height;
             corners = new List<PointF>
             {
                 topLeft,
@@ -280,6 +318,14 @@ namespace GraphicEditor
                 new PointF(topLeft.X, topLeft.Y + height)
             };
             Name = "Rectangle";
+
+            float sumX = 0, sumY = 0;
+            foreach (var pt in corners)
+            {
+                sumX += pt.X;
+                sumY += pt.Y;
+            }
+            Center = new PointF(sumX / corners.Count, sumY / corners.Count);
         }
 
         public Rectangle(List<PointF> corners) // конструктор по 4 точкам
@@ -292,20 +338,15 @@ namespace GraphicEditor
 
         public PointF Center
         {
-            get
-            {
-                float sumX = 0, sumY = 0;
-                foreach (var pt in corners)
-                {
-                    sumX += pt.X;
-                    sumY += pt.Y;
-                }
-                return new PointF(sumX / corners.Count, sumY / corners.Count);
-            }
+            get;
+
+            set;
         }
 
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string Name { get; set; }
+
+        public string DrawingGeometry => throw new NotImplementedException();
 
         public void Move(PointF vector)
         {
@@ -421,5 +462,6 @@ namespace GraphicEditor
         }
 
         public bool HitTest(Point point, double epsilon) => throw new NotImplementedException();
+        public void RandomizeParameters() => throw new NotImplementedException();
     }
 }

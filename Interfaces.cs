@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using DynamicData;
+using GraphicEditor.ViewModels;
 
 namespace GraphicEditor
 {
@@ -12,16 +13,16 @@ namespace GraphicEditor
     }
     public interface IDrawingFigure
     {
-
+        string DrawingGeometry {get;}
     }
 
-    public interface IFigure
+    public interface IFigure : IDrawingFigure
     {
         bool IsSelected { get; set; }
 
         void Move(PointF vector);
         void Rotate(PointF center, float angle);
-        PointF Center { get; }
+        PointF Center { get; set;}
         string Name { get; set; }
         void Scale(float dx, float dy);
         void Scale(PointF center, float dr);
@@ -33,6 +34,7 @@ namespace GraphicEditor
         IFigure Union(IFigure other);
         IFigure Subtract(IFigure other);
         void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams);
+        void RandomizeParameters();
     }
 
     public interface ILogic

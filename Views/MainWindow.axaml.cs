@@ -13,7 +13,6 @@ namespace GraphicEditor.Views
 {
     public partial class MainWindow : Window
     {
-        Canvas MainCanvasControl {get => MainCanvas;}
         public MainWindow()
         {
             InitializeComponent();
