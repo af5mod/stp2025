@@ -68,18 +68,19 @@
                 <!-- небольшой отступ между кнопками и ползунками -->
                 <StackPanel Width="20"/>
 
+                
                 <!-- ползунки с подписями -->
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <!-- Подписи слайдеров -->
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Ширина" HorizontalAlignment="Center" />
+                        <TextBlock Text="Прозрачность" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedShapeWidth, StringFormat='{}{0:0}'}" HorizontalAlignment="Center"/>
                     </StackPanel>
+
                     <Slider x:Name="slider" Width="120" Minimum="0" Maximum="100" Value="{Binding SelectedShapeWidth, Mode=TwoWay}" />
 
-
-<StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Высота" HorizontalAlignment="Center" />
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Толщина" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedShapeHeight, StringFormat='{}{0:0}'}" HorizontalAlignment="Center"/>
                     </StackPanel>
                     <Slider x:Name="slider2" Width="120" Minimum="0" Maximum="100" Value="{Binding SelectedShapeHeight, Mode=TwoWay}" />
@@ -175,10 +176,49 @@
                 </StackPanel>
 
                 <!-- (4) цвет -->
-                <StackPanel Grid.Row="4" Margin="8" Spacing="8">
-                    <Viewbox Stretch="Uniform">
-                        <ColorView Width="400" Height="500"/>
-                    </Viewbox>
+                <StackPanel Grid.Row="5" Margin="8" Spacing="8">
+                <!-- Мини-табличка свойств -->
+                <TextBlock Text="Свойства фигуры" FontWeight="Bold"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Name:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="ShapeName" Grid.Row="0" Grid.Column="1"/>
+
+                    <TextBlock Text="Color:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Spacing="5">
+                        <TextBox x:Name="RedValue" Width="50" Watermark="R"/>
+                        <TextBox x:Name="GreenValue" Width="50" Watermark="G"/>
+                        <TextBox x:Name="BlueValue" Width="50" Watermark="B"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Center X:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1"/>
+
+                    <TextBlock Text="Center Y:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1"/>
+                    
+                    <TextBlock Text="Radius:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="Radius" Grid.Row="4" Grid.Column="1"/>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="2" Spacing="10" HorizontalAlignment="Center" Margin="0,10,0,0">
+                        <Button Content="Увеличить" x:Name="ScaleUpButton" Width="90" Height="30"/>
+                        <Button Content="Уменьшить" x:Name="ScaleDownButton" Width="100" Height="30"/>
+                        <Button Content="Удалить" x:Name="RemoveButton" Width="80" Height="30"/>
+                    </StackPanel>
+                </Grid>
                 </StackPanel>
 
             </Grid>
