@@ -30,7 +30,7 @@ namespace GraphicEditor
 
         static FigureFabric()
         {
-            var assemblies = new[] { typeof(Line).Assembly, typeof(Circle).Assembly };
+            var assemblies = new[] { typeof(IFigure).Assembly};
             var conf = new ContainerConfiguration();
             try
             {
