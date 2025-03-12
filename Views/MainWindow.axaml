@@ -193,7 +193,13 @@
                 <!--  (2) список фигур  -->
                 <Border Grid.Row="4">
                     <ScrollViewer>
-                        <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigureNames}" SelectedItem="{Binding SelectedFigureName}" />
+                        <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Figure.Name}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>                       
                     </ScrollViewer>
                 </Border>
 
@@ -211,7 +217,7 @@
                     </ItemsControl>
                 </StackPanel>
 
-                <ContentControl Grid.Row="2" Grid.Column="0" Margin="2" Content="{Binding SelectedFigureViewModel}">
+                <ContentControl Grid.Row="2" Grid.Column="0" Margin="2" Content="{Binding #list.SelectedItem}">
                     <ContentControl.ContentTemplate>
                         <DataTemplate x:DataType="vm:FigureViewModel">
                             <Grid>

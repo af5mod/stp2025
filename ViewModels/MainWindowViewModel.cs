@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,8 +53,8 @@ namespace GraphicEditor.ViewModels
         public ObservableCollection<FigureFactoryViewModel> FigureFactories { get; } = [];
         private readonly ReadOnlyObservableCollection<string> _readonlyFiguresNames;
         public ReadOnlyObservableCollection<string> ReadonlyFigureNames => _readonlyFiguresNames;
-        private readonly ReadOnlyObservableCollection<IFigure> _readonlyFigures;
-        public ReadOnlyObservableCollection<IFigure> ReadonlyFigures => _readonlyFigures;
+        private readonly ReadOnlyObservableCollection<FigureViewModel> _readonlyFigures;
+        public ReadOnlyObservableCollection<FigureViewModel> ReadonlyFigures => _readonlyFigures;
         private readonly ReadOnlyObservableCollection<IFigure> _readonlySelectedFigures;
         public ReadOnlyObservableCollection<IFigure> ReadonlySelectedFigures => _readonlySelectedFigures;
 
@@ -92,7 +92,7 @@ namespace GraphicEditor.ViewModels
             // _figureService.AddFigure(circle);
 
             // Подключение реактивных источников
-            _figureService.Connect()
+            _figureService.Connect().Transform(figure=>new FigureViewModel(figure))
                 .Bind(out _readonlyFigures)
                 .Subscribe();
 

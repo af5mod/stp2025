@@ -7,6 +7,8 @@ using System.Linq;
 using System.Drawing;
 using GraphicEditor;
 using System.Collections;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GraphicEditor
 {
@@ -183,18 +185,18 @@ namespace GraphicEditor
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
     [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Center", "PointOnCircle" })]
-    public class Circle : IFigure, IDrawingFigure
+    public class Circle : ReactiveObject, IFigure, IDrawingFigure
     {
-        public PointF Center { get; set; }
-        public PointF PointOnCircle { get; set; }
+        [Reactive] public PointF Center { get; set; }
+        [Reactive] public PointF PointOnCircle { get; set; }
         public Circle()
         {
             // Инициализация по умолчанию (если требуется)
             RandomizeParameters();
             Name = "Circle";
         }
-        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Name { get; set; }
+        [Reactive] public bool IsSelected { get ; set ; }
+        [Reactive] public string Name { get; set; }
         public string DrawingGeometry => $"M{Center.X + Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X - Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X + Radius},{Center.Y} z";
         public float Radius => Distance(Center, PointOnCircle);
         public Circle(PointF center, PointF pointOnCircle)

@@ -4,8 +4,7 @@ namespace GraphicEditor.ViewModels
 {
     public class FigureViewModel : ViewModelBase
     {
-        [Reactive]
-        public IFigure Figure { get; set; }
+        public IFigure Figure { get; }
 
         public FigureViewModel(IFigure figure)
         {
