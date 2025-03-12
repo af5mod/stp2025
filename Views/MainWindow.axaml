@@ -196,7 +196,7 @@
                         <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding Figure.Name}"/>
+                                    <TextBlock Text="{Binding Figure.Name}"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>                       
@@ -211,7 +211,7 @@
                     <ItemsControl ItemsSource="{Binding FigureFactories}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Margin="2" Command="{Binding CreateAndAdd}" Content="{Binding FigureType, StringFormat='Create {0}'}" />
+                                <Button Margin="2" Command="{Binding CreateFigureCommand}" Content="{Binding FigureType, StringFormat='Create {0}'}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -246,10 +246,10 @@
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Center X:" />
-                                <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1" Text="{Binding Figure.Center.X}" />
+                                <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1" Text="{Binding CenterX}" />
 
                                 <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="Center Y:" />
-                                <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1" Text="{Binding Figure.Center.Y}" />
+                                <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1" Text="{Binding CenterY}" />
 
                                 <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="Radius:" />
                                 <TextBox x:Name="Radius" Grid.Row="4" Grid.Column="1" />
@@ -288,7 +288,7 @@
                 Orientation="Vertical"
                 Spacing="10" />
 
-            <ContentControl Grid.Column="1" Width="1000" Height="600" Content="{Binding SelectedFigureViewModel}">
+            <ContentControl Grid.Column="1" Width="1000" Height="600" Content="{Binding #list.SelectedItem}">
                 <ContentControl.ContentTemplate>
                     <DataTemplate x:DataType="vm:FigureViewModel">
                         <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="1">

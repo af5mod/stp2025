@@ -189,13 +189,24 @@ namespace GraphicEditor
     {
         [Reactive] public PointF Center { get; set; }
         [Reactive] public PointF PointOnCircle { get; set; }
+
+        private void InitBinding()
+        {
+
+            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+        }
+
         public Circle()
         {
             // Инициализация по умолчанию (если требуется)
             RandomizeParameters();
             Name = "Circle";
+            InitBinding();
+            // this.WhenAnyValue(x => x.Center).Subscribe(x => Console.WriteLine($"Circle's PointF Center changed: {x}"));
+
+            // this.WhenAnyValue(x => x.Center.X, x => x.Center.Y, (x, y) => { Console.WriteLine($"Circle's x or y changed: x:{x}, y:{y}"); return new PointF(x, y); });
         }
-        [Reactive] public bool IsSelected { get ; set ; }
+        [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
         public string DrawingGeometry => $"M{Center.X + Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X - Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X + Radius},{Center.Y} z";
         public float Radius => Distance(Center, PointOnCircle);
@@ -204,6 +215,7 @@ namespace GraphicEditor
             Center = center;
             PointOnCircle = pointOnCircle;
             Name = "Circle";
+            InitBinding();
         }
 
         public void Move(PointF vector)
