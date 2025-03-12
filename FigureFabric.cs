@@ -192,7 +192,6 @@ namespace GraphicEditor
 
         private void InitBinding()
         {
-
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
         }
 

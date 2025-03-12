@@ -288,8 +288,8 @@
                 Orientation="Vertical"
                 Spacing="10" />
 
-            <ContentControl Grid.Column="1" Width="1000" Height="600" Content="{Binding #list.SelectedItem}">
-                <ContentControl.ContentTemplate>
+            <ItemsControl Grid.Column="1" Width="1000" Height="600" ItemsSource="{Binding ReadonlyFigures}">
+                <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:FigureViewModel">
                         <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="1">
                             <Path.Fill>
@@ -303,8 +303,8 @@
                             Background="pink"
                             PointerPressed="Canvas_PointerPressed" /> -->
                     </DataTemplate>
-                </ContentControl.ContentTemplate>
-            </ContentControl>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </Window>
