@@ -5,8 +5,6 @@ using System.Composition;
 
 namespace GraphicEditor
 {
-    [Export(typeof(IFigure))]
-    [ExportMetadata("Name", nameof(Pentagon))]
     public class Pentagon : IFigure
     {
         private List<PointF> vertices;
@@ -25,6 +23,12 @@ namespace GraphicEditor
                 return new PointF(sumX / vertices.Count, sumY / vertices.Count);
             }
         }
+
+        bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        PointF IFigure.Center { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        string IFigure.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        string IDrawingFigure.DrawingGeometry => throw new NotImplementedException();
 
         public Pentagon(List<PointF> points)
         {
@@ -137,5 +141,7 @@ namespace GraphicEditor
                 throw new ArgumentException("Pentagon requires 5 point parameters.");
             }
         }
+
+        void IFigure.RandomizeParameters() => throw new NotImplementedException();
     }
 }

@@ -35,7 +35,13 @@ namespace GraphicEditor
                 return new PointF(sumX / corners.Count, sumY / corners.Count);
             }
         }
-        
+
+        bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        PointF IFigure.Center { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        string IFigure.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        string IDrawingFigure.DrawingGeometry => throw new NotImplementedException();
+
         public void Move(PointF vector)
         {
             for (int i = 0; i < corners.Count; i++)
@@ -144,5 +150,7 @@ namespace GraphicEditor
                 throw new ArgumentException("Для Triangle необходимы параметры 'Vertex1', 'Vertex2' и 'Vertex3'.");
             }
         }
+
+        void IFigure.RandomizeParameters() => throw new NotImplementedException();
     }
 }

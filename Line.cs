@@ -2,21 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Drawing;
+using System.Net;
 
 namespace GraphicEditor
 {
     [Export(typeof(IFigure))]
-    [ExportMetadata(nameof(FigureMetadata.Name), nameof(Line))]
+    [ExportMetadata(nameof(FigureMetadata.Name), "Line")]
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
-    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "First", "Second" })]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Start", "End" })]
     public class Line : IFigure
     {
         public PointF Start { get; private set; }
         public PointF End { get; private set; }
-        public PointF Center => new PointF((Start.X + End.X) / 2, (Start.Y + End.Y) / 2);
+        public PointF Center
+        {
+            get;
+            set;
+        }
 
-        public string Name => throw new NotImplementedException();
+        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Name { get; set; }
+
+        public string DrawingGeometry => throw new NotImplementedException();
+
+        string IDrawingFigure.DrawingGeometry => $"M{Start.X},{Start.Y} L{End.X},{End.Y}";
+
+        public Line()
+        {
+            // Инициализация по умолчанию (если требуется)
+            Start = new PointF(1f, 1f);
+            End = new PointF(2f, 2f);
+            Name = "Line";
+        }
 
         public Line(PointF start, PointF end)
         {
@@ -81,7 +99,11 @@ namespace GraphicEditor
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
-        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
+        {
+            Start = pointParams["Start"];
+            End = pointParams["End"];
+        }
 
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams)
         {
@@ -90,5 +112,16 @@ namespace GraphicEditor
         }
 
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
+        public void RandomizeParameters()
+        {
+            var startX = Random.Shared.Next(256);
+            var startY = Random.Shared.Next(256);
+
+            var endX = Random.Shared.Next(256);
+            var endY = Random.Shared.Next(256);
+
+            Start = new(startX, startY);
+            End = new(endX, endY);
+        }
     }
 }

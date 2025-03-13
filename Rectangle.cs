@@ -42,6 +42,12 @@ namespace GraphicEditor
             }
         }
 
+        bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        PointF IFigure.Center { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        string IFigure.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        string IDrawingFigure.DrawingGeometry => throw new NotImplementedException();
+
         public void Move(PointF vector)
         {
             for (int i = 0; i < corners.Count; i++)
@@ -149,5 +155,7 @@ namespace GraphicEditor
                 throw new ArgumentException("Для Rectangle необходимы параметры 'TopLeft', 'TopRight', 'BottomRight' и 'BottomLeft'.");
             }
         }
+
+        void IFigure.RandomizeParameters() => throw new NotImplementedException();
     }
 }

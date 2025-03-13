@@ -2,17 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Drawing;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GraphicEditor
 {
     [Export(typeof(IFigure))]
-    [ExportMetadata("Name", nameof(Circle))]
-    public class Circle : IFigure
+    [ExportMetadata(nameof(FigureMetadata.Name), "Circle")]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Center", "PointOnCircle" })]
+    public class Circle : ReactiveObject, IFigure, IDrawingFigure
     {
-        public PointF Center { get; set; }
-        public PointF PointOnCircle { get; set; }
-        public string Name => "Circle";
+        [Reactive] public PointF Center { get; set; }
+        [Reactive] public PointF PointOnCircle { get; set; }
+        [Reactive] public bool IsSelected { get; set; }
+        [Reactive] public string Name { get; set; }
+        private void InitBinding()
+        {
+            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+        }
 
+        public string DrawingGeometry => $"M{Center.X + Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X - Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X + Radius},{Center.Y} z";
+        public float Radius => Distance(Center, PointOnCircle);
+        public Circle()
+        {
+            // Инициализация по умолчанию (если требуется)
+            RandomizeParameters();
+            Name = "Circle";
+            InitBinding();
+            // this.WhenAnyValue(x => x.Center).Subscribe(x => Console.WriteLine($"Circle's PointF Center changed: {x}"));
+
+            // this.WhenAnyValue(x => x.Center.X, x => x.Center.Y, (x, y) => { Console.WriteLine($"Circle's x or y changed: x:{x}, y:{y}"); return new PointF(x, y); });
+        }
         public Circle(PointF center, PointF pointOnCircle)
         {
             Center = center;
@@ -90,5 +112,16 @@ namespace GraphicEditor
         public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
+        public void RandomizeParameters()
+        {
+            var centerX = Random.Shared.Next(256);
+            var centerY = Random.Shared.Next(256);
+
+            var pointX = Random.Shared.Next(256);
+            var pointY = Random.Shared.Next(256);
+
+            Center = new PointF(centerX, centerY);
+            PointOnCircle = new PointF(pointX, pointY);
+        }
     }
 }
