@@ -248,9 +248,7 @@
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Color:" />
                                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                    <TextBox x:Name="RedValue" Width="50" Text="0" Watermark="R" />
-                                    <TextBox x:Name="GreenValue" Width="50" Text="0" Watermark="G" />
-                                    <TextBox x:Name="BlueValue" Width="50" Text="0" Watermark="B" />
+                                    <ColorPicker />
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Center X:" />
