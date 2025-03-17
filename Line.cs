@@ -8,6 +8,7 @@ namespace GraphicEditor
 {
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Line")]
+    [ExportMetadata(nameof(FigureMetadata.IconPath), "/Assets/Line.svg")]
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
     [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Start", "End" })]

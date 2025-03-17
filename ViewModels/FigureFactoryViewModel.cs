@@ -12,6 +12,7 @@ namespace GraphicEditor.ViewModels
         public required MainWindowViewModel MainWindowViewModel { get; set; }
         public required string FigureType { get; set; }
         public ReactiveCommand<Unit, Unit> CreateFigureCommand { get; set; }
+        public required string IconPath { get; set; }
 
 
         public FigureFactoryViewModel()

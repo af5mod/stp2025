@@ -158,6 +158,7 @@
                     <RowDefinition Height="Auto" />
                     <!--  (2) список фигур  -->
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <!--  (3) фигуры  -->
                     <RowDefinition Height="Auto" />
                     <!--  (4) панель выбора цвета  -->
@@ -191,7 +192,7 @@
                 </StackPanel>
 
                 <!--  (2) список фигур  -->
-                <Border Grid.Row="4">
+                <Border Grid.Row="5">
                     <ScrollViewer>
                         <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}">
                             <ListBox.ItemTemplate>
@@ -203,21 +204,28 @@
                     </ScrollViewer>
                 </Border>
 
-                <GridSplitter Grid.Row="3" ResizeDirection="Rows" />
+                <GridSplitter Grid.Row="4" ResizeDirection="Rows" />
 
                 <!--  (3) фигуры  -->
-                <StackPanel Grid.Row="1" Margin="8" Orientation="Vertical" Spacing="8">
-                    <TextBlock FontWeight="Bold" Text="Фигуры" />
+                <TextBlock Grid.Row="1" Margin="8" FontWeight="Bold" Text="Фигуры" />
+                <StackPanel Grid.Row="2" Margin="8" Spacing="8" Orientation="Horizontal">
                     <ItemsControl ItemsSource="{Binding FigureFactories}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Margin="2" Command="{Binding CreateFigureCommand}" Content="{Binding FigureType, StringFormat='Create {0}'}" />
+                                <Button Margin="2" Command="{Binding CreateFigureCommand}" Width="75" Height="75">
+                                    <Svg Path="{Binding IconPath}" Css=".Black { fill: #FF0000; }" Stretch="None"/>
+                                </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
 
-                <ContentControl Grid.Row="2" Grid.Column="0" Margin="2" Content="{Binding #list.SelectedItem}">
+                <ContentControl Grid.Row="3" Grid.Column="0" Margin="2" Content="{Binding #list.SelectedItem}">
                     <ContentControl.ContentTemplate>
                         <DataTemplate x:DataType="vm:FigureViewModel">
                             <Grid>

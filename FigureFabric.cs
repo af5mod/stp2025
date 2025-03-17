@@ -19,6 +19,7 @@ namespace GraphicEditor
         public int NumberOfPointParameters { get; set; }
         public IEnumerable<string> PointParametersNames { get; set; }
         public IEnumerable<string> DoubleParametersNames { get; }
+        public string IconPath { get; set; }
     }
 
     public static class FigureFabric

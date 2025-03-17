@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive;
 using DynamicData;
 using DynamicData.Alias;
+using DynamicData.Kernel;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -45,7 +46,7 @@ namespace GraphicEditor.ViewModels
             _figureService = new FigureService();
             foreach (var figureName in FigureFabric.AvailableFigures)
             {
-                FigureFactories.Add(new() { FigureService = _figureService, FigureType = figureName, MainWindowViewModel = this });
+                FigureFactories.Add(new() { FigureService = _figureService, FigureType = figureName, MainWindowViewModel = this, IconPath = FigureFabric.AvailableMetadata.First(x => x.Name == figureName).IconPath });
             }
 
             // var line = FigureFabric.CreateFigure("Line");
