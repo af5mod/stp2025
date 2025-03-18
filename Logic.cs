@@ -159,27 +159,143 @@ namespace GraphicEditor
                     {"RadiusPoint", new PointF {X =(float)cx + (float)r, Y =(float) cy}}
                 });
 
-            AddFigure(circle);
+            AddFigureInCache(circle);
+        }
+
+        private void LoadRectangle(Match rectMatch)
+        {
+            double x = double.Parse(rectMatch.Groups["x"].Value);
+            double y = double.Parse(rectMatch.Groups["y"].Value);
+            double width = double.Parse(rectMatch.Groups["width"].Value);
+            double height = double.Parse(rectMatch.Groups["height"].Value);
+
+            var rectangle = FigureFabric.CreateFigure("Rectangle");
+            rectangle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+                {
+                    {"TopLeft", new PointF { X = (float)x, Y = (float)y }},
+                    {"BottomRight", new PointF {X = (float)(x + width), Y = (float)(y + height)}}
+                });
+
+            AddFigureInCache(rectangle);
+        }
+
+        private void LoadHexagon(Match hexagonMatch)
+        {
+            var points = new Dictionary<string, PointF>();
+            for (int i = 1; i <= 6; i++)
+            {
+                float x = float.Parse(hexagonMatch.Groups[$"x{i}"].Value);
+                float y = float.Parse(hexagonMatch.Groups[$"y{i}"].Value);
+                points.Add($"Vertex{i}", new PointF(x, y));
+            }
+
+            var hexagon = FigureFabric.CreateFigure("Hexagon");
+            hexagon.SetParameters(new Dictionary<string, double>(), points);
+
+            AddFigureInCache(hexagon);
+        }
+
+        private void LoadPentagon(Match pentagonMatch)
+        {
+            var points = new Dictionary<string, PointF>();
+            for (int i = 1; i <= 5; i++)
+            {
+                float x = float.Parse(pentagonMatch.Groups[$"x{i}"].Value);
+                float y = float.Parse(pentagonMatch.Groups[$"y{i}"].Value);
+                points.Add($"Vertex{i}", new PointF(x, y));
+            }
+
+            var pentagon = FigureFabric.CreateFigure("Pentagon");
+            pentagon.SetParameters(new Dictionary<string, double>(), points);
+
+            AddFigureInCache(pentagon);
+        }
+
+        private void LoadTriangle(Match triangleMatch)
+        {
+            List<PointF> corners = new List<PointF>();
+            for (int i = 1; i <= 3; i++)
+            {
+                float x = float.Parse(triangleMatch.Groups[$"x{i}"].Value);
+                float y = float.Parse(triangleMatch.Groups[$"y{i}"].Value);
+                corners.Add(new PointF(x, y));
+            }
+            
+            var triangle = new Triangle(corners);
+            AddFigureInCache(triangle);
         }
 
         public void Load(string FilePath, string FileFormat)
         {
-            if (FilePath.ToLower() != "svg")
+            if (FileFormat.ToLower() != "svg")
                 return;
 
             string svgContent = File.ReadAllText(FilePath);
 
-            var lineMatch = Regex.Match(svgContent, @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'");
-            if (lineMatch.Success)
+            var lineMatches = Regex.Matches(svgContent, 
+                @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s+stroke='(?<stroke>[\w#]+)'\s*stroke-width='(?<strokeWidth>[\d.]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            foreach (Match lineMatch in lineMatches)
             {
-                LoadLine(lineMatch);
+                if (lineMatch.Success)
+                {
+                    LoadLine(lineMatch);
+                }
             }
 
-            var circleMatch = Regex.Match(svgContent, @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'");
-            if (circleMatch.Success)
+            var hexagonMatches = Regex.Matches(svgContent, 
+                @"<polygon\s+points='((?<x>[\d.]+),(?<y>[\d.]+)\s+){5}(?<x>[\d.]+),(?<y>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            foreach (Match hexagonMatch in hexagonMatches)
             {
-                LoadCircle(circleMatch);
+                if (hexagonMatch.Success)
+                {
+                    LoadHexagon(hexagonMatch);
+                }
             }
+
+            var pentagonMatches = Regex.Matches(svgContent, 
+                @"<polygon\s+points='((?<x>[\d.]+),(?<y>[\d.]+)\s+){4}(?<x>[\d.]+),(?<y>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            foreach (Match pentagonMatch in pentagonMatches)
+            {
+                if (pentagonMatch.Success)
+                {
+                    LoadPentagon(pentagonMatch);
+                }
+            }
+
+            var rectMatches = Regex.Matches(svgContent, 
+                @"<rect\s+x='(?<x>[\d.]+)'\s+y='(?<y>[\d.]+)'\s+width='(?<width>[\d.]+)'\s+height='(?<height>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            foreach (Match rectMatch in rectMatches)
+            {
+                if (rectMatch.Success)
+                {
+                    LoadRectangle(rectMatch);
+                }
+            }
+
+            var triangleMatches = Regex.Matches(svgContent, 
+                @"<polygon\s+points='(?<x1>[\d.]+),(?<y1>[\d.]+)\s+(?<x2>[\d.]+),(?<y2>[\d.]+)\s+(?<x3>[\d.]+),(?<y3>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            foreach (Match triangleMatch in triangleMatches)
+            {
+                if (triangleMatch.Success)
+                {
+                    LoadTriangle(triangleMatch);
+                }
+            }
+
+            var circleMatches = Regex.Matches(svgContent, 
+                @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            foreach (Match circleMatch in circleMatches)
+            {
+                if (circleMatch.Success)
+                {
+                    LoadCircle(circleMatch);
+                }
+            }
+        }
+
+        private void AddFigureInCache(IFigure figure)
+        {
+            _figures.AddOrUpdate(figure);
         }
 
 
@@ -192,26 +308,25 @@ namespace GraphicEditor
             string svgFooter = "</svg>";
             string svgContent = "";
 
-            foreach (var figure in Figures)
+            foreach (var figure in _figures.Items)
             {
                 if (figure is Line line)
                 {
                     svgContent += $"<line x1='{line.Start.X}' y1='{line.Start.Y}' x2='{line.End.X}' y2='{line.End.Y}' " +
-                                  "style='stroke:rgb(99,99,99);stroke-width:2' />\n";
+                                "style='stroke:rgb(99,99,99);stroke-width:2' />\n";
                 }
                 else if (figure is Circle circle)
                 {
                     double radius = Math.Sqrt(Math.Pow(circle.PointOnCircle.X - circle.Center.X, 2) +
-                                              Math.Pow(circle.PointOnCircle.Y - circle.Center.Y, 2));
+                                            Math.Pow(circle.PointOnCircle.Y - circle.Center.Y, 2));
 
                     svgContent += $"<circle cx='{circle.Center.X}' cy='{circle.Center.Y}' r='{radius}' " +
-                                  "style='stroke:rgb(99,99,99);stroke-width:2; fill:none' />\n";
+                                "style='stroke:rgb(99,99,99);stroke-width:2; fill:none' />\n";
                 }
             }
 
-
-            string fullSvgContent = svgHeader + svgContent + svgFooter;
-            File.WriteAllText(FilePath, fullSvgContent);
+            string svg = svgHeader + svgContent + svgFooter;
+            File.WriteAllText(FilePath, svg);
         }
 
         private void SaveAsSvg(IFigure figure, string filePath)
