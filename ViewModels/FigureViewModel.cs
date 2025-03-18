@@ -24,6 +24,7 @@ namespace GraphicEditor.ViewModels
             Figure = figure;
             CenterX = Figure.Center.X;
             CenterY = Figure.Center.Y;
+            Color = Avalonia.Media.Color.FromRgb((byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256));
             this.WhenAnyValue(o => o.CenterX, o => o.CenterY, (x, y) => new PointF(x, y))
                 .Subscribe((x) =>
                 {

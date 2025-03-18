@@ -47,8 +47,8 @@
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="Файл">
                         <MenuItem Header="Новый" />
-                        <MenuItem Header="Открыть" />
-                        <MenuItem Header="Сохранить" />
+                        <MenuItem Header="Открыть"/>
+                        <MenuItem Header="Сохранить"/>
                     </MenuItem>
                     <MenuItem Header="Изменить" />
                     <MenuItem Header="Вид" />
@@ -183,6 +183,7 @@
                     <TextBlock Margin="0,8,0,0" FontWeight="Bold" Text="Отражение:" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Button>
+
                             <Image Source="{SvgImage /Assets/material-symbols_flip.svg}" Stretch="None" />
                         </Button>
                         <Button>
@@ -191,10 +192,10 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!--  (2) список фигур  -->
+                <!--  список фигур  -->
                 <Border Grid.Row="5">
                     <ScrollViewer>
-                        <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}">
+                        <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}" SelectedItem="{Binding SelectedFigure}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Figure.Name}" />
@@ -206,7 +207,7 @@
 
                 <GridSplitter Grid.Row="4" ResizeDirection="Rows" />
 
-                <!--  (3) фигуры  -->
+                <!--  кнопки для создания фигур  -->
                 <TextBlock Grid.Row="1" Margin="8" FontWeight="Bold" Text="Фигуры" />
                 <StackPanel Grid.Row="2" Margin="8" Orientation="Horizontal" Spacing="8">
                     <ItemsControl ItemsSource="{Binding FigureFactories}">
@@ -225,6 +226,8 @@
                     </ItemsControl>
                 </StackPanel>
 
+
+                <!--  панель свойств выбранной фигуры  -->
                 <ContentControl Grid.Row="3" Grid.Column="0" Margin="2" Content="{Binding #list.SelectedItem}">
                     <ContentControl.DataTemplates>
                         <DataTemplate x:DataType="vm:FigureViewModel">
@@ -248,7 +251,7 @@
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Color:" />
                                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                    <ColorPicker Color="{Binding Color}"/>
+                                    <ColorPicker Color="{Binding Color}" />
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Center X:" />
@@ -257,17 +260,15 @@
                                 <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="Center Y:" />
                                 <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1" Text="{Binding CenterY}" />
 
-                                <StackPanel
+                                <Button
+                                    x:Name="RemoveButton"
                                     Grid.Row="4"
                                     Grid.ColumnSpan="2"
-                                    Margin="0,10,0,0"
-                                    HorizontalAlignment="Center"
-                                    Orientation="Horizontal"
-                                    Spacing="10">
-                                    <Button x:Name="ScaleUpButton" Width="90" Height="30" Content="Увеличить" />
-                                    <Button x:Name="ScaleDownButton" Width="100" Height="30" Content="Уменьшить" />
-                                    <Button x:Name="RemoveButton" Width="80" Height="30" Content="Удалить" />
-                                </StackPanel>
+                                    Width="80"
+                                    Height="30"
+                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveSelectedCommand}"
+                                    Content="Удалить" />
+
                                 <ContentControl Grid.Row="5" Grid.ColumnSpan="2" Content="{Binding Figure}" />
                             </Grid>
                         </DataTemplate>

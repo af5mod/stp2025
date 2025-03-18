@@ -30,6 +30,7 @@ namespace GraphicEditor.ViewModels
             set => this.RaiseAndSetIfChanged(ref _selectedShapeHeight, Math.Round(value, 0));  // округление до целого
         }
         private readonly ILogic _figureService;
+        public ReactiveCommand<Unit, Unit> RemoveSelectedCommand { get; }
         public ReactiveCommand<Unit, Unit> ClearAllCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
         // public ReactiveCommand<Point, Unit> CanvasClickCommand { get; }
@@ -41,6 +42,9 @@ namespace GraphicEditor.ViewModels
         private readonly ReadOnlyObservableCollection<IFigure> _readonlySelectedFigures;
         public ReadOnlyObservableCollection<IFigure> ReadonlySelectedFigures => _readonlySelectedFigures;
 
+        [Reactive]
+        public FigureViewModel? SelectedFigure { get; set; }
+
         public MainWindowViewModel()
         {
             _figureService = new FigureService();
@@ -49,33 +53,8 @@ namespace GraphicEditor.ViewModels
                 FigureFactories.Add(new() { FigureService = _figureService, FigureType = figureName, MainWindowViewModel = this, IconPath = FigureFabric.AvailableMetadata.First(x => x.Name == figureName).IconPath });
             }
 
-            // var line = FigureFabric.CreateFigure("Line");
-
-            // line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
-            //      {
-            //          {"Start", new PointF { X = 1F, Y = 1F }},
-            //          {"End", new PointF {X =2F, Y =2F}}
-            //      });
-
-            // _figureService.AddFigure(line);
-            // var circle = FigureFabric.CreateFigure("Circle");
-
-            // circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
-            //      {
-            //          {"Center", new PointF { X = 1F, Y = 1F }},
-            //          {"PointOnCircle", new PointF {X =2F, Y =2F}}
-            //      });
-
-            // _figureService.AddFigure(circle);
-
-            //var line = new Line(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
-            //.AddFigure(line);            
-
-            // var circle = new Circle(new Point { X = 1, Y = 10 }, new Point { X = 100, Y = 100 });
-            // _figureService.AddFigure(circle);
-
             // Подключение реактивных источников
-            _figureService.Connect().Transform(figure=>new FigureViewModel(figure))
+            _figureService.Connect().Transform(figure => new FigureViewModel(figure))
                 .Bind(out _readonlyFigures)
                 .Subscribe();
 
@@ -88,8 +67,13 @@ namespace GraphicEditor.ViewModels
 
             // Инициализация команд
             ClearAllCommand = ReactiveCommand.Create(_figureService.ClearAll);
-            DeleteSelectedCommand = ReactiveCommand.Create(() =>
-                _figureService.RemoveFigures(ReadonlySelectedFigures));
+
+            RemoveSelectedCommand = ReactiveCommand.Create(() =>
+            {
+                if (SelectedFigure != null)
+                    _figureService.RemoveFigure(SelectedFigure.Figure);
+            });
+
 
             // CanvasClickCommand = ReactiveCommand.Create<PointerPressedEventArgs>(args =>
             // {

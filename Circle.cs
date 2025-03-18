@@ -129,11 +129,11 @@ namespace GraphicEditor.Models
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
         public void RandomizeParameters()
         {
-            var centerX = Random.Shared.Next(256);
-            var centerY = Random.Shared.Next(256);
+            var centerX = Random.Shared.Next(400);
+            var centerY = Random.Shared.Next(400);
 
-            var pointX = Random.Shared.Next(256);
-            var pointY = Random.Shared.Next(256);
+            var pointX = Random.Shared.Next(400);
+            var pointY = Random.Shared.Next(400);
 
             Center = new PointF(centerX, centerY);
             PointOnCircle = new PointF(pointX, pointY);
