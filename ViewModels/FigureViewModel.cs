@@ -1,20 +1,23 @@
-using System.Drawing;
+using Avalonia.Media;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;
 using System;
+using System.Drawing;
 
 namespace GraphicEditor.ViewModels
 {
     public class FigureViewModel : ViewModelBase
     {
-        public IFigure Figure { get;set; }
+        public IFigure Figure { get; set; }
 
         [Reactive]
         public float CenterX { get; set; }
         [Reactive]
         public float CenterY { get; set; }
 
+        [Reactive]
+        public Avalonia.Media.Color Color { get; set; }
 
         public FigureViewModel(IFigure figure)
         {
