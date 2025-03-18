@@ -3,7 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:m="using:GraphicEditor.IFigure"
+    xmlns:m="using:GraphicEditor.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg.Skia"
     xmlns:vm="using:GraphicEditor.ViewModels"
@@ -197,10 +197,10 @@
                         <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Figure.Name}"/>
+                                    <TextBlock Text="{Binding Figure.Name}" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
-                        </ListBox>                       
+                        </ListBox>
                     </ScrollViewer>
                 </Border>
 
@@ -208,7 +208,7 @@
 
                 <!--  (3) фигуры  -->
                 <TextBlock Grid.Row="1" Margin="8" FontWeight="Bold" Text="Фигуры" />
-                <StackPanel Grid.Row="2" Margin="8" Spacing="8" Orientation="Horizontal">
+                <StackPanel Grid.Row="2" Margin="8" Orientation="Horizontal" Spacing="8">
                     <ItemsControl ItemsSource="{Binding FigureFactories}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -217,8 +217,8 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Margin="2" Command="{Binding CreateFigureCommand}" Width="75" Height="75">
-                                    <Svg Path="{Binding IconPath}" Css=".Black { fill: #FF0000; }" Stretch="None"/>
+                                <Button Width="75" Height="75" Margin="2" Command="{Binding CreateFigureCommand}">
+                                    <Svg Css=".Black { fill: #FF0000; }" Path="{Binding IconPath}" Stretch="None" />
                                 </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -226,10 +226,11 @@
                 </StackPanel>
 
                 <ContentControl Grid.Row="3" Grid.Column="0" Margin="2" Content="{Binding #list.SelectedItem}">
-                    <ContentControl.ContentTemplate>
+                    <ContentControl.DataTemplates>
                         <DataTemplate x:DataType="vm:FigureViewModel">
                             <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -271,9 +272,21 @@
                                     <Button x:Name="ScaleDownButton" Width="100" Height="30" Content="Уменьшить" />
                                     <Button x:Name="RemoveButton" Width="80" Height="30" Content="Удалить" />
                                 </StackPanel>
+                                <ContentControl Grid.Row="6" Grid.ColumnSpan="2" Content="{Binding Figure}" />
                             </Grid>
                         </DataTemplate>
-                    </ContentControl.ContentTemplate>
+
+                        <DataTemplate x:DataType="m:Circle">
+                            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto, Auto">
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="PointOnCircle X:" />
+                                <TextBox x:Name="PointOnCircleX" Grid.Row="0" Grid.Column="1" Text="{Binding PointOnCircleX, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="PointOnCircle Y:" />
+                                <TextBox x:Name="PointOnCircleY" Grid.Row="1" Grid.Column="1" Text="{Binding PointOnCircleY, Mode=TwoWay}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ContentControl.DataTemplates>
                 </ContentControl>
 
             </Grid>
@@ -285,32 +298,40 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
+            <!--
             <StackPanel
                 Grid.Column="0"
                 Margin="11"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Orientation="Vertical"
-                Spacing="10" />
+                Spacing="10" />-->
 
-            <ItemsControl Grid.Column="1" Width="1000" Height="600" ItemsSource="{Binding ReadonlyFigures}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:FigureViewModel">
-                        <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="1">
-                            <Path.Fill>
-                                <SolidColorBrush Color="Red" />
-                            </Path.Fill>
-                        </Path>
-                        <!-- <Canvas
+            <Viewbox Grid.Column="1" Stretch="Uniform">
+                <ItemsControl Width="1000" Height="600" ItemsSource="{Binding ReadonlyFigures}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:FigureViewModel">
+                            <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="1">
+                                <Path.Fill>
+                                    <SolidColorBrush Color="Red" />
+                                </Path.Fill>
+                            </Path>
+                            <!-- <Canvas
                             x:Name="MainCanvas"
                             Width="1000"
                             Height="600"
                             Background="pink"
-                            PointerPressed="Canvas_PointerPressed" /> -->
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                            PointerPressed="Canvas_PointerPressed" />-->
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Background="White" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                </ItemsControl>
+            </Viewbox>
         </Grid>
     </Grid>
 </Window>

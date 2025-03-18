@@ -8,7 +8,7 @@ namespace GraphicEditor.ViewModels
 {
     public class FigureViewModel : ViewModelBase
     {
-        public IFigure Figure { get; }
+        public IFigure Figure { get;set; }
 
         [Reactive]
         public float CenterX { get; set; }

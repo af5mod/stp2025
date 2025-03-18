@@ -5,7 +5,7 @@ using System.Drawing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace GraphicEditor
+namespace GraphicEditor.Models
 {
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Circle")]
@@ -17,10 +17,19 @@ namespace GraphicEditor
     {
         [Reactive] public PointF Center { get; set; }
         [Reactive] public PointF PointOnCircle { get; set; }
+        [Reactive] public float PointOnCircleX { get; set; }
+        [Reactive] public float PointOnCircleY { get; set; }
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
         private void InitBinding()
         {
+            this.WhenAnyValue(o => o.PointOnCircleX, o => o.PointOnCircleY, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    PointOnCircle = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
         }
 
@@ -40,6 +49,11 @@ namespace GraphicEditor
         {
             Center = center;
             PointOnCircle = pointOnCircle;
+            PointOnCircleX = PointOnCircle.X;
+            PointOnCircleY = PointOnCircle.Y;
+            RandomizeParameters();
+            Name = "Circle";
+            InitBinding();
         }
 
         public void Move(PointF vector)
@@ -88,7 +102,7 @@ namespace GraphicEditor
 
         public IFigure Clone()
         {
-            return new Circle(new PointF(Center.X, Center.Y), new PointF(PointOnCircle.X, PointOnCircle.Y));
+            return new Circle(new PointF(100, 100), new PointF(100, 200));
         }
 
         public IEnumerable<IDrawingFigure> GetAsDrawable() => throw new NotImplementedException();

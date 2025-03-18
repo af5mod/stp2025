@@ -2,21 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia.Controls.Shapes;
 using System.IO;
 using System.Text.RegularExpressions;
 
 using DynamicData;
-using Avalonia.Interactivity;
-using Avalonia.Input;
 using System.Reactive.Linq;
-using DynamicData.Kernel;
-using System.Collections.ObjectModel;
-using Avalonia.Controls.ApplicationLifetimes;
-using Tmds.DBus.Protocol;
-using GraphicEditor.ViewModels;
+using GraphicEditor.Models;
 
 namespace GraphicEditor
 {
