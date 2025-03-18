@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reactive;
@@ -15,24 +16,13 @@ namespace GraphicEditor.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private double _selectedShapeWidth;
-        private double _selectedShapeHeight;
-
-        public double SelectedShapeWidth
-        {
-            get => _selectedShapeWidth;
-            set => this.RaiseAndSetIfChanged(ref _selectedShapeWidth, Math.Round(value, 0));  // округление до целого
-        }
-
-        public double SelectedShapeHeight
-        {
-            get => _selectedShapeHeight;
-            set => this.RaiseAndSetIfChanged(ref _selectedShapeHeight, Math.Round(value, 0));  // округление до целого
-        }
         private readonly ILogic _figureService;
+
+        public ReactiveCommand<Unit, Unit> NewCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+        public ReactiveCommand<Unit, Unit> LoadCommand { get; }
         public ReactiveCommand<Unit, Unit> RemoveSelectedCommand { get; }
         public ReactiveCommand<Unit, Unit> ClearAllCommand { get; }
-        public ReactiveCommand<Unit, Unit> DeleteSelectedCommand { get; }
         // public ReactiveCommand<Point, Unit> CanvasClickCommand { get; }
         public ObservableCollection<FigureFactoryViewModel> FigureFactories { get; } = [];
         private readonly ReadOnlyObservableCollection<string> _readonlyFiguresNames;
@@ -74,6 +64,9 @@ namespace GraphicEditor.ViewModels
                     _figureService.RemoveFigure(SelectedFigure.Figure);
             });
 
+            SaveCommand = ReactiveCommand.Create(() => { _figureService.Save("test.svg", "svg"); });
+            LoadCommand = ReactiveCommand.Create(() => { _figureService.Load("test.svg", "svg"); });
+            NewCommand = ReactiveCommand.Create(() => { _figureService.ClearAll(); });
 
             // CanvasClickCommand = ReactiveCommand.Create<PointerPressedEventArgs>(args =>
             // {

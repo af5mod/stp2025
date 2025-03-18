@@ -7,6 +7,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace GraphicEditor.Models
 {
+
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Circle")]
     [ExportMetadata(nameof(FigureMetadata.IconPath), "/Assets/Circle.svg")]
@@ -45,15 +46,12 @@ namespace GraphicEditor.Models
 
             // this.WhenAnyValue(x => x.Center.X, x => x.Center.Y, (x, y) => { Console.WriteLine($"Circle's x or y changed: x:{x}, y:{y}"); return new PointF(x, y); });
         }
-        public Circle(PointF center, PointF pointOnCircle)
+        public Circle(PointF center, PointF pointOnCircle) : this()
         {
             Center = center;
             PointOnCircle = pointOnCircle;
             PointOnCircleX = PointOnCircle.X;
             PointOnCircleY = PointOnCircle.Y;
-            RandomizeParameters();
-            Name = "Circle";
-            InitBinding();
         }
 
         public void Move(PointF vector)

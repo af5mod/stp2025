@@ -46,9 +46,9 @@
             <DockPanel Grid.Row="0" Background="#D9D9D9" LastChildFill="True">
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="Файл">
-                        <MenuItem Header="Новый" />
-                        <MenuItem Header="Открыть"/>
-                        <MenuItem Header="Сохранить"/>
+                        <MenuItem Command="{Binding NewCommand}" Header="Новый" />
+                        <MenuItem Command="{Binding LoadCommand}" Header="Открыть" />
+                        <MenuItem Command="{Binding SaveCommand}" Header="Сохранить" />
                     </MenuItem>
                     <MenuItem Header="Изменить" />
                     <MenuItem Header="Вид" />
@@ -90,27 +90,15 @@
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <!--  Подписи слайдеров  -->
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
-                        <TextBlock HorizontalAlignment="Center" Text="Прозрачность" />
-                        <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedShapeWidth, StringFormat='{}{0:0}'}" />
-                    </StackPanel>
-
-                    <Slider
-                        x:Name="slider"
-                        Width="120"
-                        Maximum="100"
-                        Minimum="0"
-                        Value="{Binding SelectedShapeWidth, Mode=TwoWay}" />
-
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
                         <TextBlock HorizontalAlignment="Center" Text="Толщина" />
-                        <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedShapeHeight, StringFormat='{}{0:0}'}" />
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedFigure.Thickness, StringFormat='{}{0:0}'}" />
                     </StackPanel>
                     <Slider
                         x:Name="slider2"
                         Width="120"
                         Maximum="100"
                         Minimum="0"
-                        Value="{Binding SelectedShapeHeight, Mode=TwoWay}" />
+                        Value="{Binding SelectedFigure.Thickness, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>
 
@@ -277,10 +265,27 @@
                             <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto, Auto">
 
                                 <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="PointOnCircle X:" />
-                                <TextBox x:Name="PointOnCircleX" Grid.Row="0" Grid.Column="1" Text="{Binding PointOnCircleX, Mode=TwoWay}" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PointOnCircleX, Mode=TwoWay}" />
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="PointOnCircle Y:" />
-                                <TextBox x:Name="PointOnCircleY" Grid.Row="1" Grid.Column="1" Text="{Binding PointOnCircleY, Mode=TwoWay}" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PointOnCircleY, Mode=TwoWay}" />
+                            </Grid>
+                        </DataTemplate>                        
+                        
+                        <DataTemplate x:DataType="m:Line">
+                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto">
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Start X:" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding StartX, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Start Y:" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding StartY, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="End X:" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding EndX, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="End Y:" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding EndY, Mode=TwoWay}" />
                             </Grid>
                         </DataTemplate>
                     </ContentControl.DataTemplates>
@@ -308,7 +313,7 @@
                 <ItemsControl Width="1000" Height="600" ItemsSource="{Binding ReadonlyFigures}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:FigureViewModel">
-                            <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="1">
+                            <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="{Binding Thickness}">
                                 <Path.Fill>
                                     <SolidColorBrush Color="{Binding Color}" />
                                 </Path.Fill>

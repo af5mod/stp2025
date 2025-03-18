@@ -18,10 +18,9 @@ namespace GraphicEditor.Views
             InitializeComponent();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
-        public async void Canvas_PointerPressed(object sender,PointerPressedEventArgs args)
+        public void Canvas_PointerPressed(object sender,PointerPressedEventArgs args)
         {
             var vm = DataContext as MainWindowViewModel;
-            await vm.DeleteSelectedCommand.Execute();
         }
 
     }

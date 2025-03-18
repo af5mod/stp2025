@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Drawing;
 using System.Net;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
-namespace GraphicEditor
+namespace GraphicEditor.Models
 {
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Line")]
@@ -12,10 +14,22 @@ namespace GraphicEditor
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
     [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new string[] { "Start", "End" })]
-    public class Line : IFigure
+    public class Line : ReactiveObject, IFigure, IDrawingFigure
     {
+        [Reactive]
         public PointF Start { get; private set; }
+        [Reactive]
+        public float StartX { get; set; }
+        [Reactive]
+        public float StartY { get; set; }
+
+        [Reactive]
         public PointF End { get; private set; }
+        [Reactive]
+        public float EndX { get; set; }
+        [Reactive]
+        public float EndY { get; set; }
+
         public PointF Center
         {
             get;
@@ -25,9 +39,8 @@ namespace GraphicEditor
         public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string Name { get; set; }
 
-        public string DrawingGeometry => throw new NotImplementedException();
 
-        string IDrawingFigure.DrawingGeometry => $"M{Start.X},{Start.Y} L{End.X},{End.Y}";
+        public string DrawingGeometry => $"M{Start.X},{Start.Y} L{End.X},{End.Y}";
 
         public Line()
         {
@@ -35,12 +48,38 @@ namespace GraphicEditor
             Start = new PointF(1f, 1f);
             End = new PointF(2f, 2f);
             Name = "Line";
+
+            InitBinding();
         }
 
-        public Line(PointF start, PointF end)
+        public Line(PointF start, PointF end) : this()
         {
             Start = start;
             End = end;
+            StartX = Start.X;
+            StartY = Start.Y;
+            EndX = End.X;
+            EndY = End.Y;
+        }
+
+        private void InitBinding()
+        {
+            this.WhenAnyValue(o => o.StartX, o => o.StartY, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.EndX, o => o.EndY, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    End = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
         }
 
         public void Move(PointF vector)
@@ -81,7 +120,7 @@ namespace GraphicEditor
             float dx = a.X - b.X;
             float dy = a.Y - b.Y;
             float d = dx * dx + dy * dy;
-            
+
             float x = ((Start.X * dx + Start.Y * dy - a.X * dx - a.Y * dy) * dx + a.X * d) / d * 2 - Start.X;
             float y = ((Start.X * dx + Start.Y * dy - a.X * dx - a.Y * dy) * dy + a.Y * d) / d * 2 - Start.Y;
             Start = new PointF { X = x, Y = y };

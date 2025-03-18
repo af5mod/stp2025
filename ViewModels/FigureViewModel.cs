@@ -18,9 +18,12 @@ namespace GraphicEditor.ViewModels
 
         [Reactive]
         public Avalonia.Media.Color Color { get; set; }
+        [Reactive]
+        public float Thickness { get; set; }
 
         public FigureViewModel(IFigure figure)
         {
+            Thickness = 1;
             Figure = figure;
             CenterX = Figure.Center.X;
             CenterY = Figure.Center.Y;
