@@ -21,11 +21,35 @@ namespace GraphicEditor.Models
         [Reactive] public PointF Center { get; set; }
         [Reactive] public PointF TopLeft { get; set; }
         [Reactive] public PointF BottomRight { get; set; }
+
+        [Reactive] public float TopLeftX { get; set; }
+        [Reactive] public float TopLeftY { get; set; }
+        [Reactive] public float BottomRightX { get; set; }
+        [Reactive] public float BottomRightY { get; set; }
         [Reactive] public float Width { get; set; }
         [Reactive] public float Height { get; set; }
 
         public string DrawingGeometry => 
             $"M{TopLeft.X},{TopLeft.Y} L{BottomRight.X},{TopLeft.Y} L{BottomRight.X},{BottomRight.Y} L{TopLeft.X},{BottomRight.Y} Z";
+
+        private void InitBinding()
+        {
+            this.WhenAnyValue(o => o.TopLeftX, o => o.TopLeftY, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    TopLeft = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.BottomRightX, o => o.BottomRightY, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    BottomRight = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+        }
 
         public Rectangle()
         {
