@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Composition;
 using System.Drawing;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reactive.Linq;
+using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace GraphicEditor
+namespace GraphicEditor.Models
 {
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Hexagon")]
@@ -17,10 +22,22 @@ namespace GraphicEditor
     {
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
-        
+
         [Reactive]
         public List<PointF> Vertices { get; set; } = new List<PointF>(6);
 
+        [Reactive] public float Point0X { get; set; }
+        [Reactive] public float Point0Y { get; set; }
+        [Reactive] public float Point1X { get; set; }
+        [Reactive] public float Point1Y { get; set; }
+        [Reactive] public float Point2X { get; set; }
+        [Reactive] public float Point2Y { get; set; }
+        [Reactive] public float Point3X { get; set; }
+        [Reactive] public float Point3Y { get; set; }
+        [Reactive] public float Point4X { get; set; }
+        [Reactive] public float Point4Y { get; set; }
+        [Reactive] public float Point5X { get; set; }
+        [Reactive] public float Point5Y { get; set; }
         public PointF Center
         {
             get
@@ -44,7 +61,7 @@ namespace GraphicEditor
             }
         }
 
-        public string DrawingGeometry => 
+        public string DrawingGeometry =>
             $"M{Vertices[0].X},{Vertices[0].Y} " +
             $"L{Vertices[1].X},{Vertices[1].Y} " +
             $"L{Vertices[2].X},{Vertices[2].Y} " +
@@ -56,11 +73,68 @@ namespace GraphicEditor
         {
             Name = "Hexagon";
             RandomizeParameters();
-            
+
+            Point0X = Vertices[0].X;
+            Point1X = Vertices[1].X;
+            Point2X = Vertices[2].X;
+            Point3X = Vertices[3].X;
+            Point4X = Vertices[4].X;
+            Point5X = Vertices[5].X;
+
+            Point0Y = Vertices[0].Y;
+            Point1Y = Vertices[1].Y;
+            Point2Y = Vertices[2].Y;
+            Point3Y = Vertices[3].Y;
+            Point4Y = Vertices[4].Y;
+            Point5Y = Vertices[5].Y;
+
+            this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[0] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point1X, o => o.Point1Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[1] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point2X, o => o.Point2Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[2] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point3X, o => o.Point3Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[3] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point4X, o => o.Point4Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[4] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point5X, o => o.Point5Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[5] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
             // Уведомление об изменении Center при изменении вершин
             this.WhenAnyValue(x => x.Vertices)
                 .Subscribe(_ => this.RaisePropertyChanged(nameof(Center)));
         }
+
 
         // Остальные методы остаются без изменений
         public void RandomizeParameters()
@@ -158,7 +232,7 @@ namespace GraphicEditor
             for (int i = 0; i < Vertices.Count; i++)
             {
                 if (((Vertices[i].Y > point.Y) != (Vertices[j].Y > point.Y)) &&
-                    (point.X < (Vertices[j].X - Vertices[i].X) * (point.Y - Vertices[i].Y) / 
+                    (point.X < (Vertices[j].X - Vertices[i].X) * (point.Y - Vertices[i].Y) /
                     (Vertices[j].Y - Vertices[i].Y) + Vertices[i].X))
                     inside = !inside;
                 j = i;
