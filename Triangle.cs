@@ -4,7 +4,7 @@ using System.Composition;
 using System.Drawing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-namespace GraphicEditor
+namespace GraphicEditor.Models
 {   
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Triangle")]

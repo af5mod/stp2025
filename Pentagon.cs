@@ -5,7 +5,7 @@ using System.Drawing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace GraphicEditor
+namespace GraphicEditor.Models
 {
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Pentagon")]
@@ -17,9 +17,21 @@ namespace GraphicEditor
     {
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
-        
+
         [Reactive]
         public List<PointF> Vertices { get; set; } = new List<PointF>(5);
+
+        [Reactive] public float Vertex1X { get; set; }
+        [Reactive] public float Vertex1Y { get; set; }
+        [Reactive] public float Vertex2X { get; set; }
+        [Reactive] public float Vertex2Y { get; set; }
+        [Reactive] public float Vertex3X { get; set; }
+        [Reactive] public float Vertex3Y { get; set; }
+        [Reactive] public float Vertex4X { get; set; }
+        [Reactive] public float Vertex4Y { get; set; }
+        [Reactive] public float Vertex5X { get; set; }
+        [Reactive] public float Vertex5Y { get; set; }
+
 
         public PointF Center
         {
@@ -41,7 +53,47 @@ namespace GraphicEditor
             }
         }
 
-        public string DrawingGeometry => 
+        private void InitBinding()
+        {
+            this.WhenAnyValue(o => o.Vertex1X, o => o.Vertex1Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[0] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Vertex2X, o => o.Vertex2Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[1] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Vertex3X, o => o.Vertex3Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[2] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Vertex4X, o => o.Vertex4Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[3] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Vertex5X, o => o.Vertex5Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Vertices[4] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+        }
+
+        public string DrawingGeometry =>
             $"M{Vertices[0].X},{Vertices[0].Y} " +
             $"L{Vertices[1].X},{Vertices[1].Y} " +
             $"L{Vertices[2].X},{Vertices[2].Y} " +
@@ -53,7 +105,7 @@ namespace GraphicEditor
         {
             Name = "Pentagon";
             RandomizeParameters();
-            this.WhenAnyValue(x => x.Vertices).Subscribe(_ => this.RaisePropertyChanged(nameof(Center)));
+            InitBinding();
         }
 
         public void RandomizeParameters()
@@ -168,7 +220,7 @@ namespace GraphicEditor
             for (int i = 0; i < Vertices.Count; i++)
             {
                 if (((Vertices[i].Y > point.Y) != (Vertices[j].Y > point.Y)) &&
-                    (point.X < (Vertices[j].X - Vertices[i].X) * (point.Y - Vertices[i].Y) / 
+                    (point.X < (Vertices[j].X - Vertices[i].X) * (point.Y - Vertices[i].Y) /
                     (Vertices[j].Y - Vertices[i].Y) + Vertices[i].X))
                     inside = !inside;
                 j = i;

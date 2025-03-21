@@ -288,6 +288,35 @@
                                 <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding EndY, Mode=TwoWay}" />
                             </Grid>
                         </DataTemplate>
+
+                        <DataTemplate x:DataType="m:Pentagon">
+                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Vertex1X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Vertex1Y, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Vertex2X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Vertex2Y, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Vertex3X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" />
+                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Vertex3Y, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="X3:" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Vertex4X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="Y3:" />
+                                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Vertex4Y, Mode=TwoWay}" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="X4:" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Vertex5X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="4" Grid.Column="2" Text="Y4:" />
+                                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Vertex5Y, Mode=TwoWay}" />
+                            </Grid>
+                        </DataTemplate>
                     </ContentControl.DataTemplates>
                 </ContentControl>
 
