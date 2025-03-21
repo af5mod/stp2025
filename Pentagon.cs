@@ -59,12 +59,29 @@ namespace GraphicEditor
         public void RandomizeParameters()
         {
             Vertices = new List<PointF>();
+
+            // Случайные параметры: центр и радиус
+            float centerX = Random.Shared.Next(100, 500);
+            float centerY = Random.Shared.Next(100, 500);
+            float radius = Random.Shared.Next(50, 200); // Радиус от 50 до 200
+
+            // Угловой шаг между вершинами (360° / 5 = 72° или 2π/5 радиан)
+            double angleStep = 2 * Math.PI / 5;
+
+            // Начальный угол для ориентации пятиугольника
+            double startAngle = -Math.PI / 2; // Одна из вершин направлена вверх
+
             for (int i = 0; i < 5; i++)
             {
-                Vertices.Add(new PointF(
-                    Random.Shared.Next(100, 500),
-                    Random.Shared.Next(100, 500)
-                ));
+                // Вычисляем угол для текущей вершины
+                double angle = startAngle + i * angleStep;
+
+                // Вычисляем координаты вершины
+                float x = centerX + (float)(radius * Math.Cos(angle));
+                float y = centerY + (float)(radius * Math.Sin(angle));
+
+                // Добавляем вершину в список
+                Vertices.Add(new PointF(x, y));
             }
         }
 

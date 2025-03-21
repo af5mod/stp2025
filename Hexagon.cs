@@ -66,12 +66,29 @@ namespace GraphicEditor
         public void RandomizeParameters()
         {
             Vertices = new List<PointF>();
+
+            // Случайные параметры: центр и радиус
+            float centerX = Random.Shared.Next(100, 500);
+            float centerY = Random.Shared.Next(100, 500);
+            float radius = Random.Shared.Next(50, 200); // Радиус от 50 до 200
+
+            // Угловой шаг между вершинами (360° / 6 = 60° или π/3 радиан)
+            double angleStep = Math.PI / 3;
+
+            // Начальный угол для ориентации шестиугольника
+            double startAngle = -Math.PI / 2; // Одна из вершин направлена вверх
+
             for (int i = 0; i < 6; i++)
             {
-                Vertices.Add(new PointF(
-                    Random.Shared.Next(100, 500),
-                    Random.Shared.Next(100, 500)
-                ));
+                // Вычисляем угол для текущей вершины
+                double angle = startAngle + i * angleStep;
+
+                // Вычисляем координаты вершины
+                float x = centerX + (float)(radius * Math.Cos(angle));
+                float y = centerY + (float)(radius * Math.Sin(angle));
+
+                // Добавляем вершину в список
+                Vertices.Add(new PointF(x, y));
             }
         }
 

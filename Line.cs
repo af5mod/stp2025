@@ -17,14 +17,14 @@ namespace GraphicEditor.Models
     public class Line : ReactiveObject, IFigure, IDrawingFigure
     {
         [Reactive]
-        public PointF Start { get; private set; }
+        public PointF Start { get;  set; }
         [Reactive]
         public float StartX { get; set; }
         [Reactive]
         public float StartY { get; set; }
 
         [Reactive]
-        public PointF End { get; private set; }
+        public PointF End { get;  set; }
         [Reactive]
         public float EndX { get; set; }
         [Reactive]
@@ -36,19 +36,16 @@ namespace GraphicEditor.Models
             set;
         }
 
-        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Name { get; set; }
+        [Reactive] public bool IsSelected { get; set; }
+        [Reactive] public string Name { get; set; }
 
 
         public string DrawingGeometry => $"M{Start.X},{Start.Y} L{End.X},{End.Y}";
 
         public Line()
         {
-            // Инициализация по умолчанию (если требуется)
-            Start = new PointF(1f, 1f);
-            End = new PointF(2f, 2f);
+            RandomizeParameters();
             Name = "Line";
-
             InitBinding();
         }
 
@@ -67,7 +64,7 @@ namespace GraphicEditor.Models
             this.WhenAnyValue(o => o.StartX, o => o.StartY, (x, y) => new PointF(x, y))
                 .Subscribe((x) =>
                 {
-                    
+                    Start = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );

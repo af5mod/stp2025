@@ -122,7 +122,11 @@ namespace GraphicEditor.Models
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
-        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
+        {
+            Center = pointParams["Center"];
+            PointOnCircle = pointParams["PointOnCircle"];
+        }
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
         public void RandomizeParameters()

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 using DynamicData;
 using System.Reactive.Linq;
 using GraphicEditor.Models;
+
 
 namespace GraphicEditor
 {
@@ -129,35 +131,50 @@ namespace GraphicEditor
             throw new NotImplementedException();
         }
 
+
         private void LoadLine(Match lineMatch)
         {
+            Console.WriteLine("ЗАГРУЗКА ЛИНИИ");
+
             double x1 = double.Parse(lineMatch.Groups["x1"].Value);
             double y1 = double.Parse(lineMatch.Groups["y1"].Value);
             double x2 = double.Parse(lineMatch.Groups["x2"].Value);
             double y2 = double.Parse(lineMatch.Groups["y2"].Value);
 
+            Console.WriteLine($"lineMatch {x1} {y1} {x2} {y2}");
+
             var line = FigureFabric.CreateFigure("Line");
+
+
             line.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
-                    {"First", new PointF { X = (float)x1, Y = (float)y1 }},
-                    {"Second", new PointF {X =(float) x2, Y =(float) y2}}
+                    {"Start", new PointF { X = (float)x1, Y = (float)y1 }},
+                    {"End", new PointF {X =(float) x2, Y =(float) y2}}
                 });
 
-            AddFigure(line);
+
+            AddFigureInCache(line);
         }
 
         private void LoadCircle(Match circleMatch)
         {
+            Console.WriteLine("ЗАГРУЗКА КРУГА");
+
             double cx = double.Parse(circleMatch.Groups["cx"].Value);
             double cy = double.Parse(circleMatch.Groups["cy"].Value);
-            double r = double.Parse(circleMatch.Groups["r"].Value);
+            double r = Double.Parse(circleMatch.Groups["r"].Value, CultureInfo.InvariantCulture);
+
+            Console.WriteLine($"circleMatch {cx} {cy} {r}");
 
             var circle = FigureFabric.CreateFigure("Circle");
+
+
             circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
                     {"Center", new PointF {X =(float) cx, Y =(float) cy}},
-                    {"RadiusPoint", new PointF {X =(float)cx + (float)r, Y =(float) cy}}
+                    {"PointOnCircle", new PointF {X =(float)cx + (float)r, Y =(float) cy}}
                 });
+
 
             AddFigureInCache(circle);
         }
@@ -175,7 +192,6 @@ namespace GraphicEditor
                     {"TopLeft", new PointF { X = (float)x, Y = (float)y }},
                     {"BottomRight", new PointF {X = (float)(x + width), Y = (float)(y + height)}}
                 });
-
             AddFigureInCache(rectangle);
         }
 
@@ -220,7 +236,7 @@ namespace GraphicEditor
                 float y = float.Parse(triangleMatch.Groups[$"y{i}"].Value);
                 corners.Add(new PointF(x, y));
             }
-            
+
             var triangle = new Triangle(corners);
             AddFigureInCache(triangle);
         }
@@ -230,10 +246,13 @@ namespace GraphicEditor
             if (FileFormat.ToLower() != "svg")
                 return;
 
+
             string svgContent = File.ReadAllText(FilePath);
 
-            var lineMatches = Regex.Matches(svgContent, 
-                @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s+stroke='(?<stroke>[\w#]+)'\s*stroke-width='(?<strokeWidth>[\d.]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            Console.WriteLine("ЗАГРУЗКА ИЗ ФАЙЛА");
+
+            var lineMatches = Regex.Matches(svgContent,
+                                @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s*(?:stroke='(?<stroke>[\w#]+)'\s*)?(?:stroke-width='(?<strokeWidth>[\d.]+)'\s*)?(?:opacity='(?<opacity>[\d.]+)'\s*)?(?:style='(?<style>[^']*)'\s*)?\/?>");
             foreach (Match lineMatch in lineMatches)
             {
                 if (lineMatch.Success)
@@ -242,7 +261,7 @@ namespace GraphicEditor
                 }
             }
 
-            var hexagonMatches = Regex.Matches(svgContent, 
+            var hexagonMatches = Regex.Matches(svgContent,
                 @"<polygon\s+points='((?<x>[\d.]+),(?<y>[\d.]+)\s+){5}(?<x>[\d.]+),(?<y>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
             foreach (Match hexagonMatch in hexagonMatches)
             {
@@ -252,7 +271,7 @@ namespace GraphicEditor
                 }
             }
 
-            var pentagonMatches = Regex.Matches(svgContent, 
+            var pentagonMatches = Regex.Matches(svgContent,
                 @"<polygon\s+points='((?<x>[\d.]+),(?<y>[\d.]+)\s+){4}(?<x>[\d.]+),(?<y>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
             foreach (Match pentagonMatch in pentagonMatches)
             {
@@ -262,7 +281,7 @@ namespace GraphicEditor
                 }
             }
 
-            var rectMatches = Regex.Matches(svgContent, 
+            var rectMatches = Regex.Matches(svgContent,
                 @"<rect\s+x='(?<x>[\d.]+)'\s+y='(?<y>[\d.]+)'\s+width='(?<width>[\d.]+)'\s+height='(?<height>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
             foreach (Match rectMatch in rectMatches)
             {
@@ -272,7 +291,7 @@ namespace GraphicEditor
                 }
             }
 
-            var triangleMatches = Regex.Matches(svgContent, 
+            var triangleMatches = Regex.Matches(svgContent,
                 @"<polygon\s+points='(?<x1>[\d.]+),(?<y1>[\d.]+)\s+(?<x2>[\d.]+),(?<y2>[\d.]+)\s+(?<x3>[\d.]+),(?<y3>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
             foreach (Match triangleMatch in triangleMatches)
             {
@@ -282,8 +301,8 @@ namespace GraphicEditor
                 }
             }
 
-            var circleMatches = Regex.Matches(svgContent, 
-                @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+            var circleMatches = Regex.Matches(svgContent,
+                @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s*(?:fill='(?<fill>[\w#]+)'\s*)?(?:stroke='(?<stroke>[\w#]+)'\s*)?(?:opacity='(?<opacity>[\d.]+)'\s*)?style='(?<style>[^']*)'\s*\/?>");
             foreach (Match circleMatch in circleMatches)
             {
                 if (circleMatch.Success)
@@ -298,15 +317,24 @@ namespace GraphicEditor
             _figures.AddOrUpdate(figure);
         }
 
+        public void PrintFigures()
+        {
+            foreach (var figure in _figures.Items)
+            {
+                Console.WriteLine($"Figure Name: {figure.Name}");
+            }
+        }
 
         public void Save(string FilePath, string FileFormat)
         {
             if (FileFormat.ToLower() != "svg")
                 return;
 
-            string svgHeader = "<svg width='500' height='500' xmlns='http://www.w3.org/2000/svg'>\n";
+            string svgHeader = "<svg width='1000' height='600' xmlns='http://www.w3.org/2000/svg'>\n";
             string svgFooter = "</svg>";
             string svgContent = "";
+
+            PrintFigures();
 
             foreach (var figure in _figures.Items)
             {
@@ -322,6 +350,17 @@ namespace GraphicEditor
 
                     svgContent += $"<circle cx='{circle.Center.X}' cy='{circle.Center.Y}' r='{radius}' " +
                                 "style='stroke:rgb(99,99,99);stroke-width:2; fill:none' />\n";
+                    Console.WriteLine($"radius: {radius}");
+                    Console.WriteLine($"PointOnCircle.X: {circle.PointOnCircle.X}");
+                    Console.WriteLine($"PointOnCircle.Y: {circle.PointOnCircle.Y}");
+                    Console.WriteLine($"Center.X: {circle.Center.X}");
+                    Console.WriteLine($"Center.Y: {circle.Center.Y}");
+
+                    svgContent += $"<circle cx='{circle.Center.X.ToString(CultureInfo.InvariantCulture)}' " +
+                        $"cy='{circle.Center.Y.ToString(CultureInfo.InvariantCulture)}' " +
+                        $"r='{radius.ToString(CultureInfo.InvariantCulture)}' " +
+                        "style='stroke:rgb(99,99,99);stroke-width:2; fill:none' />\n";
+                    Console.WriteLine($"svgContent: {svgContent}");
                 }
             }
 
@@ -338,6 +377,7 @@ namespace GraphicEditor
                 File.WriteAllText(filePath, svgContent);
             }
         }
+
 
         public void Select(IFigure f)
         {
