@@ -50,8 +50,6 @@
                         <MenuItem Command="{Binding LoadCommand}" Header="Открыть" />
                         <MenuItem Command="{Binding SaveCommand}" Header="Сохранить" />
                     </MenuItem>
-                    <MenuItem Header="Изменить" />
-                    <MenuItem Header="Вид" />
                 </Menu>
             </DockPanel>
 
@@ -63,24 +61,6 @@
                 Orientation="Horizontal"
                 Spacing="12">
 
-                <!--  группа с тремя кнопками  -->
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button>
-                        <ContentControl>
-                            <Image Source="{SvgImage /Assets/pajamas_go-back.svg}" />
-                        </ContentControl>
-                    </Button>
-                    <Button>
-                        <ContentControl>
-                            <Image Source="{SvgImage /Assets/pajamas_go-back-2.svg}" />
-                        </ContentControl>
-                    </Button>
-                    <Button>
-                        <ContentControl>
-                            <Image Source="{SvgImage /Assets/Save.svg}" />
-                        </ContentControl>
-                    </Button>
-                </StackPanel>
 
                 <!--  небольшой отступ между кнопками и ползунками  -->
                 <StackPanel Width="20" />
