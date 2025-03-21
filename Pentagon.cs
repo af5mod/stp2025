@@ -32,7 +32,8 @@ namespace GraphicEditor.Models
         [Reactive] public float Vertex5X { get; set; }
         [Reactive] public float Vertex5Y { get; set; }
 
-
+        [Reactive]
+        public Avalonia.Media.Color Color { get; set; }
         public PointF Center
         {
             get
@@ -123,7 +124,7 @@ namespace GraphicEditor.Models
         public void RandomizeParameters()
         {
             Vertices = new List<PointF>();
-
+            Color = Avalonia.Media.Color.FromRgb((byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256));
             // Случайные параметры: центр и радиус
             float centerX = Random.Shared.Next(100, 500);
             float centerY = Random.Shared.Next(100, 500);

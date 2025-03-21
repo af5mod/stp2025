@@ -29,7 +29,8 @@ namespace GraphicEditor.Models
         public float EndX { get; set; }
         [Reactive]
         public float EndY { get; set; }
-
+        [Reactive]
+        public Avalonia.Media.Color Color { get; set; }
         public PointF Center
         {
             get;
@@ -151,12 +152,13 @@ namespace GraphicEditor.Models
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
         public void RandomizeParameters()
         {
+            Color = Avalonia.Media.Color.FromRgb((byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256));
             var startX = Random.Shared.Next(256);
             var startY = Random.Shared.Next(256);
 
             var endX = Random.Shared.Next(256);
             var endY = Random.Shared.Next(256);
-
+            
             Start = new(startX, startY);
             End = new(endX, endY);
         }

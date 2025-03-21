@@ -35,6 +35,7 @@ namespace GraphicEditor
         IFigure Subtract(IFigure other);
         void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams);
         void RandomizeParameters();
+        Avalonia.Media.Color Color { get; set; }
     }
 
     public interface ILogic

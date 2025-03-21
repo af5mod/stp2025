@@ -33,7 +33,8 @@ namespace GraphicEditor.Models
             );
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
         }
-
+        [Reactive]
+        public Avalonia.Media.Color Color { get; set; }
         public string DrawingGeometry => $"M{Center.X + Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X - Radius},{Center.Y} A{Radius},{Radius},0,1,1,{Center.X + Radius},{Center.Y} z";
         public float Radius => Distance(Center, PointOnCircle);
         public Circle()
@@ -131,6 +132,7 @@ namespace GraphicEditor.Models
         public void SetParameters(IDictionary<string, float> doubleParams, IDictionary<string, PointF> pointParams) => throw new NotImplementedException();
         public void RandomizeParameters()
         {
+            Color = Avalonia.Media.Color.FromRgb((byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256));
             var centerX = Random.Shared.Next(400);
             var centerY = Random.Shared.Next(400);
 

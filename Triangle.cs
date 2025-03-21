@@ -25,6 +25,8 @@ namespace GraphicEditor.Models
         [Reactive] public float Point1Y { get; set; }
         [Reactive] public float Point2X { get; set; }
         [Reactive] public float Point2Y { get; set; }
+        [Reactive]
+        public Avalonia.Media.Color Color { get; set; }
         public Triangle()
         {
             Corners = new List<PointF>();
@@ -102,6 +104,7 @@ namespace GraphicEditor.Models
         }
         public void RandomizeParameters()
         {
+            Color = Avalonia.Media.Color.FromRgb((byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256));
             Corners = new List<PointF>
             {
                 new PointF(Random.Shared.Next(400), Random.Shared.Next(400)),

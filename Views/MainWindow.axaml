@@ -239,7 +239,7 @@
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Color:" />
                                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                    <ColorPicker Color="{Binding Color}" />
+                                    <ColorPicker Color="{Binding Figure.Color}" />
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Center X:" />
@@ -412,7 +412,7 @@
                         <DataTemplate x:DataType="vm:FigureViewModel">
                             <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="{Binding Thickness}">
                                 <Path.Fill>
-                                    <SolidColorBrush Color="{Binding Color}" />
+                                    <SolidColorBrush Color="{Binding Figure.Color}" />
                                 </Path.Fill>
                             </Path>
                             <!-- <Canvas

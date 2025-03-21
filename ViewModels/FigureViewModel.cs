@@ -16,6 +16,7 @@ namespace GraphicEditor.ViewModels
         [Reactive]
         public float CenterY { get; set; }
 
+
         [Reactive]
         public Avalonia.Media.Color Color { get; set; }
         [Reactive]

@@ -33,7 +33,8 @@ namespace GraphicEditor.Models
         [Reactive] public float Point0Y { get; set; }
         [Reactive] public float Point1X { get; set; }
         [Reactive] public float Point1Y { get; set; }
-
+        [Reactive]
+        public Avalonia.Media.Color Color { get; set; }
         public string DrawingGeometry =>
             $"M{TopLeft.X},{TopLeft.Y} L{BottomRight.X},{TopLeft.Y} L{BottomRight.X},{BottomRight.Y} L{TopLeft.X},{BottomRight.Y} Z";
 
@@ -95,6 +96,7 @@ namespace GraphicEditor.Models
 
         public void RandomizeParameters()
         {
+            Color = Avalonia.Media.Color.FromRgb((byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256), (byte)Random.Shared.Next(256));
             var x = Random.Shared.Next(100, 500);
             var y = Random.Shared.Next(100, 500);
 
