@@ -29,7 +29,12 @@ namespace GraphicEditor.Models
         [Reactive] public float Width { get; set; }
         [Reactive] public float Height { get; set; }
 
-        public string DrawingGeometry => 
+        [Reactive] public float Point0X { get; set; }
+        [Reactive] public float Point0Y { get; set; }
+        [Reactive] public float Point1X { get; set; }
+        [Reactive] public float Point1Y { get; set; }
+
+        public string DrawingGeometry =>
             $"M{TopLeft.X},{TopLeft.Y} L{BottomRight.X},{TopLeft.Y} L{BottomRight.X},{BottomRight.Y} L{TopLeft.X},{BottomRight.Y} Z";
 
         private void InitBinding()
@@ -55,7 +60,27 @@ namespace GraphicEditor.Models
         {
             RandomizeParameters();
             Name = "Rectangle";
-            
+            Point0X = TopLeft.X;
+            Point1X = BottomRight.X;
+
+            Point0Y = TopLeft.Y;
+            Point1Y = BottomRight.Y;
+
+            this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    TopLeft = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point1X, o => o.Point1Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    BottomRight = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
             this.WhenAnyValue(x => x.TopLeft, x => x.BottomRight)
                 .Subscribe(_ => UpdateCenter());
         }
@@ -72,7 +97,7 @@ namespace GraphicEditor.Models
         {
             var x = Random.Shared.Next(100, 500);
             var y = Random.Shared.Next(100, 500);
-            
+
             TopLeft = new PointF(x, y);
             BottomRight = new PointF(
                 x + Random.Shared.Next(50, 200),
@@ -97,7 +122,7 @@ namespace GraphicEditor.Models
             {
                 points[i] = RotatePoint(points[i], rotationCenter, cosA, sinA);
             }
-            
+
             TopLeft = points[0];
             BottomRight = points[1];
         }
@@ -137,7 +162,7 @@ namespace GraphicEditor.Models
             Name = this.Name
         };
 
-        public bool IsIn(PointF point, float eps) => 
+        public bool IsIn(PointF point, float eps) =>
             point.X >= TopLeft.X - eps && point.X <= BottomRight.X + eps &&
             point.Y >= TopLeft.Y - eps && point.Y <= BottomRight.Y + eps;
 
