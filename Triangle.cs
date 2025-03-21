@@ -1,39 +1,65 @@
 using System;
 using System.Collections.Generic;
+using System.Composition;
 using System.Drawing;
-
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 namespace GraphicEditor
-{
-    public class Triangle: IFigure
+{   
+    [Export(typeof(IFigure))]
+    [ExportMetadata(nameof(FigureMetadata.Name), "Triangle")]
+    [ExportMetadata(nameof(FigureMetadata.IconPath), "/Assets/Triangle.svg")]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 3)]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new[] { "Vertex1", "Vertex2", "Vertex3" })]
+    public class Triangle: ReactiveObject, IFigure, IDrawingFigure
     {
+        [Reactive] public bool IsSelected { get; set; }
+        [Reactive] public string Name { get; set; }
         private List<PointF> corners;
 
-        public Triangle(PointF vertex1, PointF vertex2, PointF vertex3)
+        public Triangle()
         {
-            corners = new List<PointF> {vertex1, vertex2, vertex3};
+            corners = new List<PointF>();
+            RandomizeParameters();
+            Name = "Triangle";
         }
 
-        public Triangle(List<PointF> corners)
+        public Triangle(PointF vertex1, PointF vertex2, PointF vertex3) : this()
+        {
+            corners = new List<PointF> { vertex1, vertex2, vertex3 };
+        }
+
+        public Triangle(List<PointF> corners) : this()
         {
             if (corners == null || corners.Count != 3)
                 throw new ArgumentException("Для треугольника необходимо задать 3 вершины.");
             this.corners = new List<PointF>(corners);
         }
+        [Reactive] public PointF Vertex1 { get => corners[0]; set => corners[0] = value; }
+        [Reactive] public PointF Vertex2 { get => corners[1]; set => corners[1] = value; }
+        [Reactive] public PointF Vertex3 { get => corners[2]; set => corners[2] = value; }
 
-        public string Name => "Triangle";
+        public string DrawingGeometry => 
+            $"M{Vertex1.X},{Vertex1.Y} L{Vertex2.X},{Vertex2.Y} L{Vertex3.X},{Vertex3.Y} Z";
 
         public PointF Center
         {
             get
             {
-                float sumX = 0, sumY = 0;
-                foreach (var pt in corners)
-                {
-                    sumX += pt.X;
-                    sumY += pt.Y;
-                }
-                return new PointF(sumX / corners.Count, sumY / corners.Count);
+                float sumX = Vertex1.X + Vertex2.X + Vertex3.X;
+                float sumY = Vertex1.Y + Vertex2.Y + Vertex3.Y;
+                return new PointF(sumX / 3, sumY / 3);
             }
+        }
+        public void RandomizeParameters()
+        {
+            corners = new List<PointF>
+            {
+                new PointF(Random.Shared.Next(400), Random.Shared.Next(400)),
+                new PointF(Random.Shared.Next(400), Random.Shared.Next(400)),
+                new PointF(Random.Shared.Next(400), Random.Shared.Next(400))
+            };
         }
 
         bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

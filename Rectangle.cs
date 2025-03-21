@@ -1,71 +1,81 @@
 using System;
 using System.Collections.Generic;
+using System.Composition;
 using System.Drawing;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GraphicEditor
 {
-    public class Rectangle : IFigure
+    [Export(typeof(IFigure))]
+    [ExportMetadata(nameof(FigureMetadata.Name), "Rectangle")]
+    [ExportMetadata(nameof(FigureMetadata.IconPath), "/Assets/Rectangle.svg")]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 2)]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 2)]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new[] { "TopLeft", "BottomRight" })]
+    [ExportMetadata(nameof(FigureMetadata.DoubleParametersNames), new[] { "Width", "Height" })]
+    public class Rectangle : ReactiveObject, IFigure, IDrawingFigure
     {
-        private List<PointF> corners;
+        [Reactive] public bool IsSelected { get; set; }
+        [Reactive] public string Name { get; set; }
+        [Reactive] public PointF Center { get; set; }
+        [Reactive] public PointF TopLeft { get; set; }
+        [Reactive] public PointF BottomRight { get; set; }
+        [Reactive] public float Width { get; set; }
+        [Reactive] public float Height { get; set; }
 
-        public Rectangle(PointF topLeft, float width, float height)
+        public string DrawingGeometry => 
+            $"M{TopLeft.X},{TopLeft.Y} L{BottomRight.X},{TopLeft.Y} L{BottomRight.X},{BottomRight.Y} L{TopLeft.X},{BottomRight.Y} Z";
+
+        public Rectangle()
         {
-            corners = new List<PointF>
-            {
-                topLeft,
-                new PointF(topLeft.X + width, topLeft.Y),
-                new PointF(topLeft.X + width, topLeft.Y + height),
-                new PointF(topLeft.X, topLeft.Y + height)
-            };
+            RandomizeParameters();
+            Name = "Rectangle";
+            
+            this.WhenAnyValue(x => x.TopLeft, x => x.BottomRight)
+                .Subscribe(_ => UpdateCenter());
         }
 
-        public Rectangle(List<PointF> corners)
+        private void UpdateCenter()
         {
-            if (corners == null || corners.Count != 4)
-                throw new ArgumentException("Для прямоугольника необходимо задать 4 вершины.");
-            this.corners = new List<PointF>(corners);
+            Center = new PointF(
+                (TopLeft.X + BottomRight.X) / 2,
+                (TopLeft.Y + BottomRight.Y) / 2
+            );
         }
 
-        public string Name => "Rectangle";
-
-        public PointF Center
+        public void RandomizeParameters()
         {
-            get
-            {
-                float sumX = 0, sumY = 0;
-                foreach (var pt in corners)
-                {
-                    sumX += pt.X;
-                    sumY += pt.Y;
-                }
-                return new PointF(sumX / corners.Count, sumY / corners.Count);
-            }
+            var x = Random.Shared.Next(100, 500);
+            var y = Random.Shared.Next(100, 500);
+            
+            TopLeft = new PointF(x, y);
+            BottomRight = new PointF(
+                x + Random.Shared.Next(50, 200),
+                y + Random.Shared.Next(50, 200)
+            );
         }
-
-        bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        PointF IFigure.Center { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        string IFigure.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        string IDrawingFigure.DrawingGeometry => throw new NotImplementedException();
 
         public void Move(PointF vector)
         {
-            for (int i = 0; i < corners.Count; i++)
-            {
-                corners[i] = new PointF(corners[i].X + vector.X, corners[i].Y + vector.Y);
-            }
+            TopLeft = new PointF(TopLeft.X + vector.X, TopLeft.Y + vector.Y);
+            BottomRight = new PointF(BottomRight.X + vector.X, BottomRight.Y + vector.Y);
         }
 
         public void Rotate(PointF rotationCenter, float angle)
         {
+            var points = new[] { TopLeft, BottomRight };
             double rad = angle * Math.PI / 180;
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
 
-            for (int i = 0; i < corners.Count; i++)
+            for (int i = 0; i < points.Length; i++)
             {
-                corners[i] = RotatePoint(corners[i], rotationCenter, cosA, sinA);
+                points[i] = RotatePoint(points[i], rotationCenter, cosA, sinA);
             }
+            
+            TopLeft = points[0];
+            BottomRight = points[1];
         }
 
         private PointF RotatePoint(PointF pt, PointF center, double cosA, double sinA)
@@ -80,82 +90,50 @@ namespace GraphicEditor
 
         public void Scale(float dx, float dy)
         {
-            for (int i = 0; i < corners.Count; i++)
-            {
-                corners[i] = new PointF(corners[i].X * dx, corners[i].Y * dy);
-            }
+            Width *= dx;
+            Height *= dy;
+            BottomRight = new PointF(TopLeft.X + Width, TopLeft.Y + Height);
         }
 
         public void Scale(PointF scaleCenter, float dr)
         {
-            for (int i = 0; i < corners.Count; i++)
-            {
-                float newX = scaleCenter.X + (corners[i].X - scaleCenter.X) * dr;
-                float newY = scaleCenter.Y + (corners[i].Y - scaleCenter.Y) * dr;
-                corners[i] = new PointF(newX, newY);
-            }
+            var newWidth = Width * dr;
+            var newHeight = Height * dr;
+            TopLeft = new PointF(
+                scaleCenter.X - (scaleCenter.X - TopLeft.X) * dr,
+                scaleCenter.Y - (scaleCenter.Y - TopLeft.Y) * dr
+            );
+            BottomRight = new PointF(TopLeft.X + newWidth, TopLeft.Y + newHeight);
         }
 
-        public void Reflection(PointF a, PointF b)
+        public IFigure Clone() => new Rectangle
         {
-            for (int i = 0; i < corners.Count; i++)
-            {
-                corners[i] = ReflectPoint(corners[i], a, b);
-            }
-        }
+            TopLeft = this.TopLeft,
+            BottomRight = this.BottomRight,
+            Name = this.Name
+        };
 
-        private PointF ReflectPoint(PointF p, PointF a, PointF b)
-        {
-            float dx = b.X - a.X;
-            float dy = b.Y - a.Y;
-            float mag2 = dx * dx + dy * dy;
-            if (mag2 == 0) return p;
-            float t = ((p.X - a.X) * dx + (p.Y - a.Y) * dy) / mag2;
-            PointF proj = new PointF(a.X + t * dx, a.Y + t * dy);
-            return new PointF(2 * proj.X - p.X, 2 * proj.Y - p.Y);
-        }
-
-        public IFigure Clone()
-        {
-            return new Rectangle(new List<PointF>(corners));
-        }
-
-        public void Draw(IDrawing drawing) => throw new NotImplementedException();
-
-        public bool IsIn(PointF point, float eps)
-        {
-            float minX = Math.Min(corners[0].X, corners[2].X);
-            float maxX = Math.Max(corners[0].X, corners[2].X);
-            float minY = Math.Min(corners[0].Y, corners[2].Y);
-            float maxY = Math.Max(corners[0].Y, corners[2].Y);
-
-            return point.X >= minX - eps && point.X <= maxX + eps &&
-                   point.Y >= minY - eps && point.Y <= maxY + eps;
-        }
-
-        public IFigure Intersect(IFigure other) => throw new NotImplementedException();
-        public IFigure Union(IFigure other) => throw new NotImplementedException();
-        public IFigure Subtract(IFigure other) => throw new NotImplementedException();
+        public bool IsIn(PointF point, float eps) => 
+            point.X >= TopLeft.X - eps && point.X <= BottomRight.X + eps &&
+            point.Y >= TopLeft.Y - eps && point.Y <= BottomRight.Y + eps;
 
         public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
         {
-            if (pointParams != null &&
-                pointParams.ContainsKey("TopLeft") &&
-                pointParams.ContainsKey("TopRight") &&
-                pointParams.ContainsKey("BottomRight") &&
-                pointParams.ContainsKey("BottomLeft"))
+            if (pointParams != null)
             {
-                corners[0] = pointParams["TopLeft"];
-                corners[1] = pointParams["TopRight"];
-                corners[2] = pointParams["BottomRight"];
-                corners[3] = pointParams["BottomLeft"];
+                TopLeft = pointParams["TopLeft"];
+                BottomRight = pointParams["BottomRight"];
             }
-            else
+            if (doubleParams != null)
             {
-                throw new ArgumentException("Для Rectangle необходимы параметры 'TopLeft', 'TopRight', 'BottomRight' и 'BottomLeft'.");
+                Width = (float)doubleParams["Width"];
+                Height = (float)doubleParams["Height"];
             }
         }
-
-        void IFigure.RandomizeParameters() => throw new NotImplementedException();
+        public void Reflection(PointF a, PointF b) => throw new NotImplementedException();
+        public IFigure Intersect(IFigure other) => throw new NotImplementedException();
+        public IFigure Union(IFigure other) => throw new NotImplementedException();
+        public IFigure Subtract(IFigure other) => throw new NotImplementedException();
+        public void Draw(IDrawing drawing) => throw new NotImplementedException();
     }
 }

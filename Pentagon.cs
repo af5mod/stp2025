@@ -1,47 +1,81 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Composition;
+using System.Drawing;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GraphicEditor
 {
-    public class Pentagon : IFigure
+    [Export(typeof(IFigure))]
+    [ExportMetadata(nameof(FigureMetadata.Name), "Pentagon")]
+    [ExportMetadata(nameof(FigureMetadata.IconPath), "/Assets/Pentagon.svg")]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 5)]
+    [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
+    [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new[] { "V1", "V2", "V3", "V4", "V5" })]
+    public class Pentagon : ReactiveObject, IFigure, IDrawingFigure
     {
-        private List<PointF> vertices;
-        public string Name => "Pentagon";
+        [Reactive] public bool IsSelected { get; set; }
+        [Reactive] public string Name { get; set; }
+        
+        [Reactive]
+        public List<PointF> Vertices { get; set; } = new List<PointF>(5);
 
         public PointF Center
         {
             get
             {
                 float sumX = 0, sumY = 0;
-                foreach (var pt in vertices)
+                foreach (var pt in Vertices)
                 {
                     sumX += pt.X;
                     sumY += pt.Y;
                 }
-                return new PointF(sumX / vertices.Count, sumY / vertices.Count);
+                return new PointF(sumX / 5, sumY / 5);
+            }
+            set
+            {
+                var currentCenter = Center;
+                var delta = new PointF(value.X - currentCenter.X, value.Y - currentCenter.Y);
+                Move(delta);
             }
         }
 
-        bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        PointF IFigure.Center { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        string IFigure.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string DrawingGeometry => 
+            $"M{Vertices[0].X},{Vertices[0].Y} " +
+            $"L{Vertices[1].X},{Vertices[1].Y} " +
+            $"L{Vertices[2].X},{Vertices[2].Y} " +
+            $"L{Vertices[3].X},{Vertices[3].Y} " +
+            $"L{Vertices[4].X},{Vertices[4].Y} Z";
 
-        string IDrawingFigure.DrawingGeometry => throw new NotImplementedException();
-
-        public Pentagon(List<PointF> points)
+        // Пустой конструктор
+        public Pentagon()
         {
-            if (points == null || points.Count != 5)
-                throw new ArgumentException("Pentagon requires exactly 5 vertices.");
-            vertices = new List<PointF>(points);
+            Name = "Pentagon";
+            RandomizeParameters();
+            this.WhenAnyValue(x => x.Vertices).Subscribe(_ => this.RaisePropertyChanged(nameof(Center)));
+        }
+
+        public void RandomizeParameters()
+        {
+            Vertices = new List<PointF>();
+            for (int i = 0; i < 5; i++)
+            {
+                Vertices.Add(new PointF(
+                    Random.Shared.Next(100, 500),
+                    Random.Shared.Next(100, 500)
+                ));
+            }
         }
 
         public void Move(PointF vector)
         {
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                vertices[i] = new PointF(vertices[i].X + vector.X, vertices[i].Y + vector.Y);
+                Vertices[i] = new PointF(
+                    Vertices[i].X + vector.X,
+                    Vertices[i].Y + vector.Y
+                );
             }
         }
 
@@ -51,9 +85,9 @@ namespace GraphicEditor
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
 
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                vertices[i] = RotatePoint(vertices[i], rotationCenter, cosA, sinA);
+                Vertices[i] = RotatePoint(Vertices[i], rotationCenter, cosA, sinA);
             }
         }
 
@@ -69,28 +103,31 @@ namespace GraphicEditor
 
         public void Scale(float dx, float dy)
         {
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                vertices[i] = new PointF(vertices[i].X * dx, vertices[i].Y * dy);
+                Vertices[i] = new PointF(
+                    Vertices[i].X * dx,
+                    Vertices[i].Y * dy
+                );
             }
         }
 
         public void Scale(PointF scaleCenter, float dr)
         {
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                vertices[i] = new PointF(
-                    scaleCenter.X + (vertices[i].X - scaleCenter.X) * dr,
-                    scaleCenter.Y + (vertices[i].Y - scaleCenter.Y) * dr
+                Vertices[i] = new PointF(
+                    scaleCenter.X + (Vertices[i].X - scaleCenter.X) * dr,
+                    scaleCenter.Y + (Vertices[i].Y - scaleCenter.Y) * dr
                 );
             }
         }
 
         public void Reflection(PointF a, PointF b)
         {
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                vertices[i] = ReflectPoint(vertices[i], a, b);
+                Vertices[i] = ReflectPoint(Vertices[i], a, b);
             }
         }
 
@@ -105,43 +142,43 @@ namespace GraphicEditor
             return new PointF(2 * proj.X - p.X, 2 * proj.Y - p.Y);
         }
 
-        public IFigure Clone()
-        {
-            return new Pentagon(new List<PointF>(vertices));
-        }
-
-        public void Draw(IDrawing drawing) => throw new NotImplementedException();
+        public IFigure Clone() => new Pentagon { Vertices = new List<PointF>(Vertices) };
 
         public bool IsIn(PointF point, float eps)
         {
+            int j = Vertices.Count - 1;
             bool inside = false;
-            int j = vertices.Count - 1;
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                if (((vertices[i].Y > point.Y) != (vertices[j].Y > point.Y)) &&
-                    (point.X < (vertices[j].X - vertices[i].X) * (point.Y - vertices[i].Y) / (vertices[j].Y - vertices[i].Y) + vertices[i].X))
+                if (((Vertices[i].Y > point.Y) != (Vertices[j].Y > point.Y)) &&
+                    (point.X < (Vertices[j].X - Vertices[i].X) * (point.Y - Vertices[i].Y) / 
+                    (Vertices[j].Y - Vertices[i].Y) + Vertices[i].X))
                     inside = !inside;
                 j = i;
             }
             return inside;
         }
 
+        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
+        {
+            if (pointParams?.Count == 5)
+            {
+                Vertices = new List<PointF>
+                {
+                    pointParams["V1"],
+                    pointParams["V2"],
+                    pointParams["V3"],
+                    pointParams["V4"],
+                    pointParams["V5"]
+                };
+            }
+            else throw new ArgumentException("Pentagon requires exactly 5 point parameters");
+        }
+
+        public void Draw(IDrawing drawing) => throw new NotImplementedException();
+
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
-
-        public void SetParameters(IDictionary<string, double> doubleParams, IDictionary<string, PointF> pointParams)
-        {
-            if (pointParams != null && pointParams.Count == 5)
-            {
-                vertices = new List<PointF>(pointParams.Values);
-            }
-            else
-            {
-                throw new ArgumentException("Pentagon requires 5 point parameters.");
-            }
-        }
-
-        void IFigure.RandomizeParameters() => throw new NotImplementedException();
     }
 }
