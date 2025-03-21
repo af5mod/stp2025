@@ -237,7 +237,7 @@ namespace GraphicEditor
                 corners.Add(new PointF(x, y));
             }
 
-            var triangle = new Triangle(corners);
+            var triangle = FigureFabric.CreateFigure("Triangle");
             AddFigureInCache(triangle);
         }
 
