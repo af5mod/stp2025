@@ -37,34 +37,31 @@ namespace GraphicEditor
                 throw new ArgumentException("Для треугольника необходимо задать 3 вершины.");
             this.corners = new List<PointF>(corners);
         }
-        [Reactive] public PointF Vertex1 { get => corners[0]; set => corners[0] = value; }
-        [Reactive] public PointF Vertex2 { get => corners[1]; set => corners[1] = value; }
-        [Reactive] public PointF Vertex3 { get => corners[2]; set => corners[2] = value; }
 
-        public string DrawingGeometry => 
-            $"M{Vertex1.X},{Vertex1.Y} L{Vertex2.X},{Vertex2.Y} L{Vertex3.X},{Vertex3.Y} Z";
+        public string DrawingGeometry =>
+            $"M{corners[0].X},{corners[0].Y} L{corners[1].X},{corners[1].Y} L{corners[2].X},{corners[2].Y} Z";
 
         public PointF Center
         {
             get
             {
-                float sumX = Vertex1.X + Vertex2.X + Vertex3.X;
-                float sumY = Vertex1.Y + Vertex2.Y + Vertex3.Y;
+                float sumX = corners[0].X + corners[1].X + corners[2].X;
+                float sumY = corners[0].Y + corners[1].Y + corners[2].Y;
                 return new PointF(sumX / 3, sumY / 3);
             }
             set
             {
                 var currentCenter = new PointF(
-                    (Vertex1.X + Vertex2.X + Vertex3.X) / 3,
-                    (Vertex1.Y + Vertex2.Y + Vertex3.Y) / 3
+                    (corners[0].X + corners[1].X + corners[2].X) / 3,
+                    (corners[0].Y + corners[1].Y + corners[2].Y) / 3
                 );
 
                 var offsetX = value.X - currentCenter.X;
                 var offsetY = value.Y - currentCenter.Y;
 
-                Vertex1 = new PointF(Vertex1.X + offsetX, Vertex1.Y + offsetY);
-                Vertex2 = new PointF(Vertex2.X + offsetX, Vertex2.Y + offsetY);
-                Vertex3 = new PointF(Vertex3.X + offsetX, Vertex3.Y + offsetY);
+                corners[0] = new PointF(corners[0].X + offsetX, corners[0].Y + offsetY);
+                corners[1] = new PointF(corners[1].X + offsetX, corners[1].Y + offsetY);
+                corners[2] = new PointF(corners[2].X + offsetX, corners[2].Y + offsetY);
             }            
         }
         public void RandomizeParameters()
