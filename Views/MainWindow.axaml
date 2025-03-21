@@ -340,6 +340,20 @@
                                 <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" />
                                 <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Point2Y, Mode=TwoWay}" />
                             </Grid>
+                        </DataTemplate>                        
+                        
+                        <DataTemplate x:DataType="m:Rectangle">
+                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Top Left X:" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Top Left Y:" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" />
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Bottom Right X:" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Bottom Right Y:" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" />
+                            </Grid>
                         </DataTemplate>
                     </ContentControl.DataTemplates>
                 </ContentControl>
