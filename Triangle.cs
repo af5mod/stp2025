@@ -16,7 +16,8 @@ namespace GraphicEditor
     {
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
-        private List<PointF> corners;
+        [Reactive]
+        public List<PointF> corners { get; set; } = new List<PointF>(3);
 
         public Triangle()
         {
