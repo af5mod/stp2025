@@ -4,7 +4,7 @@ using System.Composition;
 using System.Drawing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-namespace GraphicEditor
+namespace GraphicEditor.Models
 {
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Triangle")]
@@ -18,12 +18,47 @@ namespace GraphicEditor
         [Reactive] public string Name { get; set; }
         [Reactive]
         public List<PointF> Corners { get; set; }
-
+        [Reactive] public float Point0X { get; set; }
+        [Reactive] public float Point0Y { get; set; }
+        [Reactive] public float Point1X { get; set; }
+        [Reactive] public float Point1Y { get; set; }
+        [Reactive] public float Point2X { get; set; }
+        [Reactive] public float Point2Y { get; set; }
         public Triangle()
         {
             Corners = new List<PointF>();
             RandomizeParameters();
             Name = "Triangle";
+            Point0X = Corners[0].X;
+            Point1X = Corners[1].X;
+            Point2X = Corners[2].X;
+
+            Point0Y = Corners[0].Y;
+            Point1Y = Corners[1].Y;
+            Point2Y = Corners[2].Y;
+
+            
+            this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Corners[0] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point1X, o => o.Point1Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Corners[1] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point2X, o => o.Point2Y, (x, y) => new PointF(x, y))
+                .Subscribe((x) =>
+                {
+                    Corners[2] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
         }
 
         public Triangle(PointF vertex1, PointF vertex2, PointF vertex3) : this()
