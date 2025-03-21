@@ -5,87 +5,97 @@ using System.Drawing;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 namespace GraphicEditor
-{
+{   
     [Export(typeof(IFigure))]
     [ExportMetadata(nameof(FigureMetadata.Name), "Triangle")]
     [ExportMetadata(nameof(FigureMetadata.IconPath), "/Assets/Triangle.svg")]
     [ExportMetadata(nameof(FigureMetadata.NumberOfPointParameters), 3)]
     [ExportMetadata(nameof(FigureMetadata.NumberOfDoubleParameters), 0)]
     [ExportMetadata(nameof(FigureMetadata.PointParametersNames), new[] { "Vertex1", "Vertex2", "Vertex3" })]
-    public class Triangle : ReactiveObject, IFigure, IDrawingFigure
+    public class Triangle: ReactiveObject, IFigure, IDrawingFigure
     {
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
         [Reactive]
-        public List<PointF> Corners { get; set; }
+        public List<PointF> corners { get; set; } = new List<PointF>(3);
 
         public Triangle()
         {
-            Corners = new List<PointF>();
+            corners = new List<PointF>();
             RandomizeParameters();
             Name = "Triangle";
         }
 
         public Triangle(PointF vertex1, PointF vertex2, PointF vertex3) : this()
         {
-            Corners = new List<PointF> { vertex1, vertex2, vertex3 };
+            corners = new List<PointF> { vertex1, vertex2, vertex3 };
         }
 
         public Triangle(List<PointF> corners) : this()
         {
             if (corners == null || corners.Count != 3)
                 throw new ArgumentException("Для треугольника необходимо задать 3 вершины.");
-            this.Corners = new List<PointF>(corners);
+            this.corners = new List<PointF>(corners);
         }
+        [Reactive] public PointF Vertex1 { get => corners[0]; set => corners[0] = value; }
+        [Reactive] public PointF Vertex2 { get => corners[1]; set => corners[1] = value; }
+        [Reactive] public PointF Vertex3 { get => corners[2]; set => corners[2] = value; }
 
-        public string DrawingGeometry =>
-            $"M{Corners[0].X},{Corners[0].Y} L{Corners[1].X},{Corners[1].Y} L{Corners[2].X},{Corners[2].Y} Z";
+        public string DrawingGeometry => 
+            $"M{Vertex1.X},{Vertex1.Y} L{Vertex2.X},{Vertex2.Y} L{Vertex3.X},{Vertex3.Y} Z";
 
         public PointF Center
         {
             get
             {
-                float sumX = Corners[0].X + Corners[1].X + Corners[2].X;
-                float sumY = Corners[0].Y + Corners[1].Y + Corners[2].Y;
+                float sumX = Vertex1.X + Vertex2.X + Vertex3.X;
+                float sumY = Vertex1.Y + Vertex2.Y + Vertex3.Y;
                 return new PointF(sumX / 3, sumY / 3);
             }
+            set
+            {
+                var currentCenter = new PointF(
+                    (Vertex1.X + Vertex2.X + Vertex3.X) / 3,
+                    (Vertex1.Y + Vertex2.Y + Vertex3.Y) / 3
+                );
+
+                var offsetX = value.X - currentCenter.X;
+                var offsetY = value.Y - currentCenter.Y;
+
+                Vertex1 = new PointF(Vertex1.X + offsetX, Vertex1.Y + offsetY);
+                Vertex2 = new PointF(Vertex2.X + offsetX, Vertex2.Y + offsetY);
+                Vertex3 = new PointF(Vertex3.X + offsetX, Vertex3.Y + offsetY);
+            }            
         }
         public void RandomizeParameters()
         {
-            Corners = new List<PointF>
+            corners = new List<PointF>
             {
                 new PointF(Random.Shared.Next(400), Random.Shared.Next(400)),
                 new PointF(Random.Shared.Next(400), Random.Shared.Next(400)),
                 new PointF(Random.Shared.Next(400), Random.Shared.Next(400))
             };
         }
-
-        bool IFigure.IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        PointF IFigure.Center { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        string IFigure.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        string IDrawingFigure.DrawingGeometry => throw new NotImplementedException();
-
         public void Move(PointF vector)
         {
-            for (int i = 0; i < Corners.Count; i++)
+            for (int i = 0; i < corners.Count; i++)
             {
-                Corners[i] = new PointF(Corners[i].X + vector.X, Corners[i].Y + vector.Y);
+                corners[i] = new PointF(corners[i].X + vector.X, corners[i].Y + vector.Y);
             }
         }
-
+        
         public void Rotate(PointF rotationCenter, float angle)
         {
             double rad = angle * Math.PI / 180;
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
 
-            for (int i = 0; i < Corners.Count; i++)
+            for (int i = 0; i < corners.Count; i++)
             {
-                Corners[i] = RotatePoint(Corners[i], rotationCenter, cosA, sinA);
+                corners[i] = RotatePoint(corners[i], rotationCenter, cosA, sinA);
             }
         }
-
+        
         private PointF RotatePoint(PointF pt, PointF center, double cosA, double sinA)
         {
             float dx = pt.X - center.X;
@@ -95,30 +105,30 @@ namespace GraphicEditor
                 (float)(center.Y + dx * sinA + dy * cosA)
             );
         }
-
+        
         public void Scale(float dx, float dy)
         {
-            for (int i = 0; i < Corners.Count; i++)
+            for (int i = 0; i < corners.Count; i++)
             {
-                Corners[i] = new PointF(Corners[i].X * dx, Corners[i].Y * dy);
+                corners[i] = new PointF(corners[i].X * dx, corners[i].Y * dy);
             }
         }
-
+        
         public void Scale(PointF scaleCenter, float dr)
         {
-            for (int i = 0; i < Corners.Count; i++)
+            for (int i = 0; i < corners.Count; i++)
             {
-                float newX = scaleCenter.X + (Corners[i].X - scaleCenter.X) * dr;
-                float newY = scaleCenter.Y + (Corners[i].Y - scaleCenter.Y) * dr;
-                Corners[i] = new PointF(newX, newY);
+                float newX = scaleCenter.X + (corners[i].X - scaleCenter.X) * dr;
+                float newY = scaleCenter.Y + (corners[i].Y - scaleCenter.Y) * dr;
+                corners[i] = new PointF(newX, newY);
             }
         }
 
         public void Reflection(PointF a, PointF b)
         {
-            for (int i = 0; i < Corners.Count; i++)
+            for (int i = 0; i < corners.Count; i++)
             {
-                Corners[i] = ReflectPoint(Corners[i], a, b);
+                corners[i] = ReflectPoint(corners[i], a, b);
             }
         }
 
@@ -135,7 +145,7 @@ namespace GraphicEditor
 
         public IFigure Clone()
         {
-            return new Triangle(new List<PointF>(Corners));
+            return new Triangle(new List<PointF>(corners));
         }
 
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
@@ -143,11 +153,11 @@ namespace GraphicEditor
         public bool IsIn(PointF point, float eps)
         {
             bool inside = false;
-            int j = Corners.Count - 1;
-            for (int i = 0; i < Corners.Count; i++)
+            int j = corners.Count - 1;
+            for (int i = 0; i < corners.Count; i++)
             {
-                if (((Corners[i].Y > point.Y) != (Corners[j].Y > point.Y)) &&
-                    (point.X < (Corners[j].X - Corners[i].X) * (point.Y - Corners[i].Y) / (Corners[j].Y - Corners[i].Y) + Corners[i].X))
+                if (((corners[i].Y > point.Y) != (corners[j].Y > point.Y)) &&
+                    (point.X < (corners[j].X - corners[i].X) * (point.Y - corners[i].Y) / (corners[j].Y - corners[i].Y) + corners[i].X))
                     inside = !inside;
                 j = i;
             }
@@ -165,9 +175,9 @@ namespace GraphicEditor
                 pointParams.ContainsKey("Vertex2") &&
                 pointParams.ContainsKey("Vertex3"))
             {
-                Corners[0] = pointParams["Vertex1"];
-                Corners[1] = pointParams["Vertex2"];
-                Corners[2] = pointParams["Vertex3"];
+                corners[0] = pointParams["Vertex1"];
+                corners[1] = pointParams["Vertex2"];
+                corners[2] = pointParams["Vertex3"];
             }
             else
             {
@@ -175,6 +185,5 @@ namespace GraphicEditor
             }
         }
 
-        void IFigure.RandomizeParameters() => throw new NotImplementedException();
     }
 }
