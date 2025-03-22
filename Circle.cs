@@ -32,6 +32,11 @@ namespace GraphicEditor.Models
                 }
             );
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+
+            this.WhenAnyValue(o=>o.PointOnCircle).Subscribe(x=>{
+                PointOnCircleX = x.X;
+                PointOnCircleY = x.Y;
+            });
         }
         [Reactive]
         public Avalonia.Media.Color Color { get; set; }
@@ -146,7 +151,7 @@ namespace GraphicEditor.Models
         public void SetPosition(PointF vector)
         {
             var POCRelativeX = PointOnCircle.X - Center.X;
-            var POCRelativeY = PointOnCircle.Y - Center.Y;
+            var POCRelativeY = PointOnCircle.Y - Center.Y;            
 
             Center = new PointF(vector.X, vector.Y);
             PointOnCircle = new PointF(Center.X+POCRelativeX, Center.Y+POCRelativeY);
