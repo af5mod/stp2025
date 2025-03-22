@@ -60,7 +60,13 @@ public partial class FigureView : UserControl
         var currentPosition = e.GetPosition((Visual?)Parent);
         var FigureVM = DataContext as FigureViewModel;
 
-        FigureVM!.Figure.SetPosition(new System.Drawing.PointF((float)(currentPosition.X-_pointerOffset.X), (float)(currentPosition.Y-_pointerOffset.Y)));
+        var newCenter = new System.Drawing.PointF((float)(currentPosition.X - _pointerOffset.X), (float)(currentPosition.Y - _pointerOffset.Y));
+        FigureVM!.Figure.SetPosition(newCenter);
+
+        var POCRelativeX = newCenter.X - _pointerOffset.X;
+        var POCRelativeY = newCenter.Y - _pointerOffset.Y;
+        FigureVM.CenterX = (float)POCRelativeX;
+        FigureVM.CenterY = (float)POCRelativeY;
 
         base.OnPointerMoved(e);
     }
