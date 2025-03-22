@@ -221,5 +221,6 @@ namespace GraphicEditor.Models
             }
         }
 
+        public void SetPosition(PointF vector) => throw new NotImplementedException();
     }
 }

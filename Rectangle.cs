@@ -186,5 +186,6 @@ namespace GraphicEditor.Models
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
+        public void SetPosition(PointF vector) => throw new NotImplementedException();
     }
 }

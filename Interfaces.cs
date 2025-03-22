@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using DynamicData;
 using GraphicEditor.ViewModels;
@@ -16,10 +17,10 @@ namespace GraphicEditor
         string DrawingGeometry {get;}
     }
 
-    public interface IFigure : IDrawingFigure
+    public interface IFigure : IDrawingFigure, INotifyPropertyChanged
     {
         bool IsSelected { get; set; }
-
+void SetPosition(PointF vector);
         void Move(PointF vector);
         void Rotate(PointF center, float angle);
         PointF Center { get; set;}

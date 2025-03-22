@@ -9,10 +9,11 @@ namespace GraphicEditor.ViewModels
 {
     public class FigureViewModel : ViewModelBase
     {
+        [Reactive]
         public IFigure Figure { get; set; }
 
-        [Reactive]
         public float CenterX { get; set; }
+        private float _centerX = 0;
         [Reactive]
         public float CenterY { get; set; }
 

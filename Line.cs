@@ -162,5 +162,7 @@ namespace GraphicEditor.Models
             Start = new(startX, startY);
             End = new(endX, endY);
         }
+
+        public void SetPosition(PointF vector) => throw new NotImplementedException();
     }
 }
