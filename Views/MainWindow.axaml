@@ -169,17 +169,35 @@
                 </StackPanel>
 
                 <!--  список фигур  -->
-                <Border Grid.Row="5">
-                    <ScrollViewer>
-                        <ListBox x:Name="list" ItemsSource="{Binding ReadonlyFigures}" SelectedItem="{Binding SelectedFigure}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Figure.Name}" />
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </ScrollViewer>
-                </Border>
+				<Border Grid.Row="5">
+					<ScrollViewer VerticalScrollBarVisibility="Auto">
+						<ListBox x:Name="list" MaxHeight="192" ItemsSource="{Binding ReadonlyFigures}" 
+								SelectedItem="{Binding SelectedFigure}">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Figure.Name}" />
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+							
+							<ListBox.Styles>
+								<Style Selector="ListBoxItem">
+									<Setter Property="Background" Value="LightGray"/>
+									<Setter Property="BorderThickness" Value="1"/>
+									<Setter Property="BorderBrush" Value="LightGray"/>
+									<Setter Property="Padding" Value="5"/>
+									<Setter Property="Margin" Value="2"/>
+								</Style>
+
+								<Style Selector="ListBoxItem:selected">
+									<Setter Property="Background" Value="LightBlue"/>
+									<Setter Property="FontWeight" Value="Bold"/>
+								</Style>
+							</ListBox.Styles>
+
+						</ListBox>
+					</ScrollViewer>
+				</Border>
+
 
                 <GridSplitter Grid.Row="4" ResizeDirection="Rows" />
 
@@ -399,9 +417,20 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:FigureViewModel">
                             <Path Data="{Binding Figure.DrawingGeometry}" Stroke="Black" StrokeThickness="{Binding Thickness}">
-                                <Path.Fill>
-                                    <SolidColorBrush Color="{Binding Figure.Color}" />
-                                </Path.Fill>
+                                <Path.Styles>
+                <Style Selector="Path">
+                    <Setter Property="Stroke" Value="Black"/>
+                    <Setter Property="StrokeThickness" Value="1"/>
+                    <Setter Property="Opacity" Value="1"/> <!-- Обычное состояние -->
+                </Style>
+                <Style Selector="Path:selected">
+                    <Setter Property="Opacity" Value="0.2"/> <!-- Затемнение -->
+                </Style>
+            </Path.Styles>
+            <Path.Fill>
+                <SolidColorBrush Color="{Binding Figure.Color}" />
+            </Path.Fill>
+        
                             </Path>
                             <!-- <Canvas
                             x:Name="MainCanvas"
