@@ -63,14 +63,29 @@ namespace GraphicEditor.Models
             Point0Y = TopLeft.Y;
             Point1Y = BottomRight.Y;
 
-            this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
+            this.WhenAnyValue(o => o.Point0X, (x) => new PointF(x, TopLeft.Y))
                 .Subscribe((x) =>
                 {
                     TopLeft = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point1X, o => o.Point1Y, (x, y) => new PointF(x, y))
+            this.WhenAnyValue(o => o.Point0Y, (x) => new PointF(TopLeft.X, x))
+                .Subscribe((x) =>
+                {
+                    TopLeft = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point1X, (x) => new PointF(x, BottomRight.Y))
+                .Subscribe((x) =>
+                {
+                    BottomRight = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            this.WhenAnyValue(o => o.Point1Y, (x) => new PointF(BottomRight.X, x))
                 .Subscribe((x) =>
                 {
                     BottomRight = x;

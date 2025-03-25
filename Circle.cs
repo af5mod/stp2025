@@ -24,16 +24,26 @@ namespace GraphicEditor.Models
         [Reactive] public string Name { get; set; }
         private void InitBinding()
         {
-            this.WhenAnyValue(o => o.PointOnCircleX, o => o.PointOnCircleY, (x, y) => new PointF(x, y))
+            this.WhenAnyValue(o => o.PointOnCircleX, (x) => new PointF(x, PointOnCircle.Y))
                 .Subscribe((x) =>
                 {
                     PointOnCircle = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
+
+            this.WhenAnyValue(o => o.PointOnCircleY, (x) => new PointF(PointOnCircle.X, x))
+                .Subscribe((x) =>
+                {
+                    PointOnCircle = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
 
-            this.WhenAnyValue(o=>o.PointOnCircle).Subscribe(x=>{
+            this.WhenAnyValue(o => o.PointOnCircle).Subscribe(x =>
+            {
                 PointOnCircleX = x.X;
                 PointOnCircleY = x.Y;
             });
@@ -151,10 +161,10 @@ namespace GraphicEditor.Models
         public void SetPosition(PointF vector)
         {
             var POCRelativeX = PointOnCircle.X - Center.X;
-            var POCRelativeY = PointOnCircle.Y - Center.Y;            
+            var POCRelativeY = PointOnCircle.Y - Center.Y;
 
             Center = new PointF(vector.X, vector.Y);
-            PointOnCircle = new PointF(Center.X+POCRelativeX, Center.Y+POCRelativeY);
+            PointOnCircle = new PointF(Center.X + POCRelativeX, Center.Y + POCRelativeY);
         }
     }
 }

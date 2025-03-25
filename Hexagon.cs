@@ -94,48 +94,102 @@ namespace GraphicEditor.Models
 
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
 
-            this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
+            this.WhenAnyValue(o => o.Point0X, (x) => new PointF(x, Vertices[0].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[0] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point1X, o => o.Point1Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point0Y, (x) => new PointF(Vertices[0].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[0] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point1X, (x) => new PointF(x, Vertices[1].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[1] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point2X, o => o.Point2Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point1Y, (x) => new PointF(Vertices[1].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[1] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point2X, (x) => new PointF(x, Vertices[2].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[2] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point3X, o => o.Point3Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point2Y, (x) => new PointF(Vertices[2].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[2] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point3X, (x) => new PointF(x, Vertices[3].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[3] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point4X, o => o.Point4Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point3Y, (x) => new PointF(Vertices[3].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[3] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point4X, (x) => new PointF(x, Vertices[4].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[4] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point5X, o => o.Point5Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point4Y, (x) => new PointF(Vertices[4].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[4] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point5X, (x) => new PointF(x, Vertices[5].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[5] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
+
+            this.WhenAnyValue(o => o.Point5Y, (x) => new PointF(Vertices[5].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[5] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
             // Уведомление об изменении Center при изменении вершин
             this.WhenAnyValue(x => x.Vertices)
                 .Subscribe(o =>

@@ -41,21 +41,47 @@ namespace GraphicEditor.Models
             Point2Y = Corners[2].Y;
 
 
-            this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
+            this.WhenAnyValue(o => o.Point0X, (x) => new PointF(x, Corners[0].Y))
                 .Subscribe((x) =>
                 {
                     Corners[0] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point1X, o => o.Point1Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point0Y, (x) => new PointF(Corners[0].X, x))
+                .Subscribe((x) =>
+                {
+                    Corners[0] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point1X, (x) => new PointF(x, Corners[1].Y))
                 .Subscribe((x) =>
                 {
                     Corners[1] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Point2X, o => o.Point2Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Point1Y, (x) => new PointF(Corners[1].X, x))
+                .Subscribe((x) =>
+                {
+                    Corners[1] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point2X, (x) => new PointF(x, Corners[2].Y))
+                .Subscribe((x) =>
+                {
+                    Corners[2] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Point2Y, (x) => new PointF(Corners[2].X, x))
                 .Subscribe((x) =>
                 {
                     Corners[2] = x;
@@ -233,9 +259,14 @@ namespace GraphicEditor.Models
                 pointParams.ContainsKey("Vertex2") &&
                 pointParams.ContainsKey("Vertex3"))
             {
-                Corners[0] = pointParams["Vertex1"];
-                Corners[1] = pointParams["Vertex2"];
-                Corners[2] = pointParams["Vertex3"];
+
+                List<PointF> newCorners = [];
+
+                newCorners.Add(pointParams["Vertex1"]);
+                newCorners.Add(pointParams["Vertex2"]);
+                newCorners.Add(pointParams["Vertex3"]);
+
+                Corners = newCorners;
             }
             else
             {
