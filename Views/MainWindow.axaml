@@ -240,28 +240,34 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Name:" />
-                                <TextBox x:Name="ShapeName" Grid.Row="0" Grid.Column="1" Text="{Binding Figure.Name}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Width="80" Height="30" VerticalAlignment="Center" Margin="10 0 0 0" Text="Name:" />
+                                <TextBox x:Name="ShapeName" Grid.Row="0" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0 0 0 10" Text="{Binding Figure.Name}" />
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Color:" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Height="30" VerticalAlignment="Center" Margin="10 0 0 0" Text="Color:" />
                                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                    <ColorPicker Color="{Binding Figure.Color}" />
+                                    <ColorPicker Color="{Binding Figure.Color}" Width="200" HorizontalAlignment="Left" Margin="0 0 0 10"/>
                                 </StackPanel>
 
-                                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Center X:" />
-                                <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1" Text="{Binding CenterX}" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" Height="30" VerticalAlignment="Center" Margin="10 0 0 0" Text="Center X:" />
+                                <TextBox x:Name="CenterX" Grid.Row="2" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0 0 0 10" Text="{Binding CenterX}" />
 
-                                <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="Center Y:" />
-                                <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1" Text="{Binding CenterY}" />
+                                <TextBlock Grid.Row="3" Grid.Column="0" Height="30" VerticalAlignment="Center" Margin="10 0 0 0" Text="Center Y:" />
+                                <TextBox x:Name="CenterY" Grid.Row="3" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0 0 0 10" Text="{Binding CenterY}" />
 
                                 <Button
                                     x:Name="RemoveButton"
                                     Grid.Row="4"
                                     Grid.ColumnSpan="2"
-                                    Width="80"
+                                    Background="Red"
+                                    Foreground="White"
+                                    Width="120"
                                     Height="30"
                                     Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveSelectedCommand}"
-                                    Content="Удалить" />
+                                    Content="Удалить" 
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10 10 0 20"
+                                />
 
                                 <ContentControl Grid.Row="5" Grid.ColumnSpan="2" Content="{Binding Figure}" />
                             </Grid>
@@ -270,124 +276,124 @@
                         <DataTemplate x:DataType="m:Circle">
                             <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto, Auto">
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="PointOnCircle X:" />
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PointOnCircleX, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Height="30" VerticalAlignment="Center" Text="PointOnCircle X:" Margin="10 0 0 0" Width="120" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PointOnCircleX, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="PointOnCircle Y:" />
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PointOnCircleY, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Height="30" VerticalAlignment="Center" Text="PointOnCircle Y:" Margin="10 0 0 0" Width="120" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PointOnCircleY, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" Margin="0 0 0 10" />
                             </Grid>
                         </DataTemplate>
 
                         <DataTemplate x:DataType="m:Line">
                             <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto">
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Start X:" />
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding StartX, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Start X:" Width="60" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding StartX, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Start Y:" />
-                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding StartY, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Start Y:" Margin="20 0 0 0" Width="60" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding StartY, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="End X:" />
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding EndX, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="End X:" Width="60" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding EndX, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="1" Grid.Column="2" Text="End Y:" />
-                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding EndY, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="End Y:" Margin="20 0 0 0" Width="60" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding EndY, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                             </Grid>
                         </DataTemplate>
 
                         <DataTemplate x:DataType="m:Hexagon">
                             <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" />
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" />
-                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" Width="30" Height="30" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" />
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" />
-                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" />
-                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Point2X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" />
-                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Point2Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Point2X, Mode=TwoWay}" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Point2Y, Mode=TwoWay}" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="X3:" />
-                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Point3X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="3" Grid.Column="2" Text="Y3:" />
-                                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Point3Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="X3:" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Point3X, Mode=TwoWay}" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="Y3:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Point3Y, Mode=TwoWay}" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="X4:" />
-                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Point4X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="4" Grid.Column="2" Text="Y4:" />
-                                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Point4Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="X4:" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Point4X, Mode=TwoWay}" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="4" Grid.Column="2" Text="Y4:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Point4Y, Mode=TwoWay}" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="5" Grid.Column="0" Text="X5:" />
-                                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Point5X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="5" Grid.Column="2" Text="Y5:" />
-                                <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding Point5Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="X5:" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Point5X, Mode=TwoWay}" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="5" Grid.Column="2" Text="Y5:" Margin="20 0 0 0" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding Point5Y, Mode=TwoWay}" Margin="0 0 0 10" />
                             </Grid>
                         </DataTemplate>
 
                         <DataTemplate x:DataType="m:Triangle">
                             <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto">
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" />
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" />
-                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" />
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" />
-                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" />
-                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Point2X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" />
-                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Point2Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Point2X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Point2Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                             </Grid>
                         </DataTemplate>                        
                         
                         <DataTemplate x:DataType="m:Rectangle">
                             <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto">
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Top Left X:" />
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Top Left Y:" />
-                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Top Left X:" Width="110" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Point0X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Top Left Y:" Margin="20 0 0 0" Width="110" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Point0Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                                 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Bottom Right X:" />
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Bottom Right Y:" />
-                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Bottom Right X:" Width="110" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Point1X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Bottom Right Y:" Margin="20 0 0 0" Width="110" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Point1Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                             </Grid>
                         </DataTemplate>
 
                         <DataTemplate x:DataType="m:Pentagon">
                             <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" />
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Vertex1X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" />
-                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Vertex1Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Vertex1X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y0:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Vertex1Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" />
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Vertex2X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" />
-                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Vertex2Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="X1:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Vertex2X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Y1:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Vertex2Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" />
-                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Vertex3X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" />
-                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Vertex3Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="X2:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Vertex3X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Y2:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Vertex3Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="X3:" />
-                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Vertex4X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="3" Grid.Column="2" Text="Y3:" />
-                                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Vertex4Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="X3:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Vertex4X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="Y3:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Vertex4Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
 
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="X4:" />
-                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Vertex5X, Mode=TwoWay}" />
-                                <TextBlock Grid.Row="4" Grid.Column="2" Text="Y4:" />
-                                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Vertex5Y, Mode=TwoWay}" />
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="X4:" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Vertex5X, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
+                                <TextBlock Grid.Row="4" Grid.Column="2" Text="Y4:" Margin="20 0 0 0" Width="30" Height="30" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Vertex5Y, Mode=TwoWay}" Width="100" Margin="0 0 0 10" />
                             </Grid>
                         </DataTemplate>
 
