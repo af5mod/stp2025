@@ -18,14 +18,29 @@ namespace GraphicEditor.Models
     {
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
-        [Reactive] public PointF Center { get; set; }
+
+        public PointF Center
+        {
+            get
+            {
+                return new(
+                    (TopLeft.X + BottomRight.X) / 2,
+                    (TopLeft.Y + BottomRight.Y) / 2
+                );
+            }
+            set
+            {
+                var currentCenter = Center;
+                var delta = new PointF(
+                    value.X - currentCenter.X,
+                    value.Y - currentCenter.Y
+                );
+                Move(delta);
+                this.RaisePropertyChanged(nameof(Center));
+            }
+        }
         [Reactive] public PointF TopLeft { get; set; }
         [Reactive] public PointF BottomRight { get; set; }
-
-        [Reactive] public float TopLeftX { get; set; }
-        [Reactive] public float TopLeftY { get; set; }
-        [Reactive] public float BottomRightX { get; set; }
-        [Reactive] public float BottomRightY { get; set; }
         [Reactive] public float Width { get; set; }
         [Reactive] public float Height { get; set; }
 
@@ -37,25 +52,6 @@ namespace GraphicEditor.Models
         public Avalonia.Media.Color Color { get; set; }
         public string DrawingGeometry =>
             $"M{TopLeft.X},{TopLeft.Y} L{BottomRight.X},{TopLeft.Y} L{BottomRight.X},{BottomRight.Y} L{TopLeft.X},{BottomRight.Y} Z";
-
-        private void InitBinding()
-        {
-            this.WhenAnyValue(o => o.TopLeftX, o => o.TopLeftY, (x, y) => new PointF(x, y))
-                .Subscribe((x) =>
-                {
-                    TopLeft = x;
-                    this.RaisePropertyChanged(nameof(DrawingGeometry));
-                }
-            );
-            this.WhenAnyValue(o => o.BottomRightX, o => o.BottomRightY, (x, y) => new PointF(x, y))
-                .Subscribe((x) =>
-                {
-                    BottomRight = x;
-                    this.RaisePropertyChanged(nameof(DrawingGeometry));
-                }
-            );
-            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
-        }
 
         public Rectangle()
         {
@@ -82,8 +78,22 @@ namespace GraphicEditor.Models
                 }
             );
 
-            this.WhenAnyValue(x => x.TopLeft, x => x.BottomRight)
-                .Subscribe(_ => UpdateCenter());
+            this.WhenAnyValue(o => o.TopLeft).Subscribe(x =>
+            {
+                this.RaisePropertyChanged(nameof(Center));
+
+                Point0X = TopLeft.X;
+                Point0Y = TopLeft.Y;
+            });
+
+            this.WhenAnyValue(o => o.BottomRight).Subscribe(x =>
+            {
+                this.RaisePropertyChanged(nameof(Center));
+
+                Point1X = BottomRight.X;
+                Point1Y = BottomRight.Y;
+            });
+
         }
 
         private void UpdateCenter()
@@ -186,6 +196,9 @@ namespace GraphicEditor.Models
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
         public void Draw(IDrawing drawing) => throw new NotImplementedException();
-        public void SetPosition(PointF vector) => throw new NotImplementedException();
+        public void SetPosition(PointF vector)
+        {
+            Center = new PointF(vector.X, vector.Y);
+        }
     }
 }
