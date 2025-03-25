@@ -146,17 +146,6 @@
                         </Button>
                     </StackPanel>
 
-                    <TextBlock Margin="0,8,0,0" FontWeight="Bold" Text="Отражение:" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button>
-
-                            <Image Source="{SvgImage /Assets/material-symbols_flip.svg}" Stretch="None" />
-                        </Button>
-                        <Button>
-                            <Image Source="{SvgImage /Assets/material-symbols_flip-2.svg}" Stretch="None" />
-                        </Button>
-                    </StackPanel>
-
                     <TextBlock Margin="0,8,0,0" FontWeight="Bold" Text="Масштабирование:" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Button>
@@ -168,35 +157,46 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!--  список фигур  -->
-				<Border Grid.Row="5">
-					<ScrollViewer VerticalScrollBarVisibility="Auto">
-						<ListBox x:Name="list" MaxHeight="192" ItemsSource="{Binding ReadonlyFigures}" 
-								SelectedItem="{Binding SelectedFigure}">
-							<ListBox.ItemTemplate>
-								<DataTemplate>
-									<TextBlock Text="{Binding Figure.Name}" />
-								</DataTemplate>
-							</ListBox.ItemTemplate>
-							
-							<ListBox.Styles>
-								<Style Selector="ListBoxItem">
-									<Setter Property="Background" Value="LightGray"/>
-									<Setter Property="BorderThickness" Value="1"/>
-									<Setter Property="BorderBrush" Value="LightGray"/>
-									<Setter Property="Padding" Value="5"/>
-									<Setter Property="Margin" Value="2"/>
-								</Style>
+                <Border Grid.Row="5" BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="10">
+    <StackPanel>
+        <!-- Заголовок -->
+        <TextBlock Text="Список фигур" 
+                   FontSize="16" 
+                   FontWeight="Bold" 
+                   Margin="0 0 0 10" />
 
-								<Style Selector="ListBoxItem:selected">
-									<Setter Property="Background" Value="LightBlue"/>
-									<Setter Property="FontWeight" Value="Bold"/>
-								</Style>
-							</ListBox.Styles>
+        <!-- Прокручиваемый список -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
+            <ListBox x:Name="list"
+                     ItemsSource="{Binding ReadonlyFigures}"
+                     SelectedItem="{Binding SelectedFigure}">
+                
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Figure.Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
 
-						</ListBox>
-					</ScrollViewer>
-				</Border>
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="LightGray"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Margin" Value="2"/>
+                    </Style>
+
+                    <Style Selector="ListBoxItem:selected">
+                        <Setter Property="Background" Value="LightBlue"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                    </Style>
+                </ListBox.Styles>
+
+            </ListBox>
+        </ScrollViewer>
+    </StackPanel>
+</Border>
+
 
 
                 <GridSplitter Grid.Row="4" ResizeDirection="Rows" />
@@ -364,7 +364,7 @@
                             </Grid>
                         </DataTemplate>
 
-                        
+
                          <DataTemplate x:DataType="m:Hexagon">
                             <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="X0:" Width="30" Height="30" VerticalAlignment="Center"/>
