@@ -178,7 +178,8 @@
                                 </ListBox.ItemTemplate>
 
                                 <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
+                                    <Style x:DataType="vm:FigureViewModel" Selector="ListBoxItem">
+                                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                                         <Setter Property="Background" Value="LightGray" />
                                         <Setter Property="BorderThickness" Value="1" />
                                         <Setter Property="BorderBrush" Value="LightGray" />

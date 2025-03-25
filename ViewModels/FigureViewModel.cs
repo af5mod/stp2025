@@ -23,6 +23,9 @@ namespace GraphicEditor.ViewModels
         [Reactive]
         public float Thickness { get; set; }
 
+        [Reactive]
+        public bool IsSelected { get; set; } = false;
+
         public FigureViewModel(IFigure figure)
         {
             Thickness = 1;
@@ -36,7 +39,8 @@ namespace GraphicEditor.ViewModels
                     Figure.Center = x;
                 }
             );
-            Figure.WhenAnyValue(o=>o.Center).Subscribe((x)=>{
+            Figure.WhenAnyValue(o => o.Center).Subscribe((x) =>
+            {
                 CenterX = x.X;
                 CenterY = x.Y;
             });
