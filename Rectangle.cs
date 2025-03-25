@@ -41,8 +41,8 @@ namespace GraphicEditor.Models
         }
         [Reactive] public PointF TopLeft { get; set; }
         [Reactive] public PointF BottomRight { get; set; }
-        [Reactive] public float Width { get; set; }
-        [Reactive] public float Height { get; set; }
+        public float Width => BottomRight.X - TopLeft.X;
+        public float Height => TopLeft.Y - BottomRight.Y;
 
         [Reactive] public float Point0X { get; set; }
         [Reactive] public float Point0Y { get; set; }
@@ -140,6 +140,7 @@ namespace GraphicEditor.Models
 
         public void Rotate(PointF rotationCenter, float angle)
         {
+            /*
             var points = new[] { TopLeft, BottomRight };
             double rad = angle * Math.PI / 180;
             double cosA = Math.Cos(rad);
@@ -152,6 +153,7 @@ namespace GraphicEditor.Models
 
             TopLeft = points[0];
             BottomRight = points[1];
+            */
         }
 
         private PointF RotatePoint(PointF pt, PointF center, double cosA, double sinA)
@@ -163,14 +165,14 @@ namespace GraphicEditor.Models
                 (float)(center.Y + dx * sinA + dy * cosA)
             );
         }
-
+        /*
         public void Scale(float dx, float dy)
         {
             Width *= dx;
             Height *= dy;
             BottomRight = new PointF(TopLeft.X + Width, TopLeft.Y + Height);
         }
-
+        */
         public void Scale(PointF scaleCenter, float dr)
         {
             var newWidth = Width * dr;
@@ -179,7 +181,10 @@ namespace GraphicEditor.Models
                 scaleCenter.X - (scaleCenter.X - TopLeft.X) * dr,
                 scaleCenter.Y - (scaleCenter.Y - TopLeft.Y) * dr
             );
-            BottomRight = new PointF(TopLeft.X + newWidth, TopLeft.Y + newHeight);
+            BottomRight = new PointF(
+                scaleCenter.X - (scaleCenter.X - BottomRight.X) * dr,
+                scaleCenter.Y - (scaleCenter.Y - BottomRight.Y) * dr
+                );
         }
 
         public IFigure Clone() => new Rectangle
@@ -202,8 +207,8 @@ namespace GraphicEditor.Models
             }
             if (doubleParams != null)
             {
-                Width = (float)doubleParams["Width"];
-                Height = (float)doubleParams["Height"];
+                /*Width = (float)doubleParams["Width"];
+                Height = (float)doubleParams["Height"];*/
             }
         }
         public void Reflection(PointF a, PointF b) => throw new NotImplementedException();

@@ -25,7 +25,7 @@ void SetPosition(PointF vector);
         void Rotate(PointF center, float angle);
         PointF Center { get; set;}
         string Name { get; set; }
-        void Scale(float dx, float dy);
+        //void Scale(float dx, float dy);
         void Scale(PointF center, float dr);
         void Reflection(PointF a, PointF b);
         IFigure Clone();
