@@ -1,3 +1,11 @@
 <svg width='1000' height='600' xmlns='http://www.w3.org/2000/svg'>
-<circle cx='100' cy='100' r='100' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(0,160,164);stroke-opacity:none;opacity:1' />
+<polygon points='324,140 395.88013,204.5 395.88013,333.5 324,398 252.11989,333.5 252.11989,204.5' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(194,137,33);stroke-opacity:none;opacity:1' />
+<polygon points='107,46 200.20354,95.05979 164.60295,174.44022 49.397045,174.44022 13.796463,95.05979' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(197,56,59);stroke-opacity:none;opacity:1' />
+<line x1='47' y1='126' x2='194' y2='104' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(10,103,243);stroke-opacity:none;opacity:1' />
+<polygon points='309,186 475.27686,282 475.27686,474 309,570 142.72313,474 142.72313,282' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(204,109,92);stroke-opacity:none;opacity:1' />
+<circle cx='170' cy='305' r='101.04454463255303' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(230,251,43);stroke-opacity:none;opacity:1' />
+<polygon points='458,112 509.0955,199 509.0955,373 458,460 406.9045,373 406.9045,199' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(50,91,235);stroke-opacity:none;opacity:1' />
+<polygon points='428,201 514.54614,240.38603 481.48846,304.11395 374.51154,304.11395 341.45386,240.38603' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(248,97,162);stroke-opacity:none;opacity:1' />
+<rect x='380' y='480' width='135' height='70' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(198,4,70);opacity:1' />
+<polygon points='90,81 10,208 213,147' style='stroke:rgb(0,0,0);stroke-width:1;fill:rgb(174,126,218);stroke-opacity:none;opacity:1' />
 </svg>

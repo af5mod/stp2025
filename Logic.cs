@@ -184,6 +184,8 @@ namespace GraphicEditor
 
        private void LoadRectangle(Match rectMatch)
         {
+            Console.WriteLine("ЗАГРУЗКА Rectangle");
+
             double x = double.Parse(rectMatch.Groups["x"].Value, CultureInfo.InvariantCulture);
             double y = double.Parse(rectMatch.Groups["y"].Value, CultureInfo.InvariantCulture);
             double width = double.Parse(rectMatch.Groups["width"].Value, CultureInfo.InvariantCulture);
@@ -213,6 +215,8 @@ namespace GraphicEditor
 
         private void LoadHexagon(Match hexagonMatch)
         {
+            Console.WriteLine("ЗАГРУЗКА Hexagon");
+
             var points = new Dictionary<string, PointF>();
 
             points.Add("V1", new PointF(
@@ -258,6 +262,8 @@ namespace GraphicEditor
 
         private void LoadPentagon(Match pentagonMatch)
         {
+            Console.WriteLine("ЗАГРУЗКА Pentagon");
+
             var points = new Dictionary<string, PointF>();
 
             points.Add("V1", new PointF(
@@ -298,6 +304,8 @@ namespace GraphicEditor
 
         private void LoadTriangle(Match triangleMatch)
         {
+            Console.WriteLine("ЗАГРУЗКА Triangle");
+
             var points = new Dictionary<string, PointF>();
 
             points.Add("Vertex1", new PointF(
@@ -323,6 +331,10 @@ namespace GraphicEditor
             triangle.SetParameters(new Dictionary<string, double>(), points);
             triangle.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
 
+            Console.WriteLine($"Vertex1: {points["Vertex1"]}");
+            Console.WriteLine($"Vertex2: {points["Vertex2"]}");
+            Console.WriteLine($"Vertex3: {points["Vertex3"]}");
+
             AddFigureInCache(triangle);
         }
 
@@ -331,69 +343,60 @@ namespace GraphicEditor
             if (FileFormat.ToLower() != "svg")
                 return;
 
-            string svgContent = File.ReadAllText(FilePath);
-
             Console.WriteLine("ЗАГРУЗКА ИЗ ФАЙЛА");
 
-            var lineMatches = Regex.Matches(svgContent,
-                @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:(?<opacity>[\d.]+)' />");
-            foreach (Match lineMatch in lineMatches)
+            using (StreamReader sr = new StreamReader(FilePath))
             {
-                if (lineMatch.Success)
+                string? str;
+                while ((str = sr.ReadLine()) != null)
                 {
-                    LoadLine(lineMatch);
-                }
-            }
+                    var lineMatch = Regex.Match(str,
+                        @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:(?<opacity>[\d.]+)' />");
+                    if (lineMatch.Success)
+                    {
+                        LoadLine(lineMatch);
+                        continue;
+                    }
 
-            var hexagonMatches = Regex.Matches(svgContent,
-                @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
-            foreach (Match hexagonMatch in hexagonMatches)
-            {
-                if (hexagonMatch.Success)
-                {
-                    LoadHexagon(hexagonMatch);
-                }
-            }
+                    var hexagonMatch = Regex.Match(str,
+                        @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
+                    if (hexagonMatch.Success)
+                    {
+                        LoadHexagon(hexagonMatch);
+                        continue;
+                    }
 
-            var pentagonMatches = Regex.Matches(svgContent,
-                @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
-            foreach (Match pentagonMatch in pentagonMatches)
-            {
-                if (pentagonMatch.Success)
-                {
-                    LoadPentagon(pentagonMatch);
-                }
-            }
+                    var pentagonMatch = Regex.Match(str,
+                        @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
+                    if (pentagonMatch.Success)
+                    {
+                        LoadPentagon(pentagonMatch);
+                        continue;
+                    }
 
-            var rectMatches = Regex.Matches(svgContent,
-                @"<rect\s+x='(?<x>[\d.]+)'\s+y='(?<y>[\d.]+)'\s+width='(?<width>[\d.]+)'\s+height='(?<height>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);opacity:(?<opacity>[\d.]+)' />");
+                    var rectMatch = Regex.Match(str,
+                        @"<rect\s+x='(?<x>[\d.]+)'\s+y='(?<y>[\d.]+)'\s+width='(?<width>[\d.]+)'\s+height='(?<height>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);opacity:(?<opacity>[\d.]+)' />");
+                    if (rectMatch.Success)
+                    {
+                        LoadRectangle(rectMatch);
+                        continue;
+                    }
 
-            foreach (Match rectMatch in rectMatches)
-            {
-                if (rectMatch.Success)
-                {
-                    LoadRectangle(rectMatch);
-                }
-            }
+                    var triangleMatch = Regex.Match(str,
+                        @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
+                    if (triangleMatch.Success)
+                    {
+                        Console.WriteLine(triangleMatch);
+                        LoadTriangle(triangleMatch);
+                        continue;
+                    }
 
-            var triangleMatches = Regex.Matches(svgContent,
-                @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
-            foreach (Match triangleMatch in triangleMatches)
-            {
-                if (triangleMatch.Success)
-                {
-                    Console.WriteLine(triangleMatch);
-                    LoadTriangle(triangleMatch);
-                }
-            }
-
-            var circleMatches = Regex.Matches(svgContent,
-                @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
-            foreach (Match circleMatch in circleMatches)
-            {
-                if (circleMatch.Success)
-                {
-                    LoadCircle(circleMatch);
+                    var circleMatch = Regex.Match(str,
+                        @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
+                    if (circleMatch.Success)
+                    {
+                        LoadCircle(circleMatch);
+                    }
                 }
             }
         }
