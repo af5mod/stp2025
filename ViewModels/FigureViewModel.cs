@@ -4,13 +4,14 @@ using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;
 using System;
 using System.Drawing;
+using DynamicData.Binding;
 
 namespace GraphicEditor.ViewModels
 {
     public class FigureViewModel : ViewModelBase
     {
+        [Reactive]
         public IFigure Figure { get; set; }
-
         [Reactive]
         public float CenterX { get; set; }
         [Reactive]
@@ -35,6 +36,10 @@ namespace GraphicEditor.ViewModels
                     Figure.Center = x;
                 }
             );
+            Figure.WhenAnyValue(o=>o.Center).Subscribe((x)=>{
+                CenterX = x.X;
+                CenterY = x.Y;
+            });
         }
     }
 }

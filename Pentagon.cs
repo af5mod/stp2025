@@ -51,6 +51,7 @@ namespace GraphicEditor.Models
                 var currentCenter = Center;
                 var delta = new PointF(value.X - currentCenter.X, value.Y - currentCenter.Y);
                 Move(delta);
+                this.RaisePropertyChanged(nameof(Center));
             }
         }
 
@@ -92,6 +93,27 @@ namespace GraphicEditor.Models
                 }
             );
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+            this.WhenAnyValue(x => x.Vertices)
+                .Subscribe(o =>
+                {
+                    this.RaisePropertyChanged(nameof(Center));
+
+                    if (Vertices.Count == 0) return;
+
+                    Vertex1X = Vertices[0].X;
+                    Vertex2X = Vertices[1].X;
+                    Vertex3X = Vertices[2].X;
+                    Vertex4X = Vertices[3].X;
+                    Vertex5X = Vertices[4].X;
+
+
+                    Vertex1Y = Vertices[0].Y;
+                    Vertex2Y = Vertices[1].Y;
+                    Vertex3Y = Vertices[2].Y;
+                    Vertex4Y = Vertices[3].Y;
+                    Vertex5Y = Vertices[4].Y;
+                });
+
         }
 
         public string DrawingGeometry =>
@@ -106,7 +128,7 @@ namespace GraphicEditor.Models
         {
             Name = "Pentagon";
             RandomizeParameters();
-            
+
             Vertex1X = Vertices[0].X;
             Vertex2X = Vertices[1].X;
             Vertex3X = Vertices[2].X;
@@ -152,13 +174,16 @@ namespace GraphicEditor.Models
 
         public void Move(PointF vector)
         {
+            List<PointF> newVertices = [];
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vertices[i] = new PointF(
+                newVertices.Add(new PointF(
                     Vertices[i].X + vector.X,
                     Vertices[i].Y + vector.Y
-                );
+                ));
             }
+
+            Vertices = newVertices;
         }
 
         public void Rotate(PointF rotationCenter, float angle)
@@ -262,5 +287,9 @@ namespace GraphicEditor.Models
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
+        public void SetPosition(PointF vector)
+        {
+            Center = new PointF(vector.X, vector.Y);
+        }
     }
 }

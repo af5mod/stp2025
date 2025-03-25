@@ -62,6 +62,21 @@ namespace GraphicEditor.Models
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
+
+            this.WhenAnyValue(x => x.Corners)
+                .Subscribe(o =>
+                {
+                    this.RaisePropertyChanged(nameof(Center));
+
+                    if (Corners.Count == 0) return;
+                    Point0X = Corners[0].X;
+                    Point1X = Corners[1].X;
+                    Point2X = Corners[2].X;
+
+                    Point0Y = Corners[0].Y;
+                    Point1Y = Corners[1].Y;
+                    Point2Y = Corners[2].Y;
+                });
         }
 
         public Triangle(PointF vertex1, PointF vertex2, PointF vertex3) : this()
@@ -97,9 +112,16 @@ namespace GraphicEditor.Models
                 var offsetX = value.X - currentCenter.X;
                 var offsetY = value.Y - currentCenter.Y;
 
-                Corners[0] = new PointF(Corners[0].X + offsetX, Corners[0].Y + offsetY);
-                Corners[1] = new PointF(Corners[1].X + offsetX, Corners[1].Y + offsetY);
-                Corners[2] = new PointF(Corners[2].X + offsetX, Corners[2].Y + offsetY);
+                List<PointF> newCorners = [];
+
+
+                newCorners.Add(new PointF(Corners[0].X + offsetX, Corners[0].Y + offsetY));
+                newCorners.Add(new PointF(Corners[1].X + offsetX, Corners[1].Y + offsetY));
+                newCorners.Add(new PointF(Corners[2].X + offsetX, Corners[2].Y + offsetY));
+
+                Corners = newCorners;
+
+                this.RaisePropertyChanged(nameof(Center));
             }
         }
         public void RandomizeParameters()
@@ -221,5 +243,9 @@ namespace GraphicEditor.Models
             }
         }
 
+        public void SetPosition(PointF vector)
+        {
+            Center = new PointF(vector.X, vector.Y);
+        }
     }
 }

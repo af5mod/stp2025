@@ -18,6 +18,7 @@ namespace GraphicEditor.ViewModels
     {
         private readonly ILogic _figureService;
 
+        public ReactiveCommand<Unit, Unit> MoveSelectedCommand { get; }
         public ReactiveCommand<Unit, Unit> NewCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadCommand { get; }
@@ -57,6 +58,12 @@ namespace GraphicEditor.ViewModels
 
             // Инициализация команд
             ClearAllCommand = ReactiveCommand.Create(_figureService.ClearAll);
+
+            MoveSelectedCommand = ReactiveCommand.Create(() =>
+            {
+                if (SelectedFigure != null)
+                    SelectedFigure.Figure.Move(new PointF(100,100));
+            });
 
             RemoveSelectedCommand = ReactiveCommand.Create(() =>
             {

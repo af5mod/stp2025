@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -24,7 +25,7 @@ namespace GraphicEditor.Models
         [Reactive] public string Name { get; set; }
 
         [Reactive]
-        public List<PointF> Vertices { get; set; } = new List<PointF>(6);
+        public List<PointF> Vertices { get; set; }
         [Reactive]
         public Avalonia.Media.Color Color { get; set; }
         [Reactive] public float Point0X { get; set; }
@@ -59,6 +60,7 @@ namespace GraphicEditor.Models
                     value.Y - currentCenter.Y
                 );
                 Move(delta);
+                this.RaisePropertyChanged(nameof(Center));
             }
         }
 
@@ -72,6 +74,7 @@ namespace GraphicEditor.Models
 
         public Hexagon()
         {
+            Vertices = new List<PointF>(6);
             Name = "Hexagon";
             RandomizeParameters();
 
@@ -88,6 +91,8 @@ namespace GraphicEditor.Models
             Point3Y = Vertices[3].Y;
             Point4Y = Vertices[4].Y;
             Point5Y = Vertices[5].Y;
+
+            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
 
             this.WhenAnyValue(o => o.Point0X, o => o.Point0Y, (x, y) => new PointF(x, y))
                 .Subscribe((x) =>
@@ -133,7 +138,27 @@ namespace GraphicEditor.Models
             );
             // Уведомление об изменении Center при изменении вершин
             this.WhenAnyValue(x => x.Vertices)
-                .Subscribe(_ => this.RaisePropertyChanged(nameof(Center)));
+                .Subscribe(o =>
+                {
+                    this.RaisePropertyChanged(nameof(Center));
+
+                    if (Vertices.Count == 0) return;
+                    Point0X = Vertices[0].X;
+                    Point1X = Vertices[1].X;
+                    Point2X = Vertices[2].X;
+                    Point3X = Vertices[3].X;
+                    Point4X = Vertices[4].X;
+                    Point5X = Vertices[5].X;
+
+                    Point0Y = Vertices[0].Y;
+                    Point1Y = Vertices[1].Y;
+                    Point2Y = Vertices[2].Y;
+                    Point3Y = Vertices[3].Y;
+                    Point4Y = Vertices[4].Y;
+                    Point5Y = Vertices[5].Y;
+                });
+
+
         }
 
 
@@ -170,13 +195,17 @@ namespace GraphicEditor.Models
 
         public void Move(PointF vector)
         {
+            List<PointF> newVertices = [];
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vertices[i] = new PointF(
+                newVertices.Add(new PointF(
                     Vertices[i].X + vector.X,
                     Vertices[i].Y + vector.Y
-                );
+                ));
             }
+
+            Vertices = newVertices;
+            // this.RaisePropertyChanged(nameof(Vertices));
         }
 
         public void Rotate(PointF rotationCenter, float angle)
@@ -280,5 +309,9 @@ namespace GraphicEditor.Models
         public IFigure Intersect(IFigure other) => throw new NotImplementedException();
         public IFigure Union(IFigure other) => throw new NotImplementedException();
         public IFigure Subtract(IFigure other) => throw new NotImplementedException();
+        public void SetPosition(PointF vector)
+        {
+            Center = new PointF(vector.X, vector.Y);
+        }
     }
 }
