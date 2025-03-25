@@ -18,6 +18,11 @@ namespace GraphicEditor.ViewModels
     {
         private readonly ILogic _figureService;
 
+        public ReactiveCommand<Unit, Unit> ScaleUpCommand { get; }
+        public ReactiveCommand<Unit, Unit> ScaleDownCommand { get; }
+        public ReactiveCommand<Unit, Unit> RotateRightCommand { get; }
+        public ReactiveCommand<Unit, Unit> RotateLeftCommand { get; }
+        public ReactiveCommand<Unit, Unit> Rotate180Command { get; }
         public ReactiveCommand<Unit, Unit> MoveSelectedCommand { get; }
         public ReactiveCommand<Unit, Unit> NewCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
@@ -62,7 +67,7 @@ namespace GraphicEditor.ViewModels
             MoveSelectedCommand = ReactiveCommand.Create(() =>
             {
                 if (SelectedFigure != null)
-                    SelectedFigure.Figure.Move(new PointF(100,100));
+                    SelectedFigure.Figure.Move(new PointF(100, 100));
             });
 
             RemoveSelectedCommand = ReactiveCommand.Create(() =>
@@ -74,6 +79,13 @@ namespace GraphicEditor.ViewModels
             SaveCommand = ReactiveCommand.Create(() => { _figureService.Save("test.svg", "svg"); });
             LoadCommand = ReactiveCommand.Create(() => { _figureService.Load("test.svg", "svg"); });
             NewCommand = ReactiveCommand.Create(() => { _figureService.ClearAll(); });
+            RotateRightCommand = ReactiveCommand.Create(() => { SelectedFigure?.Figure.Rotate(SelectedFigure.Figure.Center, 45); });
+            RotateLeftCommand = ReactiveCommand.Create(() => { SelectedFigure?.Figure.Rotate(SelectedFigure.Figure.Center, -45); });
+            Rotate180Command = ReactiveCommand.Create(() => { SelectedFigure?.Figure.Rotate(SelectedFigure.Figure.Center, 180); });
+
+            ScaleUpCommand = ReactiveCommand.Create(() => { SelectedFigure?.Figure.Scale(SelectedFigure.Figure.Center, 1.2f); });
+            ScaleDownCommand = ReactiveCommand.Create(() => { SelectedFigure?.Figure.Scale(SelectedFigure.Figure.Center, 0.8f); });
+
 
             // CanvasClickCommand = ReactiveCommand.Create<PointerPressedEventArgs>(args =>
             // {
