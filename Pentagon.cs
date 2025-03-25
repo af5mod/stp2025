@@ -72,7 +72,7 @@ namespace GraphicEditor.Models
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            
+
             this.WhenAnyValue(o => o.Vertex2X, (x) => new PointF(x, Vertices[1].Y))
                 .Subscribe((x) =>
                 {
@@ -237,10 +237,14 @@ namespace GraphicEditor.Models
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
 
+            List<PointF> newVertices = [];
+
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vertices[i] = RotatePoint(Vertices[i], rotationCenter, cosA, sinA);
+                newVertices.Add(RotatePoint(Vertices[i], rotationCenter, cosA, sinA));
             }
+
+            Vertices = newVertices;
         }
 
         private PointF RotatePoint(PointF pt, PointF center, double cosA, double sinA)
@@ -266,13 +270,17 @@ namespace GraphicEditor.Models
 
         public void Scale(PointF scaleCenter, float dr)
         {
+            List<PointF> newVertices = [];
+
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vertices[i] = new PointF(
+                newVertices.Add(new PointF(
                     scaleCenter.X + (Vertices[i].X - scaleCenter.X) * dr,
                     scaleCenter.Y + (Vertices[i].Y - scaleCenter.Y) * dr
-                );
+                ));
             }
+
+            Vertices = newVertices;
         }
 
         public void Reflection(PointF a, PointF b)

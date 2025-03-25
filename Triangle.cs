@@ -174,10 +174,14 @@ namespace GraphicEditor.Models
             double cosA = Math.Cos(rad);
             double sinA = Math.Sin(rad);
 
+            List<PointF> newCorners = [];
+
             for (int i = 0; i < Corners.Count; i++)
             {
-                Corners[i] = RotatePoint(Corners[i], rotationCenter, cosA, sinA);
+                newCorners.Add(RotatePoint(Corners[i], rotationCenter, cosA, sinA));
             }
+
+            Corners = newCorners;
         }
 
         private PointF RotatePoint(PointF pt, PointF center, double cosA, double sinA)
@@ -192,20 +196,25 @@ namespace GraphicEditor.Models
 
         public void Scale(float dx, float dy)
         {
+            List<PointF> newVertices = [];
             for (int i = 0; i < Corners.Count; i++)
             {
-                Corners[i] = new PointF(Corners[i].X * dx, Corners[i].Y * dy);
+                newVertices.Add(new PointF(Corners[i].X * dx, Corners[i].Y * dy));
             }
+
+            Corners = newVertices;
         }
 
         public void Scale(PointF scaleCenter, float dr)
         {
+            List<PointF> newVertices = [];
             for (int i = 0; i < Corners.Count; i++)
             {
                 float newX = scaleCenter.X + (Corners[i].X - scaleCenter.X) * dr;
                 float newY = scaleCenter.Y + (Corners[i].Y - scaleCenter.Y) * dr;
-                Corners[i] = new PointF(newX, newY);
+                newVertices.Add(new PointF(newX, newY));
             }
+            Corners = newVertices;
         }
 
         public void Reflection(PointF a, PointF b)
