@@ -128,7 +128,7 @@ namespace GraphicEditor.Models
             // Случайные параметры: центр и радиус
             float centerX = Random.Shared.Next(100, 500);
             float centerY = Random.Shared.Next(100, 500);
-            float radius = Random.Shared.Next(50, 200); // Радиус от 50 до 200
+            float radius = Random.Shared.Next(50, 250);
 
             // Угловой шаг между вершинами (360° / 5 = 72° или 2π/5 радиан)
             double angleStep = 2 * Math.PI / 5;
