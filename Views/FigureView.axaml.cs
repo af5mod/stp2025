@@ -41,6 +41,7 @@ public partial class FigureView : UserControl
 
         _pointerOffset = new(pointerPosition.X - FigureCenter.X, pointerPosition.Y - FigureCenter.Y);
 
+        FigureVM!.IsSelected = true;
 
         base.OnPointerPressed(e);
     }
