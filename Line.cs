@@ -34,7 +34,17 @@ namespace GraphicEditor.Models
         [Reactive]
         public Avalonia.Media.Color Color { get; set; }
 
-        public PointF Center { get => Start; set => Start = value; }
+        public PointF Center
+        {
+            get => new((Start.X + End.X) / 2f, (Start.Y + End.Y) / 2f); set
+            {
+                var currentCenter = Center;
+                var delta = new PointF(value.X - currentCenter.X, value.Y - currentCenter.Y);
+                Move(delta);
+
+                this.RaisePropertyChanged(nameof(Center));
+            }
+        }
 
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
@@ -90,12 +100,16 @@ namespace GraphicEditor.Models
 
             this.WhenValueChanged(o => o.Start).Subscribe(x =>
             {
+                this.RaisePropertyChanged(nameof(Center));
+
                 StartX = x.X;
                 StartY = x.Y;
             });
 
             this.WhenValueChanged(o => o.End).Subscribe(x =>
             {
+                this.RaisePropertyChanged(nameof(Center));
+
                 EndX = x.X;
                 EndY = x.Y;
             });
@@ -186,11 +200,13 @@ namespace GraphicEditor.Models
 
         public void SetPosition(PointF vector)
         {
-            var EndRelativeX = End.X - Center.X;
-            var EndRelativeY = End.Y - Center.Y;            
-
             Center = new PointF(vector.X, vector.Y);
-            End = new PointF(Center.X+EndRelativeX, Center.Y+EndRelativeY);
+
+            // var EndRelativeX = End.X - Center.X;
+            // var EndRelativeY = End.Y - Center.Y;
+
+            // Center = new PointF(vector.X, vector.Y);
+            // End = new PointF(Center.X + EndRelativeX, Center.Y + EndRelativeY);
         }
     }
 }
