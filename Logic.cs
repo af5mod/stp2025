@@ -136,12 +136,14 @@ namespace GraphicEditor
         {
             Console.WriteLine("ЗАГРУЗКА ЛИНИИ");
 
-            double x1 = double.Parse(lineMatch.Groups["x1"].Value);
-            double y1 = double.Parse(lineMatch.Groups["y1"].Value);
-            double x2 = double.Parse(lineMatch.Groups["x2"].Value);
-            double y2 = double.Parse(lineMatch.Groups["y2"].Value);
+            double x1 = double.Parse(lineMatch.Groups["x1"].Value, CultureInfo.InvariantCulture);
+            double y1 = double.Parse(lineMatch.Groups["y1"].Value, CultureInfo.InvariantCulture);
+            double x2 = double.Parse(lineMatch.Groups["x2"].Value, CultureInfo.InvariantCulture);
+            double y2 = double.Parse(lineMatch.Groups["y2"].Value, CultureInfo.InvariantCulture);
 
-            Console.WriteLine($"lineMatch {x1} {y1} {x2} {y2}");
+            int r = int.Parse(lineMatch.Groups["r"].Value);
+            int g = int.Parse(lineMatch.Groups["g"].Value);
+            int b = int.Parse(lineMatch.Groups["b"].Value);
 
             var line = FigureFabric.CreateFigure("Line");
 
@@ -151,7 +153,7 @@ namespace GraphicEditor
                     {"Start", new PointF { X = (float)x1, Y = (float)y1 }},
                     {"End", new PointF {X =(float) x2, Y =(float) y2}}
                 });
-
+            line.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
 
             AddFigureInCache(line);
         }
@@ -160,53 +162,96 @@ namespace GraphicEditor
         {
             Console.WriteLine("ЗАГРУЗКА КРУГА");
 
-            double cx = double.Parse(circleMatch.Groups["cx"].Value);
-            double cy = double.Parse(circleMatch.Groups["cy"].Value);
-            double r = Double.Parse(circleMatch.Groups["r"].Value, CultureInfo.InvariantCulture);
+            double cx = double.Parse(circleMatch.Groups["cx"].Value, CultureInfo.InvariantCulture);
+            double cy = double.Parse(circleMatch.Groups["cy"].Value, CultureInfo.InvariantCulture);
+            double radius = Double.Parse(circleMatch.Groups["r"].Value, CultureInfo.InvariantCulture);
 
-            Console.WriteLine($"circleMatch {cx} {cy} {r}");
+            int r = int.Parse(circleMatch.Groups["r"].Value);
+            int g = int.Parse(circleMatch.Groups["g"].Value);
+            int b = int.Parse(circleMatch.Groups["b"].Value);
 
             var circle = FigureFabric.CreateFigure("Circle");
-
 
             circle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
                 {
                     {"Center", new PointF {X =(float) cx, Y =(float) cy}},
-                    {"PointOnCircle", new PointF {X =(float)cx + (float)r, Y =(float) cy}}
+                    {"PointOnCircle", new PointF {X =(float)cx + (float)radius, Y =(float) cy}}
                 });
-
+            circle.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
 
             AddFigureInCache(circle);
         }
 
-        private void LoadRectangle(Match rectMatch)
+       private void LoadRectangle(Match rectMatch)
         {
-            double x = double.Parse(rectMatch.Groups["x"].Value);
-            double y = double.Parse(rectMatch.Groups["y"].Value);
-            double width = double.Parse(rectMatch.Groups["width"].Value);
-            double height = double.Parse(rectMatch.Groups["height"].Value);
+            double x = double.Parse(rectMatch.Groups["x"].Value, CultureInfo.InvariantCulture);
+            double y = double.Parse(rectMatch.Groups["y"].Value, CultureInfo.InvariantCulture);
+            double width = double.Parse(rectMatch.Groups["width"].Value, CultureInfo.InvariantCulture);
+            double height = double.Parse(rectMatch.Groups["height"].Value, CultureInfo.InvariantCulture);
+
+            int r = int.Parse(rectMatch.Groups["r"].Value);
+            int g = int.Parse(rectMatch.Groups["g"].Value);
+            int b = int.Parse(rectMatch.Groups["b"].Value);
 
             var rectangle = FigureFabric.CreateFigure("Rectangle");
-            rectangle.SetParameters(new Dictionary<string, double>(), new Dictionary<string, PointF>
+
+            rectangle.SetParameters(
+                new Dictionary<string, double>
+                {
+                    {"Width", width},
+                    {"Height", height}
+                },
+                new Dictionary<string, PointF>
                 {
                     {"TopLeft", new PointF { X = (float)x, Y = (float)y }},
-                    {"BottomRight", new PointF {X = (float)(x + width), Y = (float)(y + height)}}
+                    {"BottomRight", new PointF { X = (float)(x + width), Y = (float)(y + height) }}
                 });
+            rectangle.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
+
             AddFigureInCache(rectangle);
         }
 
         private void LoadHexagon(Match hexagonMatch)
         {
             var points = new Dictionary<string, PointF>();
-            for (int i = 1; i <= 6; i++)
-            {
-                float x = float.Parse(hexagonMatch.Groups[$"x{i}"].Value);
-                float y = float.Parse(hexagonMatch.Groups[$"y{i}"].Value);
-                points.Add($"Vertex{i}", new PointF(x, y));
-            }
+
+            points.Add("V1", new PointF(
+                float.Parse(hexagonMatch.Groups[1].Value, CultureInfo.InvariantCulture),
+                float.Parse(hexagonMatch.Groups[2].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V2", new PointF(
+                float.Parse(hexagonMatch.Groups[3].Value, CultureInfo.InvariantCulture),
+                float.Parse(hexagonMatch.Groups[4].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V3", new PointF(
+                float.Parse(hexagonMatch.Groups[5].Value, CultureInfo.InvariantCulture),
+                float.Parse(hexagonMatch.Groups[6].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V4", new PointF(
+                float.Parse(hexagonMatch.Groups[7].Value, CultureInfo.InvariantCulture),
+                float.Parse(hexagonMatch.Groups[8].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V5", new PointF(
+                float.Parse(hexagonMatch.Groups[9].Value, CultureInfo.InvariantCulture),
+                float.Parse(hexagonMatch.Groups[10].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V6", new PointF(
+                float.Parse(hexagonMatch.Groups[11].Value, CultureInfo.InvariantCulture),
+                float.Parse(hexagonMatch.Groups[12].Value, CultureInfo.InvariantCulture))
+            );
+
+            int r = int.Parse(hexagonMatch.Groups["r"].Value);
+            int g = int.Parse(hexagonMatch.Groups["g"].Value);
+            int b = int.Parse(hexagonMatch.Groups["b"].Value);
 
             var hexagon = FigureFabric.CreateFigure("Hexagon");
             hexagon.SetParameters(new Dictionary<string, double>(), points);
+            hexagon.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
 
             AddFigureInCache(hexagon);
         }
@@ -214,30 +259,70 @@ namespace GraphicEditor
         private void LoadPentagon(Match pentagonMatch)
         {
             var points = new Dictionary<string, PointF>();
-            for (int i = 1; i <= 5; i++)
-            {
-                float x = float.Parse(pentagonMatch.Groups[$"x{i}"].Value);
-                float y = float.Parse(pentagonMatch.Groups[$"y{i}"].Value);
-                points.Add($"Vertex{i}", new PointF(x, y));
-            }
+
+            points.Add("V1", new PointF(
+                float.Parse(pentagonMatch.Groups[1].Value, CultureInfo.InvariantCulture),
+                float.Parse(pentagonMatch.Groups[2].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V2", new PointF(
+                float.Parse(pentagonMatch.Groups[3].Value, CultureInfo.InvariantCulture),
+                float.Parse(pentagonMatch.Groups[4].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V3", new PointF(
+                float.Parse(pentagonMatch.Groups[5].Value, CultureInfo.InvariantCulture),
+                float.Parse(pentagonMatch.Groups[6].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V4", new PointF(
+                float.Parse(pentagonMatch.Groups[7].Value, CultureInfo.InvariantCulture),
+                float.Parse(pentagonMatch.Groups[8].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("V5", new PointF(
+                float.Parse(pentagonMatch.Groups[9].Value, CultureInfo.InvariantCulture),
+                float.Parse(pentagonMatch.Groups[10].Value, CultureInfo.InvariantCulture))
+            );
+
+            int r = int.Parse(pentagonMatch.Groups["r"].Value);
+            int g = int.Parse(pentagonMatch.Groups["g"].Value);
+            int b = int.Parse(pentagonMatch.Groups["b"].Value);
 
             var pentagon = FigureFabric.CreateFigure("Pentagon");
             pentagon.SetParameters(new Dictionary<string, double>(), points);
+            pentagon.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
 
             AddFigureInCache(pentagon);
         }
 
         private void LoadTriangle(Match triangleMatch)
         {
-            List<PointF> corners = new List<PointF>();
-            for (int i = 1; i <= 3; i++)
-            {
-                float x = float.Parse(triangleMatch.Groups[$"x{i}"].Value);
-                float y = float.Parse(triangleMatch.Groups[$"y{i}"].Value);
-                corners.Add(new PointF(x, y));
-            }
+            var points = new Dictionary<string, PointF>();
+
+            points.Add("Vertex1", new PointF(
+                float.Parse(triangleMatch.Groups[1].Value, CultureInfo.InvariantCulture),
+                float.Parse(triangleMatch.Groups[2].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("Vertex2", new PointF(
+                float.Parse(triangleMatch.Groups[3].Value, CultureInfo.InvariantCulture),
+                float.Parse(triangleMatch.Groups[4].Value, CultureInfo.InvariantCulture))
+            );
+
+            points.Add("Vertex3", new PointF(
+                float.Parse(triangleMatch.Groups[5].Value, CultureInfo.InvariantCulture),
+                float.Parse(triangleMatch.Groups[6].Value, CultureInfo.InvariantCulture))
+            );
+
+            int r = int.Parse(triangleMatch.Groups["r"].Value);
+            int g = int.Parse(triangleMatch.Groups["g"].Value);
+            int b = int.Parse(triangleMatch.Groups["b"].Value);
 
             var triangle = FigureFabric.CreateFigure("Triangle");
+            triangle.SetParameters(new Dictionary<string, double>(), points);
+            triangle.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
+
             AddFigureInCache(triangle);
         }
 
@@ -246,13 +331,12 @@ namespace GraphicEditor
             if (FileFormat.ToLower() != "svg")
                 return;
 
-
             string svgContent = File.ReadAllText(FilePath);
 
             Console.WriteLine("ЗАГРУЗКА ИЗ ФАЙЛА");
 
             var lineMatches = Regex.Matches(svgContent,
-                                @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s*(?:stroke='(?<stroke>[\w#]+)'\s*)?(?:stroke-width='(?<strokeWidth>[\d.]+)'\s*)?(?:opacity='(?<opacity>[\d.]+)'\s*)?(?:style='(?<style>[^']*)'\s*)?\/?>");
+                @"<line\s+x1='(?<x1>[\d.]+)'\s+y1='(?<y1>[\d.]+)'\s+x2='(?<x2>[\d.]+)'\s+y2='(?<y2>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:(?<opacity>[\d.]+)' />");
             foreach (Match lineMatch in lineMatches)
             {
                 if (lineMatch.Success)
@@ -262,7 +346,7 @@ namespace GraphicEditor
             }
 
             var hexagonMatches = Regex.Matches(svgContent,
-                @"<polygon\s+points='((?<x>[\d.]+),(?<y>[\d.]+)\s+){5}(?<x>[\d.]+),(?<y>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+                @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
             foreach (Match hexagonMatch in hexagonMatches)
             {
                 if (hexagonMatch.Success)
@@ -272,7 +356,7 @@ namespace GraphicEditor
             }
 
             var pentagonMatches = Regex.Matches(svgContent,
-                @"<polygon\s+points='((?<x>[\d.]+),(?<y>[\d.]+)\s+){4}(?<x>[\d.]+),(?<y>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+                @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
             foreach (Match pentagonMatch in pentagonMatches)
             {
                 if (pentagonMatch.Success)
@@ -282,7 +366,8 @@ namespace GraphicEditor
             }
 
             var rectMatches = Regex.Matches(svgContent,
-                @"<rect\s+x='(?<x>[\d.]+)'\s+y='(?<y>[\d.]+)'\s+width='(?<width>[\d.]+)'\s+height='(?<height>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+                @"<rect\s+x='(?<x>[\d.]+)'\s+y='(?<y>[\d.]+)'\s+width='(?<width>[\d.]+)'\s+height='(?<height>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);opacity:(?<opacity>[\d.]+)' />");
+
             foreach (Match rectMatch in rectMatches)
             {
                 if (rectMatch.Success)
@@ -292,17 +377,18 @@ namespace GraphicEditor
             }
 
             var triangleMatches = Regex.Matches(svgContent,
-                @"<polygon\s+points='(?<x1>[\d.]+),(?<y1>[\d.]+)\s+(?<x2>[\d.]+),(?<y2>[\d.]+)\s+(?<x3>[\d.]+),(?<y3>[\d.]+)'\s+fill='(?<fill>[\w#]+)'\s*stroke='(?<stroke>[\w#]+)'\s*opacity='(?<opacity>[\d.]+)'?");
+                @"<polygon\s+points='([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)\s+([\d.]+),([\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
             foreach (Match triangleMatch in triangleMatches)
             {
                 if (triangleMatch.Success)
                 {
+                    Console.WriteLine(triangleMatch);
                     LoadTriangle(triangleMatch);
                 }
             }
 
             var circleMatches = Regex.Matches(svgContent,
-                @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s*(?:fill='(?<fill>[\w#]+)'\s*)?(?:stroke='(?<stroke>[\w#]+)'\s*)?(?:opacity='(?<opacity>[\d.]+)'\s*)?style='(?<style>[^']*)'\s*\/?>");
+                @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
             foreach (Match circleMatch in circleMatches)
             {
                 if (circleMatch.Success)
@@ -338,29 +424,73 @@ namespace GraphicEditor
 
             foreach (var figure in _figures.Items)
             {
+                var color = figure.Color;
+                string fillColor = $"rgb({color.R},{color.G},{color.B})";
+                double opacity = color.A / 255.0;
+
                 if (figure is Line line)
                 {
-                    svgContent += $"<line x1='{line.Start.X}' y1='{line.Start.Y}' x2='{line.End.X}' y2='{line.End.Y}' " +
-                                "style='stroke:rgb(99,99,99);stroke-width:2' />\n";
+                    svgContent += $"<line x1='{line.Start.X.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"y1='{line.Start.Y.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"x2='{line.End.X.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"y2='{line.End.Y.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};stroke-opacity:none;opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
                 }
                 else if (figure is Circle circle)
                 {
                     double radius = Math.Sqrt(Math.Pow(circle.PointOnCircle.X - circle.Center.X, 2) +
                                             Math.Pow(circle.PointOnCircle.Y - circle.Center.Y, 2));
 
-                    svgContent += $"<circle cx='{circle.Center.X}' cy='{circle.Center.Y}' r='{radius}' " +
-                                "style='stroke:rgb(99,99,99);stroke-width:2; fill:none' />\n";
-                    Console.WriteLine($"radius: {radius}");
-                    Console.WriteLine($"PointOnCircle.X: {circle.PointOnCircle.X}");
-                    Console.WriteLine($"PointOnCircle.Y: {circle.PointOnCircle.Y}");
-                    Console.WriteLine($"Center.X: {circle.Center.X}");
-                    Console.WriteLine($"Center.Y: {circle.Center.Y}");
-
                     svgContent += $"<circle cx='{circle.Center.X.ToString(CultureInfo.InvariantCulture)}' " +
-                        $"cy='{circle.Center.Y.ToString(CultureInfo.InvariantCulture)}' " +
-                        $"r='{radius.ToString(CultureInfo.InvariantCulture)}' " +
-                        "style='stroke:rgb(99,99,99);stroke-width:2; fill:none' />\n";
-                    Console.WriteLine($"svgContent: {svgContent}");
+                                $"cy='{circle.Center.Y.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"r='{radius.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};stroke-opacity:none;opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
+                }
+                else if (figure is GraphicEditor.Models.Rectangle rectangle)
+                {
+                    float x = rectangle.Point0X;
+                    float y = rectangle.Point0Y;
+                    float width = rectangle.Point1X - rectangle.Point0X;
+                    float height = rectangle.Point1Y - rectangle.Point0Y;
+
+                    svgContent += $"<rect x='{x.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"y='{y.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"width='{width.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"height='{height.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
+                }
+                else if (figure is Triangle triangle)
+                {
+                    string points = $"{triangle.Point0X.ToString(CultureInfo.InvariantCulture)},{triangle.Point0Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{triangle.Point1X.ToString(CultureInfo.InvariantCulture)},{triangle.Point1Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{triangle.Point2X.ToString(CultureInfo.InvariantCulture)},{triangle.Point2Y.ToString(CultureInfo.InvariantCulture)}";
+                                    
+
+                    svgContent += $"<polygon points='{points}' " +
+                                $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};stroke-opacity:none;opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
+                }
+                else if (figure is Pentagon pentagon)
+                {
+                    string points = $"{pentagon.Vertex1X.ToString(CultureInfo.InvariantCulture)},{pentagon.Vertex1Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{pentagon.Vertex2X.ToString(CultureInfo.InvariantCulture)},{pentagon.Vertex2Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{pentagon.Vertex3X.ToString(CultureInfo.InvariantCulture)},{pentagon.Vertex3Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{pentagon.Vertex4X.ToString(CultureInfo.InvariantCulture)},{pentagon.Vertex4Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{pentagon.Vertex5X.ToString(CultureInfo.InvariantCulture)},{pentagon.Vertex5Y.ToString(CultureInfo.InvariantCulture)}";
+
+                    svgContent += $"<polygon points='{points}' " +
+                                $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};stroke-opacity:none;opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
+                }
+                else if (figure is Hexagon hexagon)
+                {
+                    string points = $"{hexagon.Point0X.ToString(CultureInfo.InvariantCulture)},{hexagon.Point0Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{hexagon.Point1X.ToString(CultureInfo.InvariantCulture)},{hexagon.Point1Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{hexagon.Point2X.ToString(CultureInfo.InvariantCulture)},{hexagon.Point2Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{hexagon.Point3X.ToString(CultureInfo.InvariantCulture)},{hexagon.Point3Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{hexagon.Point4X.ToString(CultureInfo.InvariantCulture)},{hexagon.Point4Y.ToString(CultureInfo.InvariantCulture)} " +
+                                    $"{hexagon.Point5X.ToString(CultureInfo.InvariantCulture)},{hexagon.Point5Y.ToString(CultureInfo.InvariantCulture)}";
+
+                    svgContent += $"<polygon points='{points}' " +
+                                $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};stroke-opacity:none;opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
                 }
             }
 
@@ -373,7 +503,7 @@ namespace GraphicEditor
 
             if (figure is Line line)
             {
-                var svgContent = $"<svg height=\"200\" width=\"500\" xmlns='http://www.w3.org/2000/svg'><line x1=\"{line.Start.X}\" y1=\"{line.Start.Y}\" x2=\"{line.End.X}\" y2=\"{line.End.Y}\" style=\"stroke:rgb(99,99,99);stroke-width:2\" /></svg>";
+                var svgContent = $"<svg height=\"200\" width=\"500\" xmlns='http://www.w3.org/2000/svg'><line x1=\"{line.Start.X}\" y1=\"{line.Start.Y}\" x2=\"{line.End.X}\" y2=\"{line.End.Y}\" style=\"stroke:rgb(99,99,99);stroke-width:1\" /></svg>";
                 File.WriteAllText(filePath, svgContent);
             }
         }
