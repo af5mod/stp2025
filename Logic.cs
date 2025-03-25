@@ -164,11 +164,11 @@ namespace GraphicEditor
 
             double cx = double.Parse(circleMatch.Groups["cx"].Value, CultureInfo.InvariantCulture);
             double cy = double.Parse(circleMatch.Groups["cy"].Value, CultureInfo.InvariantCulture);
-            double radius = Double.Parse(circleMatch.Groups["rad"].Value, CultureInfo.InvariantCulture);
+            double radius = double.Parse(circleMatch.Groups["r"].Value, CultureInfo.InvariantCulture);
 
-            int r = int.Parse(circleMatch.Groups["r"].Value);
-            int g = int.Parse(circleMatch.Groups["g"].Value);
-            int b = int.Parse(circleMatch.Groups["b"].Value);
+            int red = int.Parse(circleMatch.Groups["red"].Value);
+            int green = int.Parse(circleMatch.Groups["green"].Value);
+            int blue = int.Parse(circleMatch.Groups["blue"].Value);
 
             var circle = FigureFabric.CreateFigure("Circle");
 
@@ -180,7 +180,8 @@ namespace GraphicEditor
             Console.WriteLine($"Center: {(float) cx} {(float) cy}");
             Console.WriteLine($"Radius: {(float)radius}");
             Console.WriteLine($"PointOnCircle: {(float)cx + (float)radius} {(float) cy}");
-            circle.Color = new Avalonia.Media.Color(255, (byte)r, (byte)g, (byte)b);
+
+            circle.Color = new Avalonia.Media.Color(255, (byte)red, (byte)green, (byte)blue);
 
             AddFigureInCache(circle);
         }
@@ -395,7 +396,7 @@ namespace GraphicEditor
                     }
 
                     var circleMatch = Regex.Match(str,
-                        @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+rad='(?<rad>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<r>\d+),(?<g>\d+),(?<b>\d+)\);stroke-opacity:none;opacity:([\d.]+)' />");
+                        @"<circle\s+cx='(?<cx>[\d.]+)'\s+cy='(?<cy>[\d.]+)'\s+r='(?<r>[\d.]+)'\s+style='stroke:rgb\(\d+,\d+,\d+\);stroke-width:\d+;fill:rgb\((?<red>\d+),(?<green>\d+),(?<blue>\d+)\);stroke-opacity:none;opacity:[\d.]+' />");
                     if (circleMatch.Success)
                     {
                         LoadCircle(circleMatch);
@@ -449,7 +450,7 @@ namespace GraphicEditor
 
                     svgContent += $"<circle cx='{circle.Center.X.ToString(CultureInfo.InvariantCulture)}' " +
                                 $"cy='{circle.Center.Y.ToString(CultureInfo.InvariantCulture)}' " +
-                                $"rad='{radius.ToString(CultureInfo.InvariantCulture)}' " +
+                                $"r='{radius.ToString(CultureInfo.InvariantCulture)}' " +
                                 $"style='stroke:rgb(0,0,0);stroke-width:1;fill:{fillColor};stroke-opacity:none;opacity:{opacity.ToString(CultureInfo.InvariantCulture)}' />\n";
                 }
                 else if (figure is GraphicEditor.Models.Rectangle rectangle)
