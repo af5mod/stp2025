@@ -57,41 +57,86 @@ namespace GraphicEditor.Models
 
         private void InitBinding()
         {
-            this.WhenAnyValue(o => o.Vertex1X, o => o.Vertex1Y, (x, y) => new PointF(x, y))
+            this.WhenAnyValue(o => o.Vertex1X, (x) => new PointF(x, Vertices[0].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[0] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Vertex2X, o => o.Vertex2Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Vertex1Y, (x) => new PointF(Vertices[0].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[0] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+            
+            this.WhenAnyValue(o => o.Vertex2X, (x) => new PointF(x, Vertices[1].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[1] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Vertex3X, o => o.Vertex3Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Vertex2Y, (x) => new PointF(Vertices[1].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[1] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Vertex3X, (x) => new PointF(x, Vertices[2].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[2] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Vertex4X, o => o.Vertex4Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Vertex3Y, (x) => new PointF(Vertices[2].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[2] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Vertex4X, (x) => new PointF(x, Vertices[3].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[3] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Vertex5X, o => o.Vertex5Y, (x, y) => new PointF(x, y))
+
+            this.WhenAnyValue(o => o.Vertex4Y, (x) => new PointF(Vertices[3].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[3] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
+            this.WhenAnyValue(o => o.Vertex5X, (x) => new PointF(x, Vertices[4].Y))
                 .Subscribe((x) =>
                 {
                     Vertices[4] = x;
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
+
+            this.WhenAnyValue(o => o.Vertex5Y, (x) => new PointF(Vertices[4].X, x))
+                .Subscribe((x) =>
+                {
+                    Vertices[4] = x;
+                    this.RaisePropertyChanged(nameof(DrawingGeometry));
+                }
+            );
+
             this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
             this.WhenAnyValue(x => x.Vertices)
                 .Subscribe(o =>
@@ -270,14 +315,14 @@ namespace GraphicEditor.Models
         {
             if (pointParams?.Count == 5)
             {
-                Vertices = new List<PointF>
-                {
+                Vertices =
+                [
                     pointParams["V1"],
                     pointParams["V2"],
                     pointParams["V3"],
                     pointParams["V4"],
                     pointParams["V5"]
-                };
+                ];
             }
             else throw new ArgumentException("Pentagon requires exactly 5 point parameters");
         }
