@@ -229,7 +229,20 @@
                             <StackPanel Margin="10,10,10,0" Height="300">
 
                                 <!--  Переключатель  -->
-                                <ToggleButton x:Name="TogglePointsButton" Width="150" Margin="0,0,0,20" HorizontalContentAlignment="Center" Content="Показать точки" />
+                                <ToggleButton 
+                                    x:Name="TogglePointsButton" 
+                                    Width="150" 
+                                    Margin="0,0,0,20" 
+                                    HorizontalContentAlignment="Center">
+                                    <ToggleButton.Styles>
+                                        <Style Selector="ToggleButton:checked">
+                                            <Setter Property="Content" Value="Скрыть точки" />
+                                        </Style>
+                                        <Style Selector="ToggleButton">
+                                            <Setter Property="Content" Value="Показать точки" />
+                                        </Style>
+                                    </ToggleButton.Styles>
+                                </ToggleButton>
 
                                 <!--  Основная информация о фигуре  -->
                                 <Grid Margin="0,0,0,0" IsVisible="{Binding IsChecked, ElementName=TogglePointsButton, Converter={StaticResource InverseBoolConverter}}">
