@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Drawing;
 using System.Net;
+using System.Reactive.Linq;
+using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -17,25 +19,22 @@ namespace GraphicEditor.Models
     public class Line : ReactiveObject, IFigure, IDrawingFigure
     {
         [Reactive]
-        public PointF Start { get;  set; }
+        public PointF Start { get; set; }
         [Reactive]
         public float StartX { get; set; }
         [Reactive]
         public float StartY { get; set; }
 
         [Reactive]
-        public PointF End { get;  set; }
+        public PointF End { get; set; }
         [Reactive]
         public float EndX { get; set; }
         [Reactive]
         public float EndY { get; set; }
         [Reactive]
         public Avalonia.Media.Color Color { get; set; }
-        public PointF Center
-        {
-            get;
-            set;
-        }
+
+        public PointF Center { get => Start; set => Start = value; }
 
         [Reactive] public bool IsSelected { get; set; }
         [Reactive] public string Name { get; set; }
@@ -65,7 +64,10 @@ namespace GraphicEditor.Models
             this.WhenAnyValue(o => o.StartX, o => o.StartY, (x, y) => new PointF(x, y))
                 .Subscribe((x) =>
                 {
-                    Start = x;
+                    if (Start.X != x.X || Start.Y != x.Y)
+                        Start = x;
+
+                    this.RaisePropertyChanged(nameof(Center));
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
@@ -73,11 +75,30 @@ namespace GraphicEditor.Models
             this.WhenAnyValue(o => o.EndX, o => o.EndY, (x, y) => new PointF(x, y))
                 .Subscribe((x) =>
                 {
-                    End = x;
+                    if (End.X != x.X || End.Y != x.Y)
+                        End = x;
+
                     this.RaisePropertyChanged(nameof(DrawingGeometry));
                 }
             );
-            this.WhenAnyValue(o => o.Center).Subscribe(o => this.RaisePropertyChanged(nameof(DrawingGeometry)));
+
+            this.WhenAnyValue(o => o.Center)
+            .Subscribe(x =>
+            {
+                this.RaisePropertyChanged(nameof(DrawingGeometry));
+            });
+
+            this.WhenValueChanged(o => o.Start).Subscribe(x =>
+            {
+                StartX = x.X;
+                StartY = x.Y;
+            });
+
+            this.WhenValueChanged(o => o.End).Subscribe(x =>
+            {
+                EndX = x.X;
+                EndY = x.Y;
+            });
         }
 
         public void Move(PointF vector)
@@ -158,11 +179,18 @@ namespace GraphicEditor.Models
 
             var endX = Random.Shared.Next(256);
             var endY = Random.Shared.Next(256);
-            
+
             Start = new(startX, startY);
             End = new(endX, endY);
         }
 
-        public void SetPosition(PointF vector) => throw new NotImplementedException();
+        public void SetPosition(PointF vector)
+        {
+            var EndRelativeX = End.X - Center.X;
+            var EndRelativeY = End.Y - Center.Y;            
+
+            Center = new PointF(vector.X, vector.Y);
+            End = new PointF(Center.X+EndRelativeX, Center.Y+EndRelativeY);
+        }
     }
 }
