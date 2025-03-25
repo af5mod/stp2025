@@ -133,7 +133,7 @@
 
                 <!--  (1) поворот и отражение  -->
                 <StackPanel Grid.Row="0" Margin="8" Orientation="Vertical" Spacing="4">
-                    <TextBlock FontWeight="Bold" Text="Поворот:" />
+                    <TextBlock FontWeight="Bold" Text="Поворот:" FontSize="18" Margin="0,0,0,5" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Button Command="{Binding RotateRightCommand}">
                             <Image Source="{SvgImage /Assets/Rotate Right.svg}" Stretch="None" />
@@ -146,7 +146,7 @@
                         </Button>
                     </StackPanel>
 
-                    <TextBlock Margin="0,8,0,0" FontWeight="Bold" Text="Масштабирование:" />
+                    <TextBlock Margin="0,15,0,5" FontWeight="Bold" Text="Масштабирование:" FontSize="18" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Button Command="{Binding ScaleUpCommand}">
                             <Image Source="{SvgImage /Assets/scale_plus.svg}" Stretch="None" />
@@ -165,7 +165,7 @@
                     BorderThickness="1">
                     <StackPanel>
                         <!--  Заголовок  -->
-                        <TextBlock Margin="0,0,0,10" FontSize="16" FontWeight="Bold" Text="Список фигур" />
+                        <TextBlock Margin="0,0,0,10" FontSize="18" FontWeight="Bold" Text="Список фигур" />
 
                         <!--  Прокручиваемый список  -->
                         <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
@@ -203,8 +203,8 @@
                 <GridSplitter Grid.Row="4" ResizeDirection="Rows" />
 
                 <!--  кнопки для создания фигур  -->
-                <TextBlock Grid.Row="1" Margin="8" FontWeight="Bold" Text="Фигуры" />
-                <StackPanel Grid.Row="2" Margin="8" Orientation="Horizontal" Spacing="8">
+                <TextBlock Grid.Row="1" Margin="8,15,0,5" FontWeight="Bold" Text="Фигуры" FontSize="18" />
+                <StackPanel Grid.Row="2" Margin="8,0,8,8" Orientation="Horizontal" Spacing="8">
                     <ItemsControl ItemsSource="{Binding FigureFactories}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -226,13 +226,13 @@
                 <ContentControl Grid.Row="3" Grid.Column="0" Margin="2" Content="{Binding #list.SelectedItem}">
                     <ContentControl.DataTemplates>
                         <DataTemplate x:DataType="vm:FigureViewModel">
-                            <StackPanel Margin="10">
+                            <StackPanel Margin="10,10,10,0" Height="300">
 
                                 <!--  Переключатель  -->
-                                <ToggleButton x:Name="TogglePointsButton" Width="150" Margin="0,0,0,10" Content="Показать точки" />
+                                <ToggleButton x:Name="TogglePointsButton" Width="150" Margin="0,0,0,20" HorizontalContentAlignment="Center" Content="Показать точки" />
 
                                 <!--  Основная информация о фигуре  -->
-                                <Grid Margin="0,10,0,10" IsVisible="{Binding IsChecked, ElementName=TogglePointsButton, Converter={StaticResource InverseBoolConverter}}">
+                                <Grid Margin="0,0,0,0" IsVisible="{Binding IsChecked, ElementName=TogglePointsButton, Converter={StaticResource InverseBoolConverter}}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -248,6 +248,7 @@
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="0"
+                                        Width="80"
                                         Height="30"
                                         Margin="10,0,0,0"
                                         VerticalAlignment="Center"
@@ -255,6 +256,7 @@
                                     <TextBox
                                         Grid.Row="0"
                                         Grid.Column="1"
+                                        HorizontalAlignment="Left"
                                         Width="200"
                                         Margin="0,0,0,10"
                                         Text="{Binding Figure.Name}" />
@@ -262,6 +264,7 @@
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="0"
+                                        Width="80"
                                         Height="30"
                                         Margin="10,0,0,0"
                                         VerticalAlignment="Center"
@@ -269,6 +272,8 @@
                                     <StackPanel
                                         Grid.Row="1"
                                         Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        Width="100"
                                         Margin="0,0,0,10"
                                         Orientation="Horizontal"
                                         Spacing="5">
@@ -278,6 +283,7 @@
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
+                                        Width="80"
                                         Height="30"
                                         Margin="10,0,0,0"
                                         VerticalAlignment="Center"
@@ -285,6 +291,7 @@
                                     <TextBox
                                         Grid.Row="2"
                                         Grid.Column="1"
+                                        HorizontalAlignment="Left"
                                         Width="200"
                                         Margin="0,0,0,10"
                                         Text="{Binding CenterX}" />
@@ -292,6 +299,7 @@
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="0"
+                                        Width="80"
                                         Height="30"
                                         Margin="10,0,0,0"
                                         VerticalAlignment="Center"
@@ -299,6 +307,7 @@
                                     <TextBox
                                         Grid.Row="3"
                                         Grid.Column="1"
+                                        HorizontalAlignment="Left"
                                         Width="200"
                                         Margin="0,0,0,10"
                                         Text="{Binding CenterY}" />
@@ -308,7 +317,7 @@
                                         Grid.ColumnSpan="2"
                                         Width="120"
                                         Height="30"
-                                        Margin="10,10,0,20"
+                                        Margin="10,10,0,0"
                                         HorizontalContentAlignment="Center"
                                         VerticalContentAlignment="Center"
                                         Background="Red"
@@ -323,12 +332,12 @@
 
                                         <!--  Circle  -->
                                         <DataTemplate x:DataType="m:Circle">
-                                            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto, Auto">
+                                            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto, Auto" Margin="10,0,0,0">
                                                 <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="0"
                                                     Width="120"
-                                                    Margin="10,0,0,0"
+                                                    Height="30"
                                                     VerticalAlignment="Center"
                                                     Text="PointOnCircle X:" />
                                                 <TextBox
@@ -341,7 +350,7 @@
                                                     Grid.Row="1"
                                                     Grid.Column="0"
                                                     Width="120"
-                                                    Margin="10,0,0,0"
+                                                    Height="30"
                                                     VerticalAlignment="Center"
                                                     Text="PointOnCircle Y:" />
                                                 <TextBox
@@ -355,7 +364,7 @@
 
                                         <!--  Line  -->
                                         <DataTemplate x:DataType="m:Line">
-                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto">
+                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto" Margin="10,0,0,0">
                                                 <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="0"
@@ -415,7 +424,7 @@
 
                                         <!--  Triangle  -->
                                         <DataTemplate x:DataType="m:Triangle">
-                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto">
+                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto" Margin="10,0,0,0">
                                                 <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="0"
@@ -504,7 +513,7 @@
 
                                         <!--  Rectangle  -->
                                         <DataTemplate x:DataType="m:Rectangle">
-                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto">
+                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto" Margin="10,0,0,0">
                                                 <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="0"
@@ -564,7 +573,7 @@
                                         </DataTemplate>
 
                                         <DataTemplate x:DataType="m:Pentagon">
-                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Margin="10,0,0,0">
                                                 <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="0"
@@ -709,7 +718,7 @@
 
 
                                         <DataTemplate x:DataType="m:Hexagon">
-                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Margin="10,0,0,0">
                                                 <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="0"
