@@ -80,37 +80,12 @@
                 </StackPanel>
             </StackPanel>
 
-            <!--  основная область: левый блок (инструменты) + центр (холст)  -->
+            <!--  основная область: центр (холст)  -->
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-
-                <!--  левый столбец с вертикальным списком инструментов  -->
-                <StackPanel
-                    Grid.Column="0"
-                    Margin="11"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Orientation="Vertical"
-                    Spacing="10">
-                    <Button>
-                        <Image Source="{SvgImage /Assets/mdi_pen.svg}" Stretch="None" />
-                    </Button>
-                    <Button>
-                        <Image Source="{SvgImage /Assets/solar_eraser-bold.svg}" Stretch="None" />
-                    </Button>
-                    <Button>
-                        <Image Source="{SvgImage /Assets/solar_text-bold.svg}" Stretch="None" />
-                    </Button>
-                    <Button>
-                        <Image Source="{SvgImage /Assets/ic_baseline-highlight-alt.svg}" Stretch="None" />
-                    </Button>
-                    <Button>
-                        <Image Source="{SvgImage /Assets/fluent_lasso-20-filled.svg}" Stretch="None" />
-                    </Button>
-                </StackPanel>
             </Grid>
 
         </Grid>
